@@ -1,0 +1,21 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+    -fx-background-color: #FFFFFF;
+}
+
+.userRegistrationScreen , .btnSubmit{
+    /* -fx-background-color:  #ADD8E6;*/
+}
+
+.btnSubmit{
+    -fx-font-family: Verdana, Geneva, sans-serif;
+    -fx-text-fill: #599A26;
+    -fx-border-color: #DEDEDE;/*#599A26*/
+    -fx-background-color:#FFFFFF; 
+    -fx-font-size: 20px;
+    
+   
+}
