@@ -19,7 +19,7 @@ public class Capstone extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/View/LoginScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/View/AccountCreationScreen.fxml"));
         
         Scene scene = new Scene(root);
         
