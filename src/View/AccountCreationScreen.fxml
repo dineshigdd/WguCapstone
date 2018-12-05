@@ -40,7 +40,8 @@
       <HBox prefHeight="35.0" prefWidth="477.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
       <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
          <children>
-            <Button fx:id="btnSubmit" alignment="CENTER" layoutX="256.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#btnSubmitHandler" prefHeight="35.0" prefWidth="90.0" text="Submiy" textAlignment="CENTER" />
+            <Button fx:id="btnSubmit" alignment="CENTER" layoutX="256.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#btnSubmitHandler" prefHeight="35.0" prefWidth="90.0" text="Login" textAlignment="CENTER" />
+            <Button fx:id="btnSign" alignment="CENTER" layoutX="128.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#btnSignupHandler" prefHeight="35.0" prefWidth="90.0" text="Sign Up" textAlignment="CENTER" />
          </children>
       </AnchorPane>
    </children>

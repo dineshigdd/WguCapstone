@@ -95,6 +95,8 @@ public class RegistrationScreenController implements Initializable {
     private DatePicker datePickerDOB;
     @FXML
     private HBox textArea;
+    
+    private boolean isNewUser;
     /**
      * Initializes the controller class.
      */
@@ -107,6 +109,7 @@ public class RegistrationScreenController implements Initializable {
         hzBoxContracotorType.setVisible(false);
         conn = new DBConnection();
         textArea.setVisible(false);
+        isNewUser = false;
     }    
     
     @FXML
@@ -128,7 +131,7 @@ public class RegistrationScreenController implements Initializable {
     @FXML
     private void btnSignupHandler(ActionEvent event) throws IOException {
          setUser();
-        
+         isNewUser  = true;
          Stage stage;
          Parent root;
          
@@ -141,7 +144,9 @@ public class RegistrationScreenController implements Initializable {
          stage.centerOnScreen();
          stage.show();
          
-    
+         AccountCreationScreenController controller =  loader.getController();
+         controller.setNewUser(isNewUser);
+            
         
     }
     
