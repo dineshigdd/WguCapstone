@@ -116,7 +116,7 @@
       </AnchorPane>
    </center>
    <top>
-      <Label prefHeight="21.0" prefWidth="146.0" scaleX="2.0" scaleY="2.0" text="User Registration" textFill="#1072c4e3" translateY="50.0" BorderPane.alignment="CENTER">
+      <Label fx:id="lblTitle" prefHeight="21.0" prefWidth="146.0" scaleX="2.0" scaleY="2.0" text="User Registration" textFill="#1072c4e3" translateY="50.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>

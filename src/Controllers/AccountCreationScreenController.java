@@ -40,7 +40,7 @@ public class AccountCreationScreenController implements Initializable {
     private Button btnSign;
     
     private boolean isNewUser;
-    
+    private int userType;
 
    @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -50,7 +50,7 @@ public class AccountCreationScreenController implements Initializable {
        
     
     @FXML
-    private void btnSubmitHandler(ActionEvent event) {
+    private void btnSubmitHandler(ActionEvent event) throws IOException {
         
         //check if the username is already exists
         //if not{
@@ -62,39 +62,78 @@ public class AccountCreationScreenController implements Initializable {
         String username = txtUserName.getText();
         String password = txtPassword.getText();
         
-        if( isNewUser )
-        if ( checkUserName(username)){
-            alert("The username has already been taken","User Name","Username Error", AlertType.ERROR);
-             
-//            alert("The Username exists", "Error in username","Error in username");
-           
-        }else{
-            try{
-                DBConnection conn = new DBConnection();
-                conn.connectDatabase();
-                String query = "insert into user(username, password) values( ?, ? )"; 
-                PreparedStatement ps = conn.insertRecord(query);
-                ps.setString(1, username );
-                ps.setString(2, password );
-                ps.execute();
-                conn.closeDBConnection();
-            }catch(SQLException e ){
-                e.printStackTrace();
+        if( isNewUser ){
+            if ( isUsername(username)){
+                alert("The username has already been taken","User Name","Username Error", AlertType.ERROR);
+
+    //            alert("The Username exists", "Error in username","Error in username");
+
+            }else{
+                try{
+                    DBConnection conn = new DBConnection();
+                    conn.connectDatabase();
+                    String query = "insert into user(username, password,userType) values( ?, ?,? )"; 
+                    PreparedStatement ps = conn.insertRecord(query);
+                    ps.setString(1, username );
+                    ps.setString(2, password );
+                    ps.setInt(3, userType);
+                    ps.execute();
+                    conn.closeDBConnection();
+                }catch(SQLException e ){
+                    e.printStackTrace();
+                }
             }
+        }else{ //if an existing user login to the system
+               if( isUsername(username) && isPassword(password)){
+                
+                        Stage stage;
+                        Parent root;
+
+                        stage = (Stage) btnSubmit.getScene().getWindow();
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/freelancerMainScreen.fxml"));
+                        root = loader.load();
+
+                        Scene scene = new Scene(root);
+                        stage.setScene(scene);
+                        stage.centerOnScreen();
+                        stage.show();
+               }else{
+                   alert("Your username or password is invalid","Invalid username or password","Invalid Username or Password!",AlertType.ERROR);
+               }        
+            
         }
         
     }
-
-    private boolean checkUserName(String username) {
+    
+    private boolean isPassword( String password ){
       DBConnection conn = new DBConnection();
       conn.connectDatabase();
       ResultSet sqlResult;
-      boolean isUsernameExit = false;
+      boolean isPassword = false;
+    
+      try{           
+            conn.setStatement( "select password from user where password ="+ "'" + password + "'" );
+            sqlResult = conn.getStatement();
+            isPassword = sqlResult.next();
+            conn.closeDBConnection();
+             
+      } catch(Exception e){
+              e.printStackTrace();        }
+      
+      
+     return isPassword;
+    }
+    
+    private boolean isUsername(String username) {
+      DBConnection conn = new DBConnection();
+      conn.connectDatabase();
+      ResultSet sqlResult;
+      boolean isUsername = false;
     
       try{           
             conn.setStatement( "select username from user where username ="+ "'" + username + "'" );
             sqlResult = conn.getStatement();
-            isUsernameExit = sqlResult.next();
+            isUsername = sqlResult.next();
             conn.closeDBConnection();
              
       } catch(Exception e){
@@ -102,7 +141,7 @@ public class AccountCreationScreenController implements Initializable {
         }
       
       
-     return isUsernameExit;
+     return isUsername;
     }
     
     
@@ -116,11 +155,12 @@ public class AccountCreationScreenController implements Initializable {
             
     }
 
-    public void setNewUser(boolean isNewUser) {
+    public void setNewUser(boolean isNewUser, int userType) {
         System.out.println("Account isNewUser:" + isNewUser);
         this.isNewUser = isNewUser;
        if( isNewUser ){
             btnSign.setVisible( false );
+            this.userType = userType;
             btnSubmit.setText("Submit");
         }else{
              btnSign.setVisible( true );

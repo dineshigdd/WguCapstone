@@ -96,15 +96,24 @@ public class RegistrationScreenController implements Initializable {
     @FXML
     private HBox textArea;
     
-    private boolean isNewUser;
-    /**
+    
+    @FXML
+    private Label lblTitle;
+    /**lblTitle
      * Initializes the controller class.
      */
+    private boolean isNewUser;
+    private boolean isUpdate;
+    private int userType;
+    public final static int  FREELANCER = 1;
+    public final static int  CONTRACTOR = 0;
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
                
         // TODO
-          
+       
         
         hzBoxContracotorType.setVisible(false);
         conn = new DBConnection();
@@ -145,7 +154,7 @@ public class RegistrationScreenController implements Initializable {
          stage.show();
          
          AccountCreationScreenController controller =  loader.getController();
-         controller.setNewUser(isNewUser);
+         controller.setNewUser(isNewUser,userType);
             
         
     }
@@ -155,6 +164,8 @@ public class RegistrationScreenController implements Initializable {
                 
        return Timestamp.valueOf(localDate.atStartOfDay());
     }
+   
+    
     
     public void setUser(){
         
@@ -184,6 +195,7 @@ public class RegistrationScreenController implements Initializable {
         String country = txtCountry.getText();
         String phone = txtPhoneNumber.getText();
         String email = txtEmail.getText();
+        
         //get DoB
         
         
@@ -205,7 +217,7 @@ public class RegistrationScreenController implements Initializable {
           //ObservableList jobList = FXCollections.observableArrayList();
           
           //create contractor object
-          
+            userType = CONTRACTOR;
             Contractor contractor = new Contractor( 
                   firstName,
                   lastName, 
@@ -220,7 +232,7 @@ public class RegistrationScreenController implements Initializable {
         }
       
        if( radBtnFreelancer.isSelected()){
-           
+           userType = FREELANCER;
            String selfDescription = txtAreaDescription.getText();
            String yearsOfExperience =   spinner.getValue();
            
@@ -240,23 +252,27 @@ public class RegistrationScreenController implements Initializable {
         }
     }
     
-    private int setAddress(Contact address){   //Inserting address
+    private int setAddress(Contact contact){   //Inserting address
         
         
          try{
-                             
-                String query = "INSERT INTO Contact( streetAddress,apt,city,state,zip,country,phone,email)" + 
+             String query = "";
+                if( !isUpdate ){
+                  query = "INSERT INTO Contact( streetAddress,apt,city,state,zip,country,phone,email)" + 
                                             "VALUES( ? , ? , ? ,? ,? , ? ,?, ? );";
+                }else{
+                  // query = "UPDATE SET"  
+                }
                                                 
                  PreparedStatement ps = conn.insertRecord(query);
-                                ps.setString( 1, address.getStreetAddress());
-                                ps.setString( 2, address.getApt());
-                                ps.setString( 3, address.getCity());
-                                ps.setString( 4, address.getState());
-                                ps.setString( 5, address.getZip());
-                                ps.setString( 6, address.getCountry());
-                                ps.setString( 7, address.getPhone());
-                                ps.setString( 8, address.getEmail());
+                                ps.setString( 1, contact.getStreetAddress());
+                                ps.setString( 2, contact.getApt());
+                                ps.setString( 3, contact.getCity());
+                                ps.setString( 4, contact.getState());
+                                ps.setString( 5, contact.getZip());
+                                ps.setString( 6, contact.getCountry());
+                                ps.setString( 7, contact.getPhone());
+                                ps.setString( 8, contact.getEmail());
                                 ps.execute();
                                 
                                 //conn.closeDBConnection();
@@ -293,8 +309,13 @@ public class RegistrationScreenController implements Initializable {
                 try{
                 Contractor contractor = ( Contractor )obj;
                 
-                String query = "INSERT INTO Contractor(firstName,lastName,DOB,contractorType,contactID)" + 
+                String query = "";
+                if( ! isUpdate ){
+                    query = "INSERT INTO Contractor(firstName,lastName,DOB,contractorType,contactID)" + 
                                             "VALUES( ? , ? , ? ,? ,? );";
+                }else{
+                    //update query
+                }
                                                 
                  PreparedStatement ps = conn.insertRecord(query);
                                 ps.setString( 1, contractor.getFirstName());
@@ -312,8 +333,13 @@ public class RegistrationScreenController implements Initializable {
                 try{
                 Freelancer freelancer = ( Freelancer )obj;
                 
-                String query = "INSERT INTO Freelancer(firstName,lastName,DOB,yearsOfExperience,selfDescription,contactID)" + 
+                String query = "";
+                if( ! isUpdate ){
+                        query = "INSERT INTO Freelancer(firstName,lastName,DOB,yearsOfExperience,selfDescription,contactID)" + 
                                             "VALUES( ? , ? , ? ,? ,? , ? );";
+                }else{
+                    //update query
+                }
                                                 
                  PreparedStatement ps = conn.insertRecord(query);
                                 ps.setString( 1, freelancer.getFirstName());
@@ -408,6 +434,15 @@ public class RegistrationScreenController implements Initializable {
                  contractor.getAddress().getCountry().equals("USA");
                  
     }    
+
+    void setIsUpdate(boolean isUpdate) {
+      
+       this.isUpdate = isUpdate;
+        
+        if( isUpdate ){  
+           lblTitle.setText("Update Your Record");
+        }
+    }
 
    
 
