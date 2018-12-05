@@ -9,7 +9,7 @@ package Model;
  *
  * @author Dinesh
  */ 
-public class Address {
+public class Contact {
     private int id;
     private String streetAddress;
     private String apt;
@@ -17,17 +17,38 @@ public class Address {
     private String zip;
     private String state;
     private String country;     
+    private String phone;
+    private String email;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+   
     
-    public Address() {
+    public Contact() {
     }
     
-    public Address(String streetAddress, String apt, String city, String zip, String state, String country) {
+    public Contact(String streetAddress, String apt, String city, String zip, String state, String country, String phone, String email) {
         this.streetAddress = streetAddress;
         this.apt = apt;
         this.city = city;
         this.zip = zip;
         this.state = state;
         this.country = country;
+        this.phone = phone;
+        this.email = email;
     }
     
     

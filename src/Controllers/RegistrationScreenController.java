@@ -15,29 +15,39 @@ import javafx.fxml.Initializable;
  * @author Dinesh
  */
 import DBConnection.DBConnection;
-import Model.Address;
+import Model.Contact;
 import Model.Contractor;
+import Model.Freelancer;
 import java.io.IOException;
 import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 public class RegistrationScreenController implements Initializable {
     private DBConnection conn;
@@ -69,13 +79,22 @@ public class RegistrationScreenController implements Initializable {
     @FXML
     private RadioButton radBtnContractor;
     @FXML
-    private Spinner<String> contractTypeSpinner;
+    private Spinner<String> spinner;
     @FXML
     private HBox hzBoxContracotorType;
-    @FXML
-    private TextField txtDOB;
+    
     @FXML
     private ToggleGroup user;
+    @FXML
+    private Label spinnerLabel;
+    @FXML
+    private Label spinnerLabel1;
+    @FXML
+    private TextArea txtAreaDescription;
+    @FXML
+    private DatePicker datePickerDOB;
+    @FXML
+    private HBox textArea;
     /**
      * Initializes the controller class.
      */
@@ -87,7 +106,7 @@ public class RegistrationScreenController implements Initializable {
         
         hzBoxContracotorType.setVisible(false);
         conn = new DBConnection();
-        
+        textArea.setVisible(false);
     }    
     
     @FXML
@@ -108,11 +127,29 @@ public class RegistrationScreenController implements Initializable {
     
     @FXML
     private void btnSignupHandler(ActionEvent event) throws IOException {
-        setUser();
+         setUser();
+        
+         Stage stage;
+         Parent root;
+         
+         stage = (Stage) btnSignup.getScene().getWindow();
+         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/AccountCreationScreen.fxml"));
+         root = loader.load();
+         
+         Scene scene = new Scene(root);
+         stage.setScene(scene);
+         stage.centerOnScreen();
+         stage.show();
+         
+    
         
     }
     
     
+    private Timestamp  toTimeStamp(LocalDate localDate){
+                
+       return Timestamp.valueOf(localDate.atStartOfDay());
+    }
     
     public void setUser(){
         
@@ -123,9 +160,13 @@ public class RegistrationScreenController implements Initializable {
         String firstName = txtFirstName.getText();
         String lastName = txtLastName.getText();
         
-        Date DOB = new Date();
+        LocalDate DOB = null;
+        
         try{
-         DOB = dobFormat.parse(txtDOB.getText());
+         DOB = datePickerDOB.getValue();
+         System.out.println( "Date of Birth:" + DOB );
+//         DOB = dobFormat.parse(dateInput.getDayOfMonth() + "/" + dateInput.getDayOfWeek() + "/" + dateInput.getYear());
+      
         }catch(Exception e){
            e.printStackTrace();
         }
@@ -138,47 +179,69 @@ public class RegistrationScreenController implements Initializable {
         String country = txtCountry.getText();
         String phone = txtPhoneNumber.getText();
         String email = txtEmail.getText();
+        //get DoB
         
-        Address address = null;
-        if( radBtnContractor.isSelected()){
-           
-             address = new Address(
+        
+        Contact contact = null;
+        contact = new Contact(
                 stAddress,
                 apt,
                 city,
                 zip,       
                 state,
-                country
+                country,
+                phone,
+                email
             );
-         
-         System.out.println("Testing setUser()" + Boolean.toString(setUserTest(address)));//for testing
+        
+        if( radBtnContractor.isSelected()){           
+      
+       //  System.out.println("Testing setUser()" + Boolean.toString(setUserTest(address)));//for testing
           //ObservableList jobList = FXCollections.observableArrayList();
           
           //create contractor object
-          Contractor contractor = new Contractor( 
-                firstName,
-                lastName, 
-                DOB, 
-                address,  
-                phone,
-                email,
-                contractTypeSpinner.getValue()
-           );  
+          
+            Contractor contractor = new Contractor( 
+                  firstName,
+                  lastName, 
+                  DOB, 
+                  contact,                   
+                  spinner.getValue()
+             );  
          
           
-          setDbRecord( address , contractor , "contractor"); 
+         setDbRecord( contact , contractor , "contractor"); 
 //          System.out.println("Testing Contractor:" + Boolean.toString(ContractorTest(contractor)));
         }
       
+       if( radBtnFreelancer.isSelected()){
+           
+           String selfDescription = txtAreaDescription.getText();
+           String yearsOfExperience =   spinner.getValue();
+           
+            
+           
+            Freelancer freelancer = new Freelancer( 
+                 firstName,
+                 lastName, 
+                 DOB, 
+                 contact, 
+                 yearsOfExperience,  
+                 selfDescription
+             );  
+         
+         
+           setDbRecord( contact , freelancer , "freelancer");    
+        }
     }
     
-    private int setAddress(Address address){   //Inserting address
+    private int setAddress(Contact address){   //Inserting address
         
         
          try{
                              
-                String query = "INSERT INTO Address( streetAddress,apt,city,state,zip,country )" + 
-                                            "VALUES( ? , ? , ? ,? ,? , ? );";
+                String query = "INSERT INTO Contact( streetAddress,apt,city,state,zip,country,phone,email)" + 
+                                            "VALUES( ? , ? , ? ,? ,? , ? ,?, ? );";
                                                 
                  PreparedStatement ps = conn.insertRecord(query);
                                 ps.setString( 1, address.getStreetAddress());
@@ -187,6 +250,8 @@ public class RegistrationScreenController implements Initializable {
                                 ps.setString( 4, address.getState());
                                 ps.setString( 5, address.getZip());
                                 ps.setString( 6, address.getCountry());
+                                ps.setString( 7, address.getPhone());
+                                ps.setString( 8, address.getEmail());
                                 ps.execute();
                                 
                                 //conn.closeDBConnection();
@@ -210,33 +275,53 @@ public class RegistrationScreenController implements Initializable {
                 return addressID;
     }
     
-    private void setDbRecord( Address address, Object obj, String objType ){
+    private void setDbRecord( Contact address, Object obj, String objType ){
+        
+        
         conn.connectDatabase();     
        
-        int addressID = setAddress( address );
-            System.out.println( "Fk key ID:" + addressID );
+            int contactID = setAddress( address );
+            System.out.println( "Fk key ID:" + contactID );
         switch( objType ){
             
             case "contractor": 
                 try{
                 Contractor contractor = ( Contractor )obj;
                 
-                String query = "INSERT INTO Contractor(firstName,lastName,contractorType,phoneNumber,email,addressID)" + 
-                                            "VALUES( ? , ? , ? ,? ,? , ? );";
+                String query = "INSERT INTO Contractor(firstName,lastName,DOB,contractorType,contactID)" + 
+                                            "VALUES( ? , ? , ? ,? ,? );";
                                                 
                  PreparedStatement ps = conn.insertRecord(query);
                                 ps.setString( 1, contractor.getFirstName());
                                 ps.setString( 2, contractor.getLastName());
-                                ps.setString( 3, contractor.getTypeOfContractor());
-                                ps.setString( 4, contractor.getPhone());
-                                ps.setString( 5, contractor.getEmail());
-                                ps.setInt( 6, addressID);
+                                ps.setTimestamp(3, toTimeStamp(contractor.getDOB()));
+                                ps.setString( 4, contractor.getTypeOfContractor());
+                                ps.setInt( 5, contactID);
                                 ps.execute();
                  conn.closeDBConnection();                    
                 }catch(SQLException e){
                     e.printStackTrace();
                 }
-
+                break;
+            case "freelancer":
+                try{
+                Freelancer freelancer = ( Freelancer )obj;
+                
+                String query = "INSERT INTO Freelancer(firstName,lastName,DOB,yearsOfExperience,selfDescription,contactID)" + 
+                                            "VALUES( ? , ? , ? ,? ,? , ? );";
+                                                
+                 PreparedStatement ps = conn.insertRecord(query);
+                                ps.setString( 1, freelancer.getFirstName());
+                                ps.setString( 2, freelancer.getLastName());
+                                ps.setTimestamp(3,toTimeStamp( freelancer.getDOB()));
+                                ps.setString(4, freelancer.getYearsOfExperince());
+                                ps.setString(5, freelancer.getSelfDescription());
+                                ps.setInt( 6, contactID);
+                                ps.execute();
+                 conn.closeDBConnection();       
+                }catch( SQLException e){
+                    e.printStackTrace();
+                }
                
         }
         
@@ -248,6 +333,8 @@ public class RegistrationScreenController implements Initializable {
     private void radBtnContractorHandler(MouseEvent event) {
         
          hzBoxContracotorType.setVisible(true);
+         textArea.setVisible(false);
+         spinnerLabel.setText("Type Of Contractor:");
          ObservableList<String> ContractorTypeList = FXCollections.observableArrayList();
          ContractorTypeList.add("Indivitual");
          ContractorTypeList.add("Organization");
@@ -258,21 +345,37 @@ public class RegistrationScreenController implements Initializable {
                  new  SpinnerValueFactory.ListSpinnerValueFactory<String>(ContractorTypeList);
          
          valueFactory.setValue(ContractorTypeList.get(0));         
-         contractTypeSpinner.setValueFactory(valueFactory);
+         spinner.setValueFactory(valueFactory);
          
          
     
     }
     
+    
  
     @FXML
     private void radBtnFreelancerHandler(MouseEvent event) {
         
-         hzBoxContracotorType.setVisible(false);
+         hzBoxContracotorType.setVisible(true);
+         textArea.setVisible(true);
+         spinnerLabel.setText("Experience:");
+         
+         ObservableList<String> freelancerExperienceList = FXCollections.observableArrayList();
+         
+         freelancerExperienceList.add("less than 1 year");
+         freelancerExperienceList.add("1 year");
+         freelancerExperienceList.add("1 - 5 years");
+         freelancerExperienceList.add("more than 5 years");
+         
+         SpinnerValueFactory<String> valueFactory = 
+                 new  SpinnerValueFactory.ListSpinnerValueFactory<String>(freelancerExperienceList);
+         
+         valueFactory.setValue(freelancerExperienceList.get(0));         
+         spinner.setValueFactory(valueFactory);
     }   
        
   //---------for testing purpose------------------------------------------    
-   private boolean setUserTest(Address address){
+   private boolean setUserTest(Contact address){
             
       
          return (address.getStreetAddress().equals("4919 Coldwater") &&

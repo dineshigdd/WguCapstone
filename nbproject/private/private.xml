@@ -4,11 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/F:/WGU/capstone/Test/capstone/src/Model/Contractor.java</file>
-            <file>file:/F:/WGU/capstone/Test/capstone/src/Syles/userRegistration.css</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/Controllers/LoginScreenController.java</file>
+            <file>file:/F:/WGU/capstone/Test/capstone/src/Model/Freelancer.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/capstone/Capstone.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/Controllers/RegistrationScreenController.java</file>
-            <file>file:/F:/WGU/capstone/Test/capstone/src/Model/Address.java</file>
+            <file>file:/F:/WGU/capstone/Test/capstone/src/Model/Contact.java</file>
         </group>
     </open-files>
 </project-private>

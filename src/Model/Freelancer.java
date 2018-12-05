@@ -5,19 +5,35 @@
  */
 package Model;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 /**
  *
  * @author Dinesh
  */
 public class Freelancer extends User{
-    private int yearsOfExperince;
+    private String yearsOfExperince;
     private String selfDescription;
 
-    public int getYearsOfExperince() {
+ 
+public Freelancer(String firstName, String lastName, LocalDate DOB,Contact address,String yearsOfExperience,String selfDescription) {
+       
+        this.firstName= firstName;
+        this.lastName = lastName;
+        this.DOB = DOB;
+        this.address = address;
+        this.yearsOfExperince = yearsOfExperience;  
+        this.selfDescription = selfDescription;
+    }   
+
+    
+    
+    public String getYearsOfExperince() {
         return yearsOfExperince;
     }
 
-    public void setYearsOfExperince(int yearsOfExperince) {
+    public void setYearsOfExperince(String yearsOfExperince) {
         this.yearsOfExperince = yearsOfExperince;
     }
 

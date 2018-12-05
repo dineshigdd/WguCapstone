@@ -32,16 +32,16 @@ public class LoginScreenController implements Initializable {
     @FXML
     private TextField txtPassword;
     @FXML
+    private Button btnSign;
+    @FXML
     private RadioButton radBtnContractor;
     @FXML
     private ToggleGroup user;
     @FXML
     private RadioButton radBtnFreelancer;
     @FXML
-    private Button btnSign;
-    @FXML
     private Button btnLogin;
-
+   
     /**
      * Initializes the controller class.
      */

@@ -3,9 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -13,9 +15,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="891.0" prefWidth="869.0" styleClass="mainFxmlClass" stylesheets="@../Syles/userRegistration.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegistrationScreenController">
+<BorderPane prefHeight="983.0" prefWidth="869.0" styleClass="mainFxmlClass" stylesheets="@../Syles/userRegistration.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegistrationScreenController">
    <center>
-      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="755.0" prefWidth="762.0" styleClass="mainFxmlClass" BorderPane.alignment="CENTER">
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="869.0" prefWidth="762.0" styleClass="mainFxmlClass" BorderPane.alignment="CENTER">
          <children>
             <HBox layoutX="87.0" layoutY="50.0" prefHeight="35.0" prefWidth="487.0">
                <children>
@@ -81,10 +83,10 @@
                   <TextField fx:id="txtEmail" prefHeight="35.0" prefWidth="266.0" />
                </children>
             </HBox>
-            <HBox layoutX="72.0" layoutY="600.0" prefHeight="35.0" prefWidth="356.0">
+            <HBox layoutX="70.0" layoutY="600.0" prefHeight="35.0" prefWidth="358.0">
                <children>
                   <Label prefHeight="35.0" prefWidth="96.0" text="Date Of Birth:" />
-                  <TextField fx:id="txtDOB" prefHeight="35.0" prefWidth="261.0" />
+                  <DatePicker fx:id="datePickerDOB" prefHeight="35.0" prefWidth="266.0" />
                </children>
             </HBox>
             <HBox layoutX="171.0" layoutY="662.0" prefHeight="31.0" prefWidth="260.0" spacing="50.0">
@@ -98,11 +100,17 @@
             </HBox>
             <HBox fx:id="hzBoxContracotorType" layoutX="24.0" layoutY="714.0">
                <children>
-                  <Label prefHeight="31.0" prefWidth="136.0" text="Type Of Contractor:" />
-                  <Spinner fx:id="contractTypeSpinner" prefHeight="31.0" prefWidth="283.0" />
+                  <Label fx:id="spinnerLabel" prefHeight="31.0" prefWidth="136.0" text="Type Of Contractor:" />
+                  <Spinner fx:id="spinner" prefHeight="31.0" prefWidth="283.0" />
                </children>
             </HBox>
-            <Button fx:id="btnSignup" layoutX="582.0" layoutY="704.0" mnemonicParsing="false" onAction="#btnSignupHandler" onMouseEntered="#chageCursor" onMouseExited="#setDefaultMousePointer" prefHeight="41.0" prefWidth="126.0" styleClass="btnSubmit" text="Submit" />
+            <HBox fx:id="textArea" layoutX="42.0" layoutY="772.0" prefHeight="73.0" prefWidth="403.0">
+               <children>
+                  <Label fx:id="spinnerLabel1" prefHeight="31.0" prefWidth="170.0" text="Self Description:" />
+                  <TextArea fx:id="txtAreaDescription" prefHeight="73.0" prefWidth="339.0" />
+               </children>
+            </HBox>
+            <Button fx:id="btnSignup" layoutX="574.0" layoutY="804.0" mnemonicParsing="false" onAction="#btnSignupHandler" onMouseEntered="#chageCursor" onMouseExited="#setDefaultMousePointer" prefHeight="41.0" prefWidth="126.0" styleClass="btnSubmit" text="Submit" />
             
          </children>
       </AnchorPane>

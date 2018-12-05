@@ -5,7 +5,8 @@
  */
 package Model;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 /**
  *
@@ -14,8 +15,8 @@ import java.util.Date;
 public abstract class User {
     protected String firstName;
     protected String lastName;
-    protected Date DOB;
-    protected Address address;
+    protected LocalDate DOB;
+    protected Contact address;
     protected String phone;
     protected String email;
 
@@ -28,11 +29,11 @@ public abstract class User {
     }
     
 
-    public Address getAddress() {
+    public Contact getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(Contact address) {
         
        this.address = address;
         
@@ -55,11 +56,11 @@ public abstract class User {
         this.lastName = lastName;
     }
 
-    public Date getDOB() {
+    public LocalDate getDOB() {
         return DOB;
     }
 
-    public void setDOB(Date DOB) {
+    public void setDOB(LocalDate DOB) {
         this.DOB = DOB;
     }
 

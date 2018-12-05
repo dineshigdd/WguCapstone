@@ -5,7 +5,8 @@
  */
 package Model;
 
-import java.util.Date;
+import java.time.LocalDate;
+//import java.util.Date;
 
 /**
  *
@@ -15,15 +16,12 @@ public class Contractor extends User{
     private String typeOfContractor;
   // private ObservableList<Job> jobList;    
 
-    public Contractor(String firstName, String lastName, Date DOB,Address address, 
-            String phone, String email,String typeOfContractor) {
+    public Contractor(String firstName, String lastName, LocalDate DOB,Contact address,String typeOfContractor) {
        
         this.firstName= firstName;
         this.lastName = lastName;
         this.DOB = DOB;
         this.address = address;
-        this.phone = phone;
-        this.email = email;
         this.typeOfContractor = typeOfContractor;
     }       
    
