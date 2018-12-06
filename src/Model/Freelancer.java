@@ -17,15 +17,19 @@ public class Freelancer extends User{
     private String selfDescription;
 
  
-public Freelancer(String firstName, String lastName, LocalDate DOB,Contact address,String yearsOfExperience,String selfDescription) {
+public Freelancer(String firstName, String lastName, LocalDate DOB,Contact contact,String yearsOfExperience,String selfDescription) {
        
         this.firstName= firstName;
         this.lastName = lastName;
         this.DOB = DOB;
-        this.address = address;
+        this.contact = contact;
         this.yearsOfExperince = yearsOfExperience;  
         this.selfDescription = selfDescription;
     }   
+
+    public Freelancer() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     
     

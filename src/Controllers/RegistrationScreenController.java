@@ -102,6 +102,7 @@ public class RegistrationScreenController implements Initializable {
     /**lblTitle
      * Initializes the controller class.
      */
+    private ObservableList<String> freelancerExperienceList;
     private boolean isNewUser;
     private boolean isUpdate;
     private int userType;
@@ -391,7 +392,7 @@ public class RegistrationScreenController implements Initializable {
          textArea.setVisible(true);
          spinnerLabel.setText("Experience:");
          
-         ObservableList<String> freelancerExperienceList = FXCollections.observableArrayList();
+         freelancerExperienceList = FXCollections.observableArrayList();
          
          freelancerExperienceList.add("less than 1 year");
          freelancerExperienceList.add("1 year");
@@ -424,18 +425,18 @@ public class RegistrationScreenController implements Initializable {
          return (contractor.getFirstName().equals("Dinesh") &&
                  contractor.getLastName().equals("gamage") &&
                  contractor.getTypeOfContractor().equalsIgnoreCase("Indivitual") &&
-                 contractor.getPhone().equalsIgnoreCase("818") &&
-                 contractor.getEmail().equalsIgnoreCase("d@d.com")&&
-                 contractor.getAddress().getStreetAddress().equalsIgnoreCase("4919 coldwater")) &&
-                 contractor.getAddress().getApt().equals("1") &&       
-                 contractor.getAddress().getCity().equals( "Sherman Oaks") &&     
-                 contractor.getAddress().getZip().equals("91423") &&     
-                 contractor.getAddress().getState().equals("CA") && 
-                 contractor.getAddress().getCountry().equals("USA");
+                 contractor.getContact().getPhone().equalsIgnoreCase("818") &&
+                 contractor.getContact().getEmail().equalsIgnoreCase("d@d.com")&&
+                 contractor.getContact().getStreetAddress().equalsIgnoreCase("4919 coldwater")) &&
+                 contractor.getContact().getApt().equals("1") &&       
+                 contractor.getContact().getCity().equals( "Sherman Oaks") &&     
+                 contractor.getContact().getZip().equals("91423") &&     
+                 contractor.getContact().getState().equals("CA") && 
+                 contractor.getContact().getCountry().equals("USA");
                  
     }    
 
-    void setIsUpdate(boolean isUpdate) {
+    public void setUpdate(boolean isUpdate, String username) {
       
        this.isUpdate = isUpdate;
         
@@ -445,7 +446,113 @@ public class RegistrationScreenController implements Initializable {
     }
 
    
+    private void getUpdateRecord(String username){
+        
+       int userID = 0; 
+       int userType = -1;
+       conn.connectDatabase();     
+       String query = "select userID,userType,username from User where username="+ "'" + username + "'";       
+       conn.setStatement( query );
+       ResultSet sqlResult = conn.getStatement();
+       
+       try{
+            while( ! sqlResult.next()){
+                userID = sqlResult.getInt("userID");
+                userType = sqlResult.getInt("userType");
+            }
+        }catch(SQLException e){
 
+         }
+       
+       
+       if( userType == FREELANCER ){
+                Contact contact = null;
+           
+                try{
+                      query = "select * from contact, freelancer where contact.contactID = freelancer.contactID";
+                      conn.setStatement(query);
+                      sqlResult = conn.getStatement(); 
+
+                      while( !sqlResult.next()){
+                             contact = new Contact(
+                              sqlResult.getString("streetAddress"),
+                              sqlResult.getString("apt"),
+                              sqlResult.getString("city"),
+                              sqlResult.getString("zip"), 
+                              sqlResult.getString("state"), 
+                              sqlResult.getString("country"),                             
+                              sqlResult.getString("phone"), 
+                              sqlResult.getString("email")
+                           );
+                      }
+                 }catch( SQLException sql){
+
+                 }
+
+
+                 Freelancer freelancer = null;   
+                 try{
+                     query = "select * from user, freelancer where user.userID = freelancer.userID";
+                     conn.setStatement(query);
+                     sqlResult = conn.getStatement();               
+
+                      while( !sqlResult.next()){
+                              freelancer = new Freelancer(
+                              sqlResult.getString("firstName"),
+                              sqlResult.getString("lastName"),
+                              sqlResult.getTimestamp("DOB").toLocalDateTime().toLocalDate(),
+                              contact,
+                              sqlResult.getString("yearsOfExperience"),
+                              sqlResult.getString("selfDescription")
+
+                            );          
+
+                      }
+                 }catch(SQLException e){
+
+                 }
+       
+       }else{
+           
+       }       
+       
+       
+    }
     
-   
+   private void setUpdateRecord( Contact contact, Object obj, int userType ){
+       
+       if( userType == FREELANCER ){
+                Freelancer freelancer = (Freelancer)obj;
+                txtFirstName.setText(freelancer.getFirstName());
+                txtLastName.setText(freelancer.getLastName());
+                txtStaddress.setText(freelancer.getContact().getStreetAddress());
+                txtApt.setText(freelancer.getContact().getApt());
+                txtCity.setText(freelancer.getContact().getCity());
+                txtCity.setText(freelancer.getContact().getCity());
+                txtState.setText(freelancer.getContact().getState());
+                txtCountry.setText(freelancer.getContact().getCountry());
+                txtPhoneNumber.setText(freelancer.getContact().getPhone());
+                txtEmail.setText(freelancer.getContact().getEmail());
+                datePickerDOB.setValue(freelancer.getDOB());
+                
+                
+                SpinnerValueFactory<String> valueFactory = 
+                new  SpinnerValueFactory.ListSpinnerValueFactory<String>(freelancerExperienceList);
+                
+                int i = 0;
+                while( i < freelancerExperienceList.size() && freelancerExperienceList.get(i).equals( freelancer.getYearsOfExperince())){
+                        i++ ;
+                }
+                            
+                    
+                valueFactory.setValue(freelancerExperienceList.get(i));                 
+                spinner.setValueFactory(valueFactory);
+                
+               
+                
+                txtAreaDescription.setText(freelancer.getSelfDescription());
+       }
+     
+       
+   }
 }

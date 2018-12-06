@@ -16,26 +16,26 @@ public abstract class User {
     protected String firstName;
     protected String lastName;
     protected LocalDate DOB;
-    protected Contact address;
-    protected String phone;
-    protected String email;
+    protected Contact contact;
+//    protected String phone;
+//    protected String email;
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
     
 
-    public Contact getAddress() {
-        return address;
+    public Contact getContact() {
+        return contact;
     }
 
-    public void setAddress(Contact address) {
+    public void setContact(Contact contact) {
         
-       this.address = address;
+       this.contact = contact;
         
     }
 
@@ -64,13 +64,13 @@ public abstract class User {
         this.DOB = DOB;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-      
+//    public String getPhone() {
+//        return phone;
+//    }
+//
+//    public void setPhone(String phone) {
+//        this.phone = phone;
+//    }
+//      
     
 }

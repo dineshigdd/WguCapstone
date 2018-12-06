@@ -78,6 +78,17 @@ public class AccountCreationScreenController implements Initializable {
                     ps.setString(2, password );
                     ps.setInt(3, userType);
                     ps.execute();
+                    
+                    //UPDATE FREELANCER
+                    conn.setStatement("select LAST_INSERT_ID();");
+                    ResultSet sqlResult  = conn.getStatement();
+                    int userID = sqlResult.getInt("LAST_INSERT_ID()");
+                    query = "update freelancer set(userID) value = "+ userID;
+                    ps = conn.insertRecord(query);
+                    ps.setInt( 1, userID);
+                    ps.execute();
+                    
+                    
                     conn.closeDBConnection();
                 }catch(SQLException e ){
                     e.printStackTrace();
@@ -97,6 +108,9 @@ public class AccountCreationScreenController implements Initializable {
                         stage.setScene(scene);
                         stage.centerOnScreen();
                         stage.show();
+                        
+                        FreelancerMainScreenController controller = loader.getController();
+                        controller.setUsername(username);
                }else{
                    alert("Your username or password is invalid","Invalid username or password","Invalid Username or Password!",AlertType.ERROR);
                }        

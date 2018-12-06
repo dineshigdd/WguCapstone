@@ -19,6 +19,21 @@ public class Contact {
     private String country;     
     private String phone;
     private String email;
+    
+    
+    public Contact() {
+    }
+    
+    public Contact(String streetAddress, String apt, String city, String zip, String state, String country, String phone, String email) {
+        this.streetAddress = streetAddress;
+        this.apt = apt;
+        this.city = city;
+        this.zip = zip;
+        this.state = state;
+        this.country = country;
+        this.phone = phone;
+        this.email = email;
+    }
 
     public String getPhone() {
         return phone;
@@ -35,23 +50,7 @@ public class Contact {
     public void setEmail(String email) {
         this.email = email;
     }
-   
-    
-    public Contact() {
-    }
-    
-    public Contact(String streetAddress, String apt, String city, String zip, String state, String country, String phone, String email) {
-        this.streetAddress = streetAddress;
-        this.apt = apt;
-        this.city = city;
-        this.zip = zip;
-        this.state = state;
-        this.country = country;
-        this.phone = phone;
-        this.email = email;
-    }
-    
-    
+      
     public String getStreetAddress() {
         return streetAddress;
     }

@@ -29,6 +29,8 @@ public class FreelancerMainScreenController implements Initializable {
     private MenuItem updateMenuItem;
     @FXML
     private MenuButton settings;
+    
+    private String username;
     /**
      * Initializes the controller class.
      */
@@ -58,9 +60,13 @@ public class FreelancerMainScreenController implements Initializable {
          stage.show();
          
          RegistrationScreenController controller = loader.getController();         
-         controller.setIsUpdate(isUpdate);
+         controller.setUpdate(isUpdate, username);
          
         
+    }
+
+    void setUsername(String username) {
+        this.username = username;
     }
     
 }
