@@ -20,10 +20,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 /**
@@ -40,14 +47,44 @@ public class FreelancerMainScreenController implements Initializable {
     
     private String username;
     private String password;
+    @FXML
+    private MenuItem deleteMenuItem;
+    @FXML
+    private ToggleGroup searchCategory;
+    @FXML
+    private RadioButton radBtnDate;
+    @FXML
+    private RadioButton radBtnTitle;
+    @FXML
+    private RadioButton radBtnLocation;
+    @FXML
+    private HBox searchHzBox;
+    @FXML
+    private AnchorPane searchPane;
+    
+    
+    @FXML
+    private AnchorPane mainPane;
+    private DatePicker datepicker;
+    private TextField txtSearch;
+    private HBox hbox;
+    private Button btnSearch;
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
-    }    
+           hbox = new HBox();           
+           hbox.setSpacing(15);
+           hbox.setLayoutX(250);
+           hbox.setLayoutY(170);    
+           searchPane.getChildren().add(hbox);
+           btnSearch = new Button("Search");
+           datepicker = new DatePicker();
+           txtSearch = new TextField();
+     }    
 
     
     
@@ -128,6 +165,69 @@ public class FreelancerMainScreenController implements Initializable {
             
         return isConfirmed;   
     }
+
+    private void btnSearchHandler(ActionEvent event) throws IOException {
+//        HBox hbox = new HBox(datePicker);
+//
+//        Scene scene = new Scene(hbox, 200, 100);
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
+
+         
+         
+        
+        
+        if( radBtnDate.isSelected()){
+            
+           
+        }
+    }
+
+    @FXML
+    private void radbtnDateHandler(ActionEvent event) throws IOException {
+        
+         if( hbox.getChildren().isEmpty()){
+             hbox.getChildren().add(datepicker);
+             hbox.getChildren().add(btnSearch);
+         }else if( hbox.getChildren().get(0).equals(txtSearch)){
+             hbox.getChildren().remove(0);
+             hbox.getChildren().add(0,datepicker);            
+             
+         }
+        
+              
+     
+        
+         
+    }
+
+    @FXML
+    private void radbtnTitleHandler(ActionEvent event) {
+        
+        
+        if( hbox.getChildren().isEmpty()){
+             hbox.getChildren().add(btnSearch);
+             hbox.getChildren().add(0,txtSearch );
+        }else if( hbox.getChildren().get(0).equals(datepicker) ){
+             hbox.getChildren().remove(0);
+             hbox.getChildren().add(0,txtSearch );
+        }   
+    
+        
+    }
+
+    @FXML
+    private void radbtnLocationHandler(ActionEvent event) {
+        
+        if( hbox.getChildren().isEmpty()){          
+             hbox.getChildren().add(btnSearch);
+             hbox.getChildren().add(0,txtSearch );
+        }else if( hbox.getChildren().get(0).equals(datepicker) ){
+             hbox.getChildren().remove(0);
+             hbox.getChildren().add(0,txtSearch );
+        } 
+    }
       
      
+    
 }
