@@ -29,7 +29,7 @@
       <MenuButton fx:id="settings" layoutX="772.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="109.0" text="Settings">
         <items>
           <MenuItem fx:id="updateMenuItem" mnemonicParsing="false" onAction="#updateMenuItemHandler" text="Update" />
-          <MenuItem mnemonicParsing="false" text="Delele" />
+          <MenuItem fx:id="deleteMenuItem" mnemonicParsing="false" onAction="#deleteMenuItemHandler" text="Delele" />
         </items>
       </MenuButton>
    </children>

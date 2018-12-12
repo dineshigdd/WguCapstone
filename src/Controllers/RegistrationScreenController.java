@@ -123,17 +123,17 @@ public class RegistrationScreenController implements Initializable {
                
         // TODO
        
-        freelancerExperienceList = FXCollections.observableArrayList();
-        freelancerExperienceList.add("less than 1 year");
-        freelancerExperienceList.add("1 year");
-         freelancerExperienceList.add("1 - 5 years");
-         freelancerExperienceList.add("more than 5 years");
+       freelancerExperienceList = FXCollections.observableArrayList();
+       freelancerExperienceList.add("less than 1 year");
+       freelancerExperienceList.add("1 year");
+       freelancerExperienceList.add("1 - 5 years");
+       freelancerExperienceList.add("more than 5 years");
          
          
-         ContractorTypeList = FXCollections.observableArrayList();
-         ContractorTypeList.add("Indivitual");
-         ContractorTypeList.add("Organization");
-         ContractorTypeList.add("Government");
+       ContractorTypeList = FXCollections.observableArrayList();
+       ContractorTypeList.add("Indivitual");
+       ContractorTypeList.add("Organization");
+       ContractorTypeList.add("Government");
          
         hzBoxContracotorType.setVisible(false);
         conn = new DBConnection();
@@ -305,7 +305,7 @@ public class RegistrationScreenController implements Initializable {
                 this.contractor.setDOB(DOB);
                 this.contractor.setTypeOfContractor(spinner.getValue());
                 userType = this.contractor.getUserAccount().getUserType();
-                record.setUpdateRecord( contractor, userType );
+                UpdateRecord.setUpdateRecord( contractor, userType );
             
            }catch(Exception e){
                 contact.setContactId(this.freelancer.getContact().getContactId());
@@ -316,10 +316,10 @@ public class RegistrationScreenController implements Initializable {
                 this.freelancer.setYearsOfExperince(spinner.getValue());
                 this.freelancer.setSelfDescription(txtAreaDescription.getText());
                 userType = this.freelancer.getUserAccount().getUserType();
-                record.setUpdateRecord( freelancer, userType );
+                UpdateRecord.setUpdateRecord( freelancer, userType );
            }
             
-            record.setUpdateContactRecord(contact); //update Database record for the contact
+            UpdateRecord.setUpdateContactRecord(contact); //update Database record for the contact
        }
        
        
@@ -507,8 +507,8 @@ public class RegistrationScreenController implements Initializable {
         }
         
         
-         record= new UpdateRecord();        
-         Object obj = record.getUpdateRecord(username);    
+        // record= new UpdateRecord();        
+         Object obj = UpdateRecord.getUpdateRecord(username);    
          setUpdateFields(obj);
         
     }

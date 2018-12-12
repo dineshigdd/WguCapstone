@@ -23,11 +23,11 @@ import javafx.scene.control.SpinnerValueFactory;
  * @author Dinesh
  */
 public class UpdateRecord {
-    public final int  FREELANCER = 1;
-    public final int  CONTRACTOR = 0;
+    private static final int  FREELANCER = 1;
+    private static final int  CONTRACTOR = 0;
     
     
-    public Object getUpdateRecord(String username){       
+    public static Object getUpdateRecord(String username){       
        
        int userID = 0; 
        int contactID = 0;
@@ -183,7 +183,7 @@ public class UpdateRecord {
     }
     
     
-    public void setUpdateContactRecord(Contact contact){
+    public static void setUpdateContactRecord(Contact contact){
               
         DBConnection  conn = new DBConnection();
         conn.connectDatabase();
@@ -220,7 +220,7 @@ public class UpdateRecord {
                      
     }
     
-    public void setUpdateRecord( Object obj, int userType ){
+    public static void setUpdateRecord( Object obj, int userType ){
         
         DBConnection  conn = new DBConnection();
         conn.connectDatabase();    
@@ -293,7 +293,7 @@ public class UpdateRecord {
         }
 }
     
-     private Timestamp toTimeStamp(LocalDate localDate){                
+     private static Timestamp toTimeStamp(LocalDate localDate){                
                  return Timestamp.valueOf(localDate.atStartOfDay());
     }
 }

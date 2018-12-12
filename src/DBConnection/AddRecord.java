@@ -20,14 +20,14 @@ import java.time.LocalDate;
  */
 public  class AddRecord {
   //  private DBConnection conn;
-    public final int  FREELANCER = 1;
-    public final int  CONTRACTOR = 0;
+    private static final int  FREELANCER = 1;
+    private  static final int  CONTRACTOR = 0;
 
     public AddRecord() {
     }
     
     
-    public void setAddress(Contact contact){   //Inserting address        
+    public static void setAddress(Contact contact){   //Inserting address        
         DBConnection  conn = new DBConnection();
         conn.connectDatabase();
          try{
@@ -72,7 +72,7 @@ public  class AddRecord {
     
     
     
-    public void setDbRecord( Object obj, int userType ){
+    public static void setDbRecord( Object obj, int userType ){
         
         DBConnection  conn = new DBConnection();
         conn.connectDatabase();    
@@ -134,7 +134,7 @@ public  class AddRecord {
         
     }
     
-    private Timestamp toTimeStamp(LocalDate localDate){                
+    private static Timestamp toTimeStamp(LocalDate localDate){                
        return Timestamp.valueOf(localDate.atStartOfDay());
     }
 }

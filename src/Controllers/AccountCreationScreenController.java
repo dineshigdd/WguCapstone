@@ -120,21 +120,21 @@ public class AccountCreationScreenController implements Initializable {
 //                    ps = conn.insertRecord(query);
 //                    ps.setInt( 1, userID);
 //                    ps.execute();
-                    AddRecord record = new AddRecord();                  
+                //    AddRecord record = new AddRecord();                  
                     System.out.println("city :" +contact.getCity());
-                    record.setAddress(contact);
+                    AddRecord.setAddress(contact);
                     
                     if( userAccount.getUserType() == FREELANCER ){
                         Freelancer freelancer  = new Freelancer();
                         freelancer = (Freelancer)obj;
                         freelancer.setUserAccount(userAccount);                              
-                        record.setDbRecord(freelancer, freelancer.getUserAccount().getUserType());
+                        AddRecord.setDbRecord(freelancer, freelancer.getUserAccount().getUserType());
                         
                     }else{
                         Contractor contractor = new Contractor();
                         contractor = ( Contractor)obj;
                         contractor.setUserAccount(userAccount);
-                        record.setDbRecord(contractor, contractor.getUserAccount().getUserType());
+                        AddRecord.setDbRecord(contractor, contractor.getUserAccount().getUserType());
                     }
                     
                     
@@ -175,7 +175,7 @@ public class AccountCreationScreenController implements Initializable {
                         stage.show();
                         
                         FreelancerMainScreenController controller = loader.getController();
-                        controller.setUsername(username);
+                        controller.setLoginInfo(username, password);
                }else{
                    alert("Your username or password is invalid","Invalid username or password","Invalid Username or Password!",AlertType.ERROR);
                }        
