@@ -10,7 +10,7 @@ package Model;
  * @author Dinesh
  */ 
 public class Contact {
-    private int id;
+    private int contactId;
     private String streetAddress;
     private String apt;
     private String city;
@@ -19,6 +19,21 @@ public class Contact {
     private String country;     
     private String phone;
     private String email;
+    
+    
+    public Contact() {
+    }
+    
+    public Contact(String streetAddress, String apt, String city, String zip, String state, String country, String phone, String email) {
+        this.streetAddress = streetAddress;
+        this.apt = apt;
+        this.city = city;
+        this.zip = zip;
+        this.state = state;
+        this.country = country;
+        this.phone = phone;
+        this.email = email;
+    }
 
     public String getPhone() {
         return phone;
@@ -35,23 +50,7 @@ public class Contact {
     public void setEmail(String email) {
         this.email = email;
     }
-   
-    
-    public Contact() {
-    }
-    
-    public Contact(String streetAddress, String apt, String city, String zip, String state, String country, String phone, String email) {
-        this.streetAddress = streetAddress;
-        this.apt = apt;
-        this.city = city;
-        this.zip = zip;
-        this.state = state;
-        this.country = country;
-        this.phone = phone;
-        this.email = email;
-    }
-    
-    
+      
     public String getStreetAddress() {
         return streetAddress;
     }
@@ -100,8 +99,12 @@ public class Contact {
         this.country = country;
     }
 
-    public int getId() {
-        return id;
+    public int getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(int contactId) {
+        this.contactId = contactId;
     }
 
 

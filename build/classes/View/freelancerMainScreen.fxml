@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="736.0" prefWidth="881.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.FreelancerMainScreenController">
+    <stylesheets>
+        <URL value="@/Syles/mainscreen.css" />
+    </stylesheets>
+   <children>
+      <TabPane layoutY="51.0" prefHeight="662.0" prefWidth="881.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Search for Job">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="647.0" prefWidth="881.0" />
+            </content>
+          </Tab>
+          <Tab text="Settings">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <MenuButton fx:id="settings" layoutX="772.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="109.0" text="Settings">
+        <items>
+          <MenuItem fx:id="updateMenuItem" mnemonicParsing="false" onAction="#updateMenuItemHandler" text="Update" />
+          <MenuItem mnemonicParsing="false" text="Delele" />
+        </items>
+      </MenuButton>
+   </children>
+</AnchorPane>

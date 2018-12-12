@@ -6,6 +6,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -15,117 +16,123 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="983.0" prefWidth="869.0" styleClass="mainFxmlClass" stylesheets="@../Syles/userRegistration.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegistrationScreenController">
-   <center>
-      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="869.0" prefWidth="762.0" styleClass="mainFxmlClass" BorderPane.alignment="CENTER">
-         <children>
-            <HBox layoutX="87.0" layoutY="50.0" prefHeight="35.0" prefWidth="487.0">
+
+<ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegistrationScreenController">
+   <content>
+      <BorderPane prefHeight="983.0" prefWidth="869.0" styleClass="mainFxmlClass" stylesheets="@../Syles/userRegistration.css">
+         <center>
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="869.0" prefWidth="762.0" styleClass="mainFxmlClass" BorderPane.alignment="CENTER">
                <children>
-                  <Label prefHeight="35.0" prefWidth="120.0" text="First Name:" />
-                  <TextField fx:id="txtFirstName" prefHeight="35.0" prefWidth="450.0" />
+                  <HBox layoutX="87.0" layoutY="50.0" prefHeight="35.0" prefWidth="487.0">
+                     <children>
+                        <Label prefHeight="35.0" prefWidth="120.0" text="First Name:" />
+                        <TextField fx:id="txtFirstName" prefHeight="35.0" prefWidth="450.0" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="87.0" layoutY="111.0" prefHeight="35.0" prefWidth="487.0">
+                     <children>
+                        <Label prefHeight="64.0" prefWidth="120.0" text="Last Name:" />
+                        <TextField fx:id="txtLastName" prefHeight="35.0" prefWidth="450.0" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="58.0" layoutY="170.0" prefHeight="35.0" prefWidth="515.0">
+                     <children>
+                        <Label prefHeight="35.0" prefWidth="106.0" text="Street Address:" />
+                        <TextField fx:id="txtStaddress" prefHeight="35.0" prefWidth="409.0">
+                           <rotationAxis>
+                              <Point3D y="1.0" z="1.0" />
+                           </rotationAxis>
+                        </TextField>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="129.0" layoutY="227.0" prefHeight="35.0" prefWidth="123.0">
+                     <children>
+                        <Label prefHeight="35.0" prefWidth="46.0" text="Apt:" />
+                        <TextField fx:id="txtApt" prefHeight="35.0" prefWidth="98.0" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="129.0" layoutY="281.0" prefHeight="35.0" prefWidth="291.0">
+                     <children>
+                        <Label prefHeight="35.0" prefWidth="36.0" text="City:" />
+                        <TextField fx:id="txtCity" prefHeight="35.0" prefWidth="257.0" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="51.0" layoutY="334.0" prefHeight="35.0" prefWidth="311.0">
+                     <children>
+                        <Label prefHeight="35.0" prefWidth="115.0" text="ZIP/Postal Code:" />
+                        <TextField fx:id="txtZip" prefHeight="35.0" prefWidth="195.0" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="7.0" layoutY="387.0" prefHeight="35.0" prefWidth="418.0">
+                     <children>
+                        <Label prefHeight="35.0" prefWidth="160.0" text="State/Province/Region:" />
+                        <TextField fx:id="txtState" prefHeight="35.0" prefWidth="261.0" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="100.0" layoutY="439.0" prefHeight="35.0" prefWidth="326.0">
+                     <children>
+                        <Label prefHeight="35.0" prefWidth="67.0" text="Country:" />
+                        <TextField fx:id="txtCountry" prefHeight="35.0" prefWidth="260.0" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="57.0" layoutY="497.0" prefHeight="35.0" prefWidth="373.0">
+                     <children>
+                        <Label prefHeight="35.0" prefWidth="113.0" text="Phone Number:" />
+                        <TextField fx:id="txtPhoneNumber" prefHeight="35.0" prefWidth="266.0" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="115.0" layoutY="545.0" prefHeight="35.0" prefWidth="313.0">
+                     <children>
+                        <Label prefHeight="35.0" prefWidth="56.0" text="E-mail:" />
+                        <TextField fx:id="txtEmail" prefHeight="35.0" prefWidth="266.0" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="70.0" layoutY="600.0" prefHeight="35.0" prefWidth="358.0">
+                     <children>
+                        <Label prefHeight="35.0" prefWidth="96.0" text="Date Of Birth:" />
+                        <DatePicker fx:id="datePickerDOB" prefHeight="35.0" prefWidth="266.0" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="171.0" layoutY="662.0" prefHeight="31.0" prefWidth="260.0" spacing="50.0">
+                     <children>
+                        <RadioButton fx:id="radBtnContractor" mnemonicParsing="false" onMouseClicked="#radBtnContractorHandler" prefHeight="31.0" prefWidth="117.0" text="Contractor">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="user" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="radBtnFreelancer" mnemonicParsing="false" onMouseClicked="#radBtnFreelancerHandler" prefHeight="31.0" prefWidth="110.0" text="Freelancer" toggleGroup="$user" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hzBoxContracotorType" layoutX="24.0" layoutY="714.0">
+                     <children>
+                        <Label fx:id="spinnerLabel" prefHeight="31.0" prefWidth="136.0" text="Type Of Contractor:" />
+                        <Spinner fx:id="spinner" prefHeight="31.0" prefWidth="283.0" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="textArea" layoutX="42.0" layoutY="772.0" prefHeight="73.0" prefWidth="403.0">
+                     <children>
+                        <Label fx:id="spinnerLabel1" prefHeight="31.0" prefWidth="170.0" text="Self Description:" />
+                        <TextArea fx:id="txtAreaDescription" prefHeight="73.0" prefWidth="339.0" />
+                     </children>
+                  </HBox>
+                  <Button fx:id="btnSignup" layoutX="574.0" layoutY="804.0" mnemonicParsing="false" onAction="#btnSignupHandler" onMouseEntered="#chageCursor" onMouseExited="#setDefaultMousePointer" prefHeight="41.0" prefWidth="126.0" styleClass="btnSubmit" text="Submit" />
+                  
                </children>
-            </HBox>
-            <HBox layoutX="87.0" layoutY="111.0" prefHeight="35.0" prefWidth="487.0">
-               <children>
-                  <Label prefHeight="64.0" prefWidth="120.0" text="Last Name:" />
-                  <TextField fx:id="txtLastName" prefHeight="35.0" prefWidth="450.0" />
-               </children>
-            </HBox>
-            <HBox layoutX="58.0" layoutY="170.0" prefHeight="35.0" prefWidth="515.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="106.0" text="Street Address:" />
-                  <TextField fx:id="txtStaddress" prefHeight="35.0" prefWidth="409.0">
-                     <rotationAxis>
-                        <Point3D y="1.0" z="1.0" />
-                     </rotationAxis>
-                  </TextField>
-               </children>
-            </HBox>
-            <HBox layoutX="129.0" layoutY="227.0" prefHeight="35.0" prefWidth="123.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="46.0" text="Apt:" />
-                  <TextField fx:id="txtApt" prefHeight="35.0" prefWidth="98.0" />
-               </children>
-            </HBox>
-            <HBox layoutX="129.0" layoutY="281.0" prefHeight="35.0" prefWidth="291.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="36.0" text="City:" />
-                  <TextField fx:id="txtCity" prefHeight="35.0" prefWidth="257.0" />
-               </children>
-            </HBox>
-            <HBox layoutX="51.0" layoutY="334.0" prefHeight="35.0" prefWidth="311.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="115.0" text="ZIP/Postal Code:" />
-                  <TextField fx:id="txtZip" prefHeight="35.0" prefWidth="195.0" />
-               </children>
-            </HBox>
-            <HBox layoutX="7.0" layoutY="387.0" prefHeight="35.0" prefWidth="418.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="160.0" text="State/Province/Region:" />
-                  <TextField fx:id="txtState" prefHeight="35.0" prefWidth="261.0" />
-               </children>
-            </HBox>
-            <HBox layoutX="100.0" layoutY="439.0" prefHeight="35.0" prefWidth="326.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="67.0" text="Country:" />
-                  <TextField fx:id="txtCountry" prefHeight="35.0" prefWidth="260.0" />
-               </children>
-            </HBox>
-            <HBox layoutX="57.0" layoutY="497.0" prefHeight="35.0" prefWidth="373.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="113.0" text="Phone Number:" />
-                  <TextField fx:id="txtPhoneNumber" prefHeight="35.0" prefWidth="266.0" />
-               </children>
-            </HBox>
-            <HBox layoutX="115.0" layoutY="545.0" prefHeight="35.0" prefWidth="313.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="56.0" text="E-mail:" />
-                  <TextField fx:id="txtEmail" prefHeight="35.0" prefWidth="266.0" />
-               </children>
-            </HBox>
-            <HBox layoutX="70.0" layoutY="600.0" prefHeight="35.0" prefWidth="358.0">
-               <children>
-                  <Label prefHeight="35.0" prefWidth="96.0" text="Date Of Birth:" />
-                  <DatePicker fx:id="datePickerDOB" prefHeight="35.0" prefWidth="266.0" />
-               </children>
-            </HBox>
-            <HBox layoutX="171.0" layoutY="662.0" prefHeight="31.0" prefWidth="260.0" spacing="50.0">
-               <children>
-                  <RadioButton fx:id="radBtnContractor" mnemonicParsing="false" onMouseClicked="#radBtnContractorHandler" prefHeight="31.0" prefWidth="117.0" text="Contractor">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="user" />
-                     </toggleGroup></RadioButton>
-                  <RadioButton fx:id="radBtnFreelancer" mnemonicParsing="false" onMouseClicked="#radBtnFreelancerHandler" prefHeight="31.0" prefWidth="110.0" text="Freelancer" toggleGroup="$user" />
-               </children>
-            </HBox>
-            <HBox fx:id="hzBoxContracotorType" layoutX="24.0" layoutY="714.0">
-               <children>
-                  <Label fx:id="spinnerLabel" prefHeight="31.0" prefWidth="136.0" text="Type Of Contractor:" />
-                  <Spinner fx:id="spinner" prefHeight="31.0" prefWidth="283.0" />
-               </children>
-            </HBox>
-            <HBox fx:id="textArea" layoutX="42.0" layoutY="772.0" prefHeight="73.0" prefWidth="403.0">
-               <children>
-                  <Label fx:id="spinnerLabel1" prefHeight="31.0" prefWidth="170.0" text="Self Description:" />
-                  <TextArea fx:id="txtAreaDescription" prefHeight="73.0" prefWidth="339.0" />
-               </children>
-            </HBox>
-            <Button fx:id="btnSignup" layoutX="574.0" layoutY="804.0" mnemonicParsing="false" onAction="#btnSignupHandler" onMouseEntered="#chageCursor" onMouseExited="#setDefaultMousePointer" prefHeight="41.0" prefWidth="126.0" styleClass="btnSubmit" text="Submit" />
-            
-         </children>
-      </AnchorPane>
-   </center>
-   <top>
-      <Label prefHeight="21.0" prefWidth="146.0" scaleX="2.0" scaleY="2.0" text="User Registration" textFill="#1072c4e3" translateY="50.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
-         <padding>
-            <Insets left="12.0" right="12.0" />
-         </padding>
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-   </top>
-</BorderPane>
+            </AnchorPane>
+         </center>
+         <top>
+            <Label fx:id="lblTitle" prefHeight="21.0" prefWidth="146.0" scaleX="2.0" scaleY="2.0" text="User Registration" textFill="#1072c4e3" translateY="50.0" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+               <padding>
+                  <Insets left="12.0" right="12.0" />
+               </padding>
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+         </top>
+      </BorderPane>
+   </content>
+</ScrollPane>

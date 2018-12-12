@@ -16,16 +16,19 @@ public class Contractor extends User{
     private String typeOfContractor;
   // private ObservableList<Job> jobList;    
 
-    public Contractor(String firstName, String lastName, LocalDate DOB,Contact address,String typeOfContractor) {
+    
+     public Contractor() {
+        
+    }
+     
+    public Contractor(String firstName, String lastName, LocalDate DOB,Contact contact,String typeOfContractor) {
        
         this.firstName= firstName;
         this.lastName = lastName;
         this.DOB = DOB;
-        this.address = address;
+        this.contact = contact;
         this.typeOfContractor = typeOfContractor;
-    }       
-   
-    
+    }          
     
 
     public String getTypeOfContractor() {

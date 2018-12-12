@@ -15,27 +15,40 @@ import java.time.LocalDate;
 public abstract class User {
     protected String firstName;
     protected String lastName;
+    protected UserAccount userAccount;
     protected LocalDate DOB;
-    protected Contact address;
-    protected String phone;
-    protected String email;
+    protected Contact contact;
 
-    public String getEmail() {
-        return email;
+    public UserAccount getUserAccount() {
+        return userAccount;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
     
 
-    public Contact getAddress() {
-        return address;
+   
+    
+//    protected String phone;
+//    protected String email;
+
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
+    
+
+    public Contact getContact() {
+        return contact;
     }
 
-    public void setAddress(Contact address) {
+    public void setContact(Contact contact) {
         
-       this.address = address;
+       this.contact = contact;
         
     }
 
@@ -64,13 +77,13 @@ public abstract class User {
         this.DOB = DOB;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-      
+//    public String getPhone() {
+//        return phone;
+//    }
+//
+//    public void setPhone(String phone) {
+//        this.phone = phone;
+//    }
+//      
     
 }
