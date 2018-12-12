@@ -63,10 +63,9 @@ public class FreelancerMainScreenController implements Initializable {
          controller.setUpdate(isUpdate, username);
          
         
-    }
-
-    void setUsername(String username) {
+    }       
+    
+     void setUsername(String username) {
         this.username = username;
     }
-    
 }

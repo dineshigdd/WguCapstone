@@ -17,6 +17,10 @@ public class Freelancer extends User{
     private String selfDescription;
 
  
+public Freelancer() {
+       
+}
+
 public Freelancer(String firstName, String lastName, LocalDate DOB,Contact contact,String yearsOfExperience,String selfDescription) {
        
         this.firstName= firstName;
@@ -26,11 +30,6 @@ public Freelancer(String firstName, String lastName, LocalDate DOB,Contact conta
         this.yearsOfExperince = yearsOfExperience;  
         this.selfDescription = selfDescription;
     }   
-
-    public Freelancer() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     
     
     public String getYearsOfExperince() {

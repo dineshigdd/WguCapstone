@@ -15,8 +15,21 @@ import java.time.LocalDate;
 public abstract class User {
     protected String firstName;
     protected String lastName;
+    protected UserAccount userAccount;
     protected LocalDate DOB;
     protected Contact contact;
+
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
+    
+
+   
+    
 //    protected String phone;
 //    protected String email;
 

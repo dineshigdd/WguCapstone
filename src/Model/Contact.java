@@ -10,7 +10,7 @@ package Model;
  * @author Dinesh
  */ 
 public class Contact {
-    private int id;
+    private int contactId;
     private String streetAddress;
     private String apt;
     private String city;
@@ -99,8 +99,12 @@ public class Contact {
         this.country = country;
     }
 
-    public int getId() {
-        return id;
+    public int getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(int contactId) {
+        this.contactId = contactId;
     }
 
 

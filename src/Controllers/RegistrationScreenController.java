@@ -15,9 +15,11 @@ import javafx.fxml.Initializable;
  * @author Dinesh
  */
 import DBConnection.DBConnection;
+import DBConnection.UpdateRecord;
 import Model.Contact;
 import Model.Contractor;
 import Model.Freelancer;
+import Model.User;
 import java.io.IOException;
 import java.util.Date;
 import java.sql.PreparedStatement;
@@ -103,11 +105,17 @@ public class RegistrationScreenController implements Initializable {
      * Initializes the controller class.
      */
     private ObservableList<String> freelancerExperienceList;
+    private ObservableList<String> ContractorTypeList;
+    private Object obj;
+    private Contact contact;
     private boolean isNewUser;
     private boolean isUpdate;
     private int userType;
-    public final static int  FREELANCER = 1;
-    public final static int  CONTRACTOR = 0;
+    public final int  FREELANCER = 1;
+    public final int  CONTRACTOR = 0;
+    private UpdateRecord record;
+    private Freelancer freelancer;
+    private Contractor contractor;
     
     
     @Override
@@ -115,7 +123,18 @@ public class RegistrationScreenController implements Initializable {
                
         // TODO
        
-        
+        freelancerExperienceList = FXCollections.observableArrayList();
+        freelancerExperienceList.add("less than 1 year");
+        freelancerExperienceList.add("1 year");
+         freelancerExperienceList.add("1 - 5 years");
+         freelancerExperienceList.add("more than 5 years");
+         
+         
+         ContractorTypeList = FXCollections.observableArrayList();
+         ContractorTypeList.add("Indivitual");
+         ContractorTypeList.add("Organization");
+         ContractorTypeList.add("Government");
+         
         hzBoxContracotorType.setVisible(false);
         conn = new DBConnection();
         textArea.setVisible(false);
@@ -140,36 +159,52 @@ public class RegistrationScreenController implements Initializable {
     
     @FXML
     private void btnSignupHandler(ActionEvent event) throws IOException {
-         setUser();
-         isNewUser  = true;
-         Stage stage;
-         Parent root;
+         getInput();
          
-         stage = (Stage) btnSignup.getScene().getWindow();
-         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/AccountCreationScreen.fxml"));
-         root = loader.load();
+           if( !isUpdate ){
+                isNewUser  = true;         
+                Stage stage;
+                Parent root;
+
+                stage = (Stage) btnSignup.getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/AccountCreationScreen.fxml"));
+                root = loader.load();
+
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.centerOnScreen();
+                stage.show();
+
+                AccountCreationScreenController controller =  loader.getController();
+                controller.setNewUser(isNewUser,userType, obj, contact);
+                
+           }else if( isUpdate ){
+                Stage stage;
+                Parent root;
+
+                stage = (Stage) btnSignup.getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/freelancerMainScreen.fxml"));
+                root = loader.load();
+
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.centerOnScreen();
+                stage.show();
+           }
          
-         Scene scene = new Scene(root);
-         stage.setScene(scene);
-         stage.centerOnScreen();
-         stage.show();
-         
-         AccountCreationScreenController controller =  loader.getController();
-         controller.setNewUser(isNewUser,userType);
             
         
     }
     
     
-    private Timestamp  toTimeStamp(LocalDate localDate){
-                
-       return Timestamp.valueOf(localDate.atStartOfDay());
-    }
+//    private Timestamp  toTimeStamp(LocalDate localDate){
+//                
+//       return Timestamp.valueOf(localDate.atStartOfDay());
+//    }
    
     
     
-    public void setUser(){
-        
+    public void getInput(){        
         
         //get textField inuput
         SimpleDateFormat dobFormat = new SimpleDateFormat("MM/dd/YYYY");
@@ -177,7 +212,8 @@ public class RegistrationScreenController implements Initializable {
         String firstName = txtFirstName.getText();
         String lastName = txtLastName.getText();
         
-        LocalDate DOB = null;
+        LocalDate DOB = null;     
+        
         
         try{
          DOB = datePickerDOB.getValue();
@@ -197,10 +233,8 @@ public class RegistrationScreenController implements Initializable {
         String phone = txtPhoneNumber.getText();
         String email = txtEmail.getText();
         
-        //get DoB
-        
-        
-        Contact contact = null;
+        //get DoB     
+       
         contact = new Contact(
                 stAddress,
                 apt,
@@ -212,28 +246,36 @@ public class RegistrationScreenController implements Initializable {
                 email
             );
         
-        if( radBtnContractor.isSelected()){           
+         
+          
+        if( radBtnContractor.isSelected() ){           
       
        //  System.out.println("Testing setUser()" + Boolean.toString(setUserTest(address)));//for testing
           //ObservableList jobList = FXCollections.observableArrayList();
           
           //create contractor object
-            userType = CONTRACTOR;
-            Contractor contractor = new Contractor( 
-                  firstName,
-                  lastName, 
-                  DOB, 
-                  contact,                   
-                  spinner.getValue()
-             );  
-         
-          
-         setDbRecord( contact , contractor , "contractor"); 
+          String typeOfContractor = spinner.getValue();
+           
+                 Contractor contractor = new Contractor( 
+                    firstName,
+                    lastName, 
+                    DOB, 
+                    contact,                   
+                    typeOfContractor
+               );  
+
+                              
+                obj = contractor;
+                userType = CONTRACTOR;
+                 
+            
+        // setDbRecord( contact , contractor , "contractor"); 
 //          System.out.println("Testing Contractor:" + Boolean.toString(ContractorTest(contractor)));
         }
       
-       if( radBtnFreelancer.isSelected()){
-           userType = FREELANCER;
+         
+       if( radBtnFreelancer.isSelected() ){
+          
            String selfDescription = txtAreaDescription.getText();
            String yearsOfExperience =   spinner.getValue();
            
@@ -248,118 +290,148 @@ public class RegistrationScreenController implements Initializable {
                  selfDescription
              );  
          
-         
-           setDbRecord( contact , freelancer , "freelancer");    
+            obj = freelancer;
+            userType = FREELANCER;
+           //setDbRecord( contact , freelancer , "freelancer");    
         }
-    }
-    
-    private int setAddress(Contact contact){   //Inserting address
-        
-        
-         try{
-             String query = "";
-                if( !isUpdate ){
-                  query = "INSERT INTO Contact( streetAddress,apt,city,state,zip,country,phone,email)" + 
-                                            "VALUES( ? , ? , ? ,? ,? , ? ,?, ? );";
-                }else{
-                  // query = "UPDATE SET"  
-                }
-                                                
-                 PreparedStatement ps = conn.insertRecord(query);
-                                ps.setString( 1, contact.getStreetAddress());
-                                ps.setString( 2, contact.getApt());
-                                ps.setString( 3, contact.getCity());
-                                ps.setString( 4, contact.getState());
-                                ps.setString( 5, contact.getZip());
-                                ps.setString( 6, contact.getCountry());
-                                ps.setString( 7, contact.getPhone());
-                                ps.setString( 8, contact.getEmail());
-                                ps.execute();
-                                
-                                //conn.closeDBConnection();
-                }catch(SQLException e){
-                    e.printStackTrace();
-                }
-    
-                //conn.connectDatabase();
-                conn.setStatement("select LAST_INSERT_ID();");
-                ResultSet sqlResult  = conn.getStatement();
-                
-                int addressID = 0;
-                try{
-                while( sqlResult.next() ){
-                    addressID = sqlResult.getInt("LAST_INSERT_ID()");
-                }
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-                   System.out.println( "Address ID:" + addressID );
-                return addressID;
-    }
-    
-    private void setDbRecord( Contact address, Object obj, String objType ){
-        
-        
-        conn.connectDatabase();     
        
-            int contactID = setAddress( address );
-            System.out.println( "Fk key ID:" + contactID );
-        switch( objType ){
+       if( isUpdate ){          
+                   
+           try{           
+                contact.setContactId(this.contractor.getContact().getContactId());
+                this.contractor.setFirstName(firstName);
+                this.contractor.setLastName(lastName);
+                this.contractor.setContact(contact);           
+                this.contractor.setDOB(DOB);
+                this.contractor.setTypeOfContractor(spinner.getValue());
+                userType = this.contractor.getUserAccount().getUserType();
+                record.setUpdateRecord( contractor, userType );
             
-            case "contractor": 
-                try{
-                Contractor contractor = ( Contractor )obj;
-                
-                String query = "";
-                if( ! isUpdate ){
-                    query = "INSERT INTO Contractor(firstName,lastName,DOB,contractorType,contactID)" + 
-                                            "VALUES( ? , ? , ? ,? ,? );";
-                }else{
-                    //update query
-                }
-                                                
-                 PreparedStatement ps = conn.insertRecord(query);
-                                ps.setString( 1, contractor.getFirstName());
-                                ps.setString( 2, contractor.getLastName());
-                                ps.setTimestamp(3, toTimeStamp(contractor.getDOB()));
-                                ps.setString( 4, contractor.getTypeOfContractor());
-                                ps.setInt( 5, contactID);
-                                ps.execute();
-                 conn.closeDBConnection();                    
-                }catch(SQLException e){
-                    e.printStackTrace();
-                }
-                break;
-            case "freelancer":
-                try{
-                Freelancer freelancer = ( Freelancer )obj;
-                
-                String query = "";
-                if( ! isUpdate ){
-                        query = "INSERT INTO Freelancer(firstName,lastName,DOB,yearsOfExperience,selfDescription,contactID)" + 
-                                            "VALUES( ? , ? , ? ,? ,? , ? );";
-                }else{
-                    //update query
-                }
-                                                
-                 PreparedStatement ps = conn.insertRecord(query);
-                                ps.setString( 1, freelancer.getFirstName());
-                                ps.setString( 2, freelancer.getLastName());
-                                ps.setTimestamp(3,toTimeStamp( freelancer.getDOB()));
-                                ps.setString(4, freelancer.getYearsOfExperince());
-                                ps.setString(5, freelancer.getSelfDescription());
-                                ps.setInt( 6, contactID);
-                                ps.execute();
-                 conn.closeDBConnection();       
-                }catch( SQLException e){
-                    e.printStackTrace();
-                }
-               
-        }
-        
-        
-        
+           }catch(Exception e){
+                contact.setContactId(this.freelancer.getContact().getContactId());
+                this.freelancer.setFirstName(firstName);
+                this.freelancer.setLastName(lastName);
+                this.freelancer.setContact(contact);           
+                this.freelancer.setDOB(DOB);
+                this.freelancer.setYearsOfExperince(spinner.getValue());
+                this.freelancer.setSelfDescription(txtAreaDescription.getText());
+                userType = this.freelancer.getUserAccount().getUserType();
+                record.setUpdateRecord( freelancer, userType );
+           }
+            
+            record.setUpdateContactRecord(contact); //update Database record for the contact
+       }
+       
+       
     }
+    
+//    private int setAddress(Contact contact){   //Inserting address
+//        
+//        
+//         try{
+//             String query = "";
+//                if( !isUpdate ){
+//                  query = "INSERT INTO Contact( streetAddress,apt,city,state,zip,country,phone,email)" + 
+//                                            "VALUES( ? , ? , ? ,? ,? , ? ,?, ? );";
+//                }else{
+//                  // query = "UPDATE SET"  
+//                }
+//                                                
+//                 PreparedStatement ps = conn.insertRecord(query);
+//                                ps.setString( 1, contact.getStreetAddress());
+//                                ps.setString( 2, contact.getApt());
+//                                ps.setString( 3, contact.getCity());
+//                                ps.setString( 4, contact.getState());
+//                                ps.setString( 5, contact.getZip());
+//                                ps.setString( 6, contact.getCountry());
+//                                ps.setString( 7, contact.getPhone());
+//                                ps.setString( 8, contact.getEmail());
+//                                ps.execute();
+//                                
+//                                //conn.closeDBConnection();
+//                }catch(SQLException e){
+//                    e.printStackTrace();
+//                }
+//    
+//                //conn.connectDatabase();
+//                conn.setStatement("select LAST_INSERT_ID();");
+//                ResultSet sqlResult  = conn.getStatement();
+//                
+//                int addressID = 0;
+//                try{
+//                while( sqlResult.next() ){
+//                    addressID = sqlResult.getInt("LAST_INSERT_ID()");
+//                }
+//                }catch(Exception e){
+//                    e.printStackTrace();
+//                }
+//                   System.out.println( "Address ID:" + addressID );
+//                return addressID;
+//    }
+    
+//    private void setDbRecord( Contact address, Object obj, String objType ){
+//        
+//        
+//        conn.connectDatabase();     
+//       
+//            int contactID = setAddress( address );
+//            System.out.println( "Fk key ID:" + contactID );
+//        switch( objType ){
+//            
+//            case "contractor": 
+//                try{
+//                Contractor contractor = ( Contractor )obj;
+//                
+//                String query = "";
+//                if( ! isUpdate ){
+//                    query = "INSERT INTO Contractor(firstName,lastName,DOB,contractorType,contactID)" + 
+//                                            "VALUES( ? , ? , ? ,? ,? );";
+//                }else{
+//                    //update query
+//                }
+//                                                
+//                 PreparedStatement ps = conn.insertRecord(query);
+//                                ps.setString( 1, contractor.getFirstName());
+//                                ps.setString( 2, contractor.getLastName());
+//                                ps.setTimestamp(3, toTimeStamp(contractor.getDOB()));
+//                                ps.setString( 4, contractor.getTypeOfContractor());
+//                                ps.setInt( 5, contactID);
+//                                ps.execute();
+//                 conn.closeDBConnection();                    
+//                }catch(SQLException e){
+//                    e.printStackTrace();
+//                }
+//                break;
+//            case "freelancer":
+//                try{
+//                Freelancer freelancer = ( Freelancer )obj;
+//                
+//                String query = "";
+//                if( ! isUpdate ){
+//                        query = "INSERT INTO Freelancer(firstName,lastName,DOB,yearsOfExperience,selfDescription,contactID)" + 
+//                                            "VALUES( ? , ? , ? ,? ,? , ? );";
+//                }else{
+//                    //update query
+//                }
+//                                                
+//                 PreparedStatement ps = conn.insertRecord(query);
+//                                ps.setString( 1, freelancer.getFirstName());
+//                                ps.setString( 2, freelancer.getLastName());
+//                                ps.setTimestamp(3,toTimeStamp( freelancer.getDOB()));
+//                                ps.setString(4, freelancer.getYearsOfExperince());
+//                                ps.setString(5, freelancer.getSelfDescription());
+//                                ps.setInt( 6, contactID);
+//                                ps.execute();
+//                 conn.closeDBConnection();       
+//                }catch( SQLException e){
+//                    e.printStackTrace();
+//                }
+//               
+//        }
+//        
+//        
+//        
+//    }
     
     @FXML
     private void radBtnContractorHandler(MouseEvent event) {
@@ -367,11 +439,7 @@ public class RegistrationScreenController implements Initializable {
          hzBoxContracotorType.setVisible(true);
          textArea.setVisible(false);
          spinnerLabel.setText("Type Of Contractor:");
-         ObservableList<String> ContractorTypeList = FXCollections.observableArrayList();
-         ContractorTypeList.add("Indivitual");
-         ContractorTypeList.add("Organization");
-         ContractorTypeList.add("Government");
-        
+                
          
          SpinnerValueFactory<String> valueFactory = 
                  new  SpinnerValueFactory.ListSpinnerValueFactory<String>(ContractorTypeList);
@@ -390,14 +458,8 @@ public class RegistrationScreenController implements Initializable {
         
          hzBoxContracotorType.setVisible(true);
          textArea.setVisible(true);
-         spinnerLabel.setText("Experience:");
+         spinnerLabel.setText("Experience:");    
          
-         freelancerExperienceList = FXCollections.observableArrayList();
-         
-         freelancerExperienceList.add("less than 1 year");
-         freelancerExperienceList.add("1 year");
-         freelancerExperienceList.add("1 - 5 years");
-         freelancerExperienceList.add("more than 5 years");
          
          SpinnerValueFactory<String> valueFactory = 
                  new  SpinnerValueFactory.ListSpinnerValueFactory<String>(freelancerExperienceList);
@@ -407,152 +469,195 @@ public class RegistrationScreenController implements Initializable {
     }   
        
   //---------for testing purpose------------------------------------------    
-   private boolean setUserTest(Contact address){
-            
-      
-         return (address.getStreetAddress().equals("4919 Coldwater") &&
-         address.getApt().equals("1") &&              
-         address.getCity().equals( "Sherman Oaks") &&     
-         address.getZip().equals("91423")&&         
-         address.getState().equals("CA") &&         
-         address.getCountry().equals("USA"));
-                
-   }
-   
-   private boolean ContractorTest(Contractor contractor){
-            
-      
-         return (contractor.getFirstName().equals("Dinesh") &&
-                 contractor.getLastName().equals("gamage") &&
-                 contractor.getTypeOfContractor().equalsIgnoreCase("Indivitual") &&
-                 contractor.getContact().getPhone().equalsIgnoreCase("818") &&
-                 contractor.getContact().getEmail().equalsIgnoreCase("d@d.com")&&
-                 contractor.getContact().getStreetAddress().equalsIgnoreCase("4919 coldwater")) &&
-                 contractor.getContact().getApt().equals("1") &&       
-                 contractor.getContact().getCity().equals( "Sherman Oaks") &&     
-                 contractor.getContact().getZip().equals("91423") &&     
-                 contractor.getContact().getState().equals("CA") && 
-                 contractor.getContact().getCountry().equals("USA");
-                 
-    }    
+//   private boolean setUserTest(Contact address){
+//            
+//      
+//         return (address.getStreetAddress().equals("4919 Coldwater") &&
+//         address.getApt().equals("1") &&              
+//         address.getCity().equals( "Sherman Oaks") &&     
+//         address.getZip().equals("91423")&&         
+//         address.getState().equals("CA") &&         
+//         address.getCountry().equals("USA"));
+//                
+//   }
+//   
+//   private boolean ContractorTest(Contractor contractor){
+//            
+//      
+//         return (contractor.getFirstName().equals("Dinesh") &&
+//                 contractor.getLastName().equals("gamage") &&
+//                 contractor.getTypeOfContractor().equalsIgnoreCase("Indivitual") &&
+//                 contractor.getContact().getPhone().equalsIgnoreCase("818") &&
+//                 contractor.getContact().getEmail().equalsIgnoreCase("d@d.com")&&
+//                 contractor.getContact().getStreetAddress().equalsIgnoreCase("4919 coldwater")) &&
+//                 contractor.getContact().getApt().equals("1") &&       
+//                 contractor.getContact().getCity().equals( "Sherman Oaks") &&     
+//                 contractor.getContact().getZip().equals("91423") &&     
+//                 contractor.getContact().getState().equals("CA") && 
+//                 contractor.getContact().getCountry().equals("USA");
+//                 
+//    }    
 
     public void setUpdate(boolean isUpdate, String username) {
       
        this.isUpdate = isUpdate;
-        
+       
         if( isUpdate ){  
            lblTitle.setText("Update Your Record");
         }
+        
+        
+         record= new UpdateRecord();        
+         Object obj = record.getUpdateRecord(username);    
+         setUpdateFields(obj);
+        
     }
 
    
-    private void getUpdateRecord(String username){
-        
-       int userID = 0; 
-       int userType = -1;
-       conn.connectDatabase();     
-       String query = "select userID,userType,username from User where username="+ "'" + username + "'";       
-       conn.setStatement( query );
-       ResultSet sqlResult = conn.getStatement();
-       
-       try{
-            while( ! sqlResult.next()){
-                userID = sqlResult.getInt("userID");
-                userType = sqlResult.getInt("userType");
-            }
-        }catch(SQLException e){
+//    private void getUpdateRecord(String username){
+//        
+//       int userID = 0; 
+//       int userType = -1;
+//       conn.connectDatabase();     
+//       String query = "select userID,userType,username from User where username="+ "'" + username + "'";       
+//       conn.setStatement( query );
+//       ResultSet sqlResult = conn.getStatement();
+//       
+//       try{
+//            while( ! sqlResult.next()){
+//                userID = sqlResult.getInt("userID");
+//                userType = sqlResult.getInt("userType");
+//            }
+//        }catch(SQLException e){
+//
+//         }
+//       
+//       
+//       if( userType == FREELANCER ){
+//                Contact contact = null;
+//           
+//                try{
+//                      query = "select * from contact, freelancer where contact.contactID = freelancer.contactID";
+//                      conn.setStatement(query);
+//                      sqlResult = conn.getStatement(); 
+//
+//                      while( !sqlResult.next()){
+//                             contact = new Contact(
+//                              sqlResult.getString("streetAddress"),
+//                              sqlResult.getString("apt"),
+//                              sqlResult.getString("city"),
+//                              sqlResult.getString("zip"), 
+//                              sqlResult.getString("state"), 
+//                              sqlResult.getString("country"),                             
+//                              sqlResult.getString("phone"), 
+//                              sqlResult.getString("email")
+//                           );
+//                      }
+//                 }catch( SQLException sql){
+//
+//                 }
+//
+//
+//                 Freelancer freelancer = null;   
+//                 try{
+//                     query = "select * from user, freelancer where user.userID = freelancer.userID";
+//                     conn.setStatement(query);
+//                     sqlResult = conn.getStatement();               
+//
+//                      while( !sqlResult.next()){
+//                              freelancer = new Freelancer(
+//                              sqlResult.getString("firstName"),
+//                              sqlResult.getString("lastName"),
+//                              sqlResult.getTimestamp("DOB").toLocalDateTime().toLocalDate(),
+//                              contact,
+//                              sqlResult.getString("yearsOfExperience"),
+//                              sqlResult.getString("selfDescription")
+//
+//                            );          
+//
+//                      }
+//                 }catch(SQLException e){
+//
+//                 }
+//       
+//       }else{
+//           
+//       }       
+//       
+//       
+//    }
+//    
+   public void setUpdateFields( Object obj ){
+             radBtnContractor.setVisible(false);
+             radBtnFreelancer.setVisible(false);
+             hzBoxContracotorType.setVisible(true);
+             
+       try{            
+             
+             freelancer = (Freelancer)obj;  
+             
+             txtFirstName.setText(freelancer.getFirstName());
+             txtLastName.setText(freelancer.getLastName());
+             txtStaddress.setText(freelancer.getContact().getStreetAddress());
+             txtApt.setText(freelancer.getContact().getApt());
+             txtCity.setText(freelancer.getContact().getCity());
+             txtZip.setText(freelancer.getContact().getZip());
+             txtState.setText(freelancer.getContact().getState());
+             txtCountry.setText(freelancer.getContact().getCountry());
+             txtPhoneNumber.setText(freelancer.getContact().getPhone());
+             txtEmail.setText(freelancer.getContact().getEmail());
+             datePickerDOB.setValue(freelancer.getDOB());             
+             
+             SpinnerValueFactory<String> valueFactory = 
+             new  SpinnerValueFactory.ListSpinnerValueFactory<String>(freelancerExperienceList);
 
-         }
-       
-       
-       if( userType == FREELANCER ){
-                Contact contact = null;
-           
-                try{
-                      query = "select * from contact, freelancer where contact.contactID = freelancer.contactID";
-                      conn.setStatement(query);
-                      sqlResult = conn.getStatement(); 
+             int i = 0;
+             while( i < freelancerExperienceList.size() && ! freelancerExperienceList.get(i).equals( freelancer.getYearsOfExperince())){
+                     i++ ;
+             }
 
-                      while( !sqlResult.next()){
-                             contact = new Contact(
-                              sqlResult.getString("streetAddress"),
-                              sqlResult.getString("apt"),
-                              sqlResult.getString("city"),
-                              sqlResult.getString("zip"), 
-                              sqlResult.getString("state"), 
-                              sqlResult.getString("country"),                             
-                              sqlResult.getString("phone"), 
-                              sqlResult.getString("email")
-                           );
-                      }
-                 }catch( SQLException sql){
+             
+             valueFactory.setValue(freelancerExperienceList.get(i));                 
+             spinner.setValueFactory(valueFactory);
+             
+             textArea.setVisible(true);
+             txtAreaDescription.setText(freelancer.getSelfDescription());
+             
+            
+         
+      }
+       catch(ClassCastException e){
+             contractor = (Contractor)obj;
+             
+             txtFirstName.setText(contractor.getFirstName());
+             txtLastName.setText(contractor.getLastName());
+             txtStaddress.setText(contractor.getContact().getStreetAddress());
+             txtApt.setText(contractor.getContact().getApt());
+             txtCity.setText(contractor.getContact().getCity());
+             txtZip.setText(contractor.getContact().getZip());
+             txtState.setText(contractor.getContact().getState());
+             txtCountry.setText(contractor.getContact().getCountry());
+             txtPhoneNumber.setText(contractor.getContact().getPhone());
+             txtEmail.setText(contractor.getContact().getEmail());
+             datePickerDOB.setValue(contractor.getDOB());
+             
+             SpinnerValueFactory<String> valueFactory = 
+             new  SpinnerValueFactory.ListSpinnerValueFactory<String>(ContractorTypeList);
 
-                 }
+             int i = 0;
+             while( i < ContractorTypeList.size() &&  !ContractorTypeList.get(i).equals( contractor.getTypeOfContractor())){
+                     i++ ;
+             }
 
-
-                 Freelancer freelancer = null;   
-                 try{
-                     query = "select * from user, freelancer where user.userID = freelancer.userID";
-                     conn.setStatement(query);
-                     sqlResult = conn.getStatement();               
-
-                      while( !sqlResult.next()){
-                              freelancer = new Freelancer(
-                              sqlResult.getString("firstName"),
-                              sqlResult.getString("lastName"),
-                              sqlResult.getTimestamp("DOB").toLocalDateTime().toLocalDate(),
-                              contact,
-                              sqlResult.getString("yearsOfExperience"),
-                              sqlResult.getString("selfDescription")
-
-                            );          
-
-                      }
-                 }catch(SQLException e){
-
-                 }
-       
-       }else{
-           
-       }       
-       
-       
-    }
-    
-   private void setUpdateRecord( Contact contact, Object obj, int userType ){
-       
-       if( userType == FREELANCER ){
-                Freelancer freelancer = (Freelancer)obj;
-                txtFirstName.setText(freelancer.getFirstName());
-                txtLastName.setText(freelancer.getLastName());
-                txtStaddress.setText(freelancer.getContact().getStreetAddress());
-                txtApt.setText(freelancer.getContact().getApt());
-                txtCity.setText(freelancer.getContact().getCity());
-                txtCity.setText(freelancer.getContact().getCity());
-                txtState.setText(freelancer.getContact().getState());
-                txtCountry.setText(freelancer.getContact().getCountry());
-                txtPhoneNumber.setText(freelancer.getContact().getPhone());
-                txtEmail.setText(freelancer.getContact().getEmail());
-                datePickerDOB.setValue(freelancer.getDOB());
-                
-                
-                SpinnerValueFactory<String> valueFactory = 
-                new  SpinnerValueFactory.ListSpinnerValueFactory<String>(freelancerExperienceList);
-                
-                int i = 0;
-                while( i < freelancerExperienceList.size() && freelancerExperienceList.get(i).equals( freelancer.getYearsOfExperince())){
-                        i++ ;
-                }
-                            
-                    
-                valueFactory.setValue(freelancerExperienceList.get(i));                 
-                spinner.setValueFactory(valueFactory);
-                
-               
-                
-                txtAreaDescription.setText(freelancer.getSelfDescription());
-       }
-     
+             
+             valueFactory.setValue(ContractorTypeList.get(i));                 
+             spinner.setValueFactory(valueFactory);
+             
+              
+             
+         }  
        
    }
+   
+   
 }
