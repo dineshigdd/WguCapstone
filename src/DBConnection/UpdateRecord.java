@@ -8,6 +8,7 @@ package DBConnection;
 import Model.Contact;
 import Model.Contractor;
 import Model.Freelancer;
+import Model.Job;
 import Model.User;
 
 import Model.UserAccount;
@@ -16,7 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import javafx.scene.control.SpinnerValueFactory;
 
 /**
  *
@@ -25,7 +25,7 @@ import javafx.scene.control.SpinnerValueFactory;
 public class UpdateRecord {
     private static final int  FREELANCER = 1;
     private static final int  CONTRACTOR = 0;
-    
+    private static final int  JOB = 3;
     
     public static Object getUpdateRecord(String username){       
        
@@ -220,8 +220,9 @@ public class UpdateRecord {
                      
     }
     
-    public static void setUpdateRecord( Object obj, int userType ){
+    public static boolean setUpdateRecord( Object obj, int userType ){
         
+        boolean isUpdated = false;
         DBConnection  conn = new DBConnection();
         conn.connectDatabase();    
         
@@ -255,7 +256,8 @@ public class UpdateRecord {
                                 ps.setInt( 5, contractor.getContact().getContactId());
                                 ps.setInt( 6, contractor.getUserAccount().getUserID());
                                 ps.executeUpdate();
-                 conn.closeDBConnection();                    
+                 conn.closeDBConnection();        
+                 isUpdated = true;
                 }catch(SQLException e){
                     e.printStackTrace();
                 }
@@ -285,12 +287,39 @@ public class UpdateRecord {
                                 ps.setInt( 6, freelancer.getContact().getContactId());
                                 ps.setInt( 7, freelancer.getUserAccount().getUserID());
                                 ps.executeUpdate();
-                 conn.closeDBConnection();       
+                 conn.closeDBConnection();    
+                 isUpdated = true;
                 }catch( SQLException e){
                     e.printStackTrace();
                 }
-               
+            
+            case JOB:
+                try{
+                    Job job = (Job)obj;
+                    String query;
+                    query = "Update Job set "
+                        + "jobTitle = ?," 
+                        + "jobDescription = ?,"
+                        + "jobCategory = ?,"
+                        + "updatedDate = ?"
+                        + " where jobID = " + job.getJobID();
+                
+                                    
+                    PreparedStatement ps = conn.insertRecord(query);
+                                ps.setString( 1, job.getJobTitle());
+                                ps.setString( 2, job.getJobDescription());
+                                ps.setString(3,job.getJobCategory());
+                                ps.setTimestamp(4, toTimeStamp(job.getUpdateDate()));  
+                                
+                                ps.executeUpdate();
+                   conn.closeDBConnection();       
+                   isUpdated = true;
+                }catch(SQLException e){
+                     e.printStackTrace();
+                }
         }
+        
+        return  isUpdated;
 }
     
      private static Timestamp toTimeStamp(LocalDate localDate){                

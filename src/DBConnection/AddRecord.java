@@ -8,6 +8,7 @@ package DBConnection;
 import Model.Contact;
 import Model.Contractor;
 import Model.Freelancer;
+import Model.Job;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +23,7 @@ public  class AddRecord {
   //  private DBConnection conn;
     private static final int  FREELANCER = 1;
     private  static final int  CONTRACTOR = 0;
-
+    private static final int JOB = 3;
     public AddRecord() {
     }
     
@@ -129,7 +130,25 @@ public  class AddRecord {
                 }catch( SQLException e){
                     e.printStackTrace();
                 }
-               
+            
+            case JOB:
+                try{
+                Job job = ( Job )obj;
+                String query = "";
+                query = "INSERT INTO Job(jobTitle,jobDescription,jobCategory,jobPostDate)" + 
+                                            "VALUES( ? , ? , ? ,? );";
+                                            
+                                                
+                 PreparedStatement ps = conn.insertRecord(query);
+                                ps.setString( 1, job.getJobTitle());
+                                ps.setString( 2, job.getJobDescription());
+                                ps.setString( 3, job.getJobCategory());
+                                ps.setTimestamp(4, toTimeStamp(job.getPostDate()));
+                                ps.execute();
+                 conn.closeDBConnection();       
+                }catch( SQLException e){
+                    e.printStackTrace();
+                }
         }  
         
     }

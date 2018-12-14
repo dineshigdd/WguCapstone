@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" fx:id="mainPane" prefHeight="736.0" prefWidth="881.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainScreenController">
+    <stylesheets>
+        <URL value="@/Syles/mainscreen.css" />
+    </stylesheets>
+   <children>
+      <TabPane layoutY="106.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="106.0">
+         <tabs>
+            <Tab text="Contractor">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TabPane prefHeight="591.0" prefWidth="881.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <tabs>
+                            <Tab text="Post A Job">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="326.0" prefWidth="611.0">
+                                       <children>
+                                          <GridPane layoutX="151.0" layoutY="112.0" prefHeight="189.0" prefWidth="484.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="229.0" minWidth="10.0" prefWidth="101.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="409.0" minWidth="10.0" prefWidth="367.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints vgrow="SOMETIMES" />
+                                              <RowConstraints maxHeight="55.0" minHeight="34.0" prefHeight="55.0" vgrow="SOMETIMES" />
+                                              <RowConstraints maxHeight="124.0" minHeight="103.0" prefHeight="103.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="124.0" minHeight="103.0" prefHeight="103.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <Label prefHeight="21.0" prefWidth="39.0" text="Title :" />
+                                                <Label prefHeight="21.0" prefWidth="72.0" text="Category :" GridPane.rowIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets bottom="5.0" top="25.0" />
+                                                   </GridPane.margin>
+                                                </Label>
+                                                <Label prefHeight="21.0" prefWidth="82.0" text="Decription :" GridPane.rowIndex="2">
+                                                   <GridPane.margin>
+                                                      <Insets top="15.0" />
+                                                   </GridPane.margin>
+                                                </Label>
+                                                <TextField fx:id="txtJobTitle" prefHeight="31.0" prefWidth="378.0" promptText="Ex: Web Developer" GridPane.columnIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets bottom="5.0" top="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                <HBox prefHeight="100.0" prefWidth="200.0" spacing="50.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                   <children>
+                                                      <RadioButton fx:id="radbtnRemote" mnemonicParsing="false" text="Remote" translateY="20.0">
+                                                         <HBox.margin>
+                                                            <Insets />
+                                                         </HBox.margin>
+                                                         <toggleGroup>
+                                                            <ToggleGroup fx:id="jobCategory" />
+                                                         </toggleGroup>
+                                                      </RadioButton>
+                                                      <RadioButton fx:id="radbtnOnsite" mnemonicParsing="false" text="Onsite" toggleGroup="$jobCategory" translateY="20.0">
+                                                         <HBox.margin>
+                                                            <Insets />
+                                                         </HBox.margin>
+                                                      </RadioButton>
+                                                      <RadioButton fx:id="radbtnHybrid" mnemonicParsing="false" text="Hybrid" toggleGroup="$jobCategory" translateY="20.0">
+                                                         <HBox.margin>
+                                                            <Insets />
+                                                         </HBox.margin>
+                                                      </RadioButton>
+                                                   </children>
+                                                   <GridPane.margin>
+                                                      <Insets />
+                                                   </GridPane.margin>
+                                                   <padding>
+                                                      <Insets left="25.0" />
+                                                   </padding>
+                                                </HBox>
+                                                <TextArea fx:id="txtAreaDescription" prefHeight="200.0" prefWidth="375.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                   <GridPane.margin>
+                                                      <Insets top="25.0" />
+                                                   </GridPane.margin>
+                                                </TextArea>
+                                                <Button fx:id="btnSubmit" mnemonicParsing="false" onAction="#btnSubmitHandler" text="Submit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                              <Tab fx:id="tabAllJobs" onSelectionChanged="#tabAllJobsHandler" text="Manage Post">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <TableView fx:id="tableViewJobPosted" editable="true" onMouseClicked="#TableViewEditDataHandler" prefHeight="480.0" prefWidth="881.0" AnchorPane.bottomAnchor="72.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <columns>
+                                              <TableColumn fx:id="colAllJobTitle" prefWidth="75.0" text="Title" />
+                                              <TableColumn fx:id="colAllJobDescription" prefWidth="107.0" text="Description" />
+                                                <TableColumn fx:id="colAllJobCategory" prefWidth="75.0" text="Category" />
+                                                <TableColumn fx:id="colAllJobPostDate" prefWidth="75.0" text="Post Date" />
+                                            </columns>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
+                                          </TableView>
+                                          <ButtonBar layoutX="661.0" layoutY="492.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
+                            <Tab text="Search for Freelancer">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                              </content>
+                            </Tab>
+                          </tabs>
+                        </TabPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Freelancer">
+               <content>
+                  <TabPane prefHeight="630.0" prefWidth="881.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                      <Tab text="Search for Job">
+                        <content>
+                          <AnchorPane fx:id="searchPane" minHeight="0.0" minWidth="0.0" prefHeight="647.0" prefWidth="881.0">
+                                 <children>
+                                    <HBox fx:id="searchHzBox" layoutX="214.0" layoutY="174.0" prefHeight="31.0" prefWidth="385.0" spacing="10.0" />
+                                    <VBox layoutX="214.0" layoutY="251.0" spacing="20.0">
+                                       <children>
+                                          <RadioButton fx:id="radBtnDate" mnemonicParsing="false" onAction="#radbtnDateHandler" text="By Date">
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="searchCategory" />
+                                             </toggleGroup>
+                                          </RadioButton>
+                                          <RadioButton fx:id="radBtnTitle" mnemonicParsing="false" onAction="#radbtnTitleHandler" text="By Title" toggleGroup="$searchCategory" />
+                                          <RadioButton fx:id="radBtnLocation" mnemonicParsing="false" onAction="#radbtnLocationHandler" text="By Location" toggleGroup="$searchCategory" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                      <Tab fx:id="tabSearchResult" text="Search Result">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="tableViewJob" editable="true" layoutX="75.0" layoutY="69.0" prefHeight="623.0" prefWidth="881.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <columns>
+                                        <TableColumn fx:id="colJobTitle" prefWidth="75.0" text="Title" />
+                                        <TableColumn fx:id="colJobDescription" prefWidth="112.0" text="Description" />
+                                          <TableColumn fx:id="colJobType" prefWidth="75.0" text="Category" />
+                                          <TableColumn fx:id="colJobPostdate" prefWidth="101.0" text="Posted Date" />
+                                      </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                    </tabs>
+                  </TabPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+      <MenuButton fx:id="settings" layoutX="772.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="109.0" text="Settings">
+        <items>
+          <MenuItem fx:id="updateMenuItem" mnemonicParsing="false" onAction="#updateMenuItemHandler" text="Update" />
+          <MenuItem fx:id="deleteMenuItem" mnemonicParsing="false" onAction="#deleteMenuItemHandler" text="Delele" />
+        </items>
+      </MenuButton>
+   </children>
+</AnchorPane>

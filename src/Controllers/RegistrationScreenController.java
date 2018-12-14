@@ -183,7 +183,7 @@ public class RegistrationScreenController implements Initializable {
                 Parent root;
 
                 stage = (Stage) btnSignup.getScene().getWindow();
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/freelancerMainScreen.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/MainScreen.fxml"));
                 root = loader.load();
 
                 Scene scene = new Scene(root);

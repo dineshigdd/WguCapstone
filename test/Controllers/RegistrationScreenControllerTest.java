@@ -39,7 +39,7 @@ public class RegistrationScreenControllerTest {
         ResourceBundle rb = null;
         RegistrationScreenController instance = new RegistrationScreenController();
         instance.initialize(url, rb);
-        instance.setUser();
+       // instance.setUser();
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }

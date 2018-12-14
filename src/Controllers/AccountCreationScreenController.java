@@ -166,7 +166,7 @@ public class AccountCreationScreenController implements Initializable {
                         Parent root;
 
                         stage = (Stage) btnSubmit.getScene().getWindow();
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/freelancerMainScreen.fxml"));
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/MainScreen.fxml"));
                         root = loader.load();
 
                         Scene scene = new Scene(root);
@@ -174,7 +174,7 @@ public class AccountCreationScreenController implements Initializable {
                         stage.centerOnScreen();
                         stage.show();
                         
-                        FreelancerMainScreenController controller = loader.getController();
+                        MainScreenController controller = loader.getController();
                         controller.setLoginInfo(username, password);
                }else{
                    alert("Your username or password is invalid","Invalid username or password","Invalid Username or Password!",AlertType.ERROR);

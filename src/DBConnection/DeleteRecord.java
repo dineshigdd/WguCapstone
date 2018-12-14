@@ -19,8 +19,9 @@ public class DeleteRecord {
     private  static final int  CONTRACTOR = 0;
     private static UserAccount userAccount;
     
-    public static void deleteRecord(UserAccount useraccount) throws SQLException{      
+    public static void deleteUserAccount(UserAccount useraccount) throws SQLException{      
             
+        
          DeleteRecord.userAccount = useraccount;
          getUserInfo( useraccount.getUsername(), useraccount.getPassword());
          
@@ -69,11 +70,22 @@ public class DeleteRecord {
              }
              DeleteRecord.userAccount.setUserID(userID);
              DeleteRecord.userAccount.setUserType(userType);
+             conn.closeDBConnection();
          }catch(Exception e){
              e.printStackTrace();
          }
 
          
+    }
+
+    public static void deleteJob(int jobID) throws SQLException {
+         DBConnection  conn = new DBConnection();
+         conn.connectDatabase();
+         PreparedStatement ps = conn.insertRecord("delete from job where jobID = ?");
+             ps.setInt( 1,jobID) ;                                         
+             ps.execute();
+             
+        
     }
 
     
