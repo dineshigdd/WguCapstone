@@ -27,9 +27,9 @@
         <URL value="@/Syles/mainscreen.css" />
     </stylesheets>
    <children>
-      <TabPane layoutY="106.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="106.0">
+      <TabPane fx:id="mainTabPane" layoutY="106.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="106.0">
          <tabs>
-            <Tab text="Contractor">
+            <Tab fx:id="tabContractor" text="Contractor">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -138,7 +138,7 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab text="Freelancer">
+            <Tab fx:id="tabFreelancer" text="Freelancer">
                <content>
                   <TabPane fx:id="tabPaneFreelancer" prefHeight="630.0" prefWidth="881.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>

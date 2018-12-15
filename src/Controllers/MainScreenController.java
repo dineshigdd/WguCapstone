@@ -6,12 +6,14 @@
 package Controllers;
 
 import DBConnection.AddRecord;
+import DBConnection.DBConnection;
 import DBConnection.DeleteRecord;
 import DBConnection.SearchRecord;
 import Model.Job;
 import Model.UserAccount;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -76,8 +78,6 @@ public class MainScreenController implements Initializable {
     private AnchorPane searchPane;
     
     
-    @FXML
-    private AnchorPane mainPane;
     private DatePicker datepicker;
     private TextField txtSearch;
     private HBox hbox;
@@ -129,7 +129,16 @@ public class MainScreenController implements Initializable {
     @FXML
     private TabPane tabPaneFreelancer;
   
-    
+    private static final int  FREELANCER = 1;
+    private  static final int  CONTRACTOR = 0;
+    @FXML
+    private TabPane mainTabPane;
+    @FXML
+    private AnchorPane mainPane;
+    @FXML
+    private Tab tabContractor;
+    @FXML
+    private Tab tabFreelancer;
     /**
      * Initializes the controller class.
      */
@@ -198,9 +207,27 @@ public class MainScreenController implements Initializable {
      void setLoginInfo(String username , String password) {
         this.username = username;
         this.password = password;
-        
+        int userType = -1;
        
+        try {
+        DBConnection conn = new DBConnection();
+        conn.connectDatabase();
+        conn.setStatement("select userType from user where username =" + "'" + username + "'");
+        ResultSet sqlResult = conn.getStatement();
+        while( sqlResult.next()){
+              userType = sqlResult.getInt("userType");
+        }
+      
+           
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
         
+        if( userType == FREELANCER ){
+            mainTabPane.getTabs().remove(tabFreelancer);
+        }else{
+            mainTabPane.getTabs().remove(tabContractor);
+        }
     }
      
      
