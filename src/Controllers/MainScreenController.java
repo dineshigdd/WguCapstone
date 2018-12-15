@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
@@ -34,6 +35,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -68,8 +70,6 @@ public class MainScreenController implements Initializable {
     private RadioButton radBtnDate;
     @FXML
     private RadioButton radBtnTitle;
-    @FXML
-    private RadioButton radBtnLocation;
     @FXML
     private HBox searchHzBox;
     @FXML
@@ -125,9 +125,9 @@ public class MainScreenController implements Initializable {
     @FXML
     private TableColumn<?, ?> colAllJobPostDate;
     @FXML
-    private Button btnUpdate;
+    private RadioButton radBtnCategory;
     @FXML
-    private Button btnDelete;
+    private TabPane tabPaneFreelancer;
   
     
     /**
@@ -143,10 +143,9 @@ public class MainScreenController implements Initializable {
            searchPane.getChildren().add(hbox);
            btnSearch = new Button("Search");
            datepicker = new DatePicker();
-           txtSearch = new TextField();
-         
+           txtSearch = new TextField();        
            
-           
+          
            searchJob();
            
      }    
@@ -261,8 +260,7 @@ public class MainScreenController implements Initializable {
     }
 
     @FXML
-    private void radbtnLocationHandler(ActionEvent event) {
-        
+    private void radbtnCategoryHandler(ActionEvent event) {
         if( hbox.getChildren().isEmpty()){          
              hbox.getChildren().add(btnSearch);
              hbox.getChildren().add(0,txtSearch );
@@ -270,8 +268,26 @@ public class MainScreenController implements Initializable {
              hbox.getChildren().remove(0);
              hbox.getChildren().add(0,txtSearch );
         } 
+        
+         criteria = "jobCategory";
+//         Stage stage = null;
+//         Parent root;
+//         stage = (Stage) settings.getScene().getWindow();       
+//       
+//        
+//         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/updatePostScreen.fxml"));
+//         root = loader.load();
+//         
+//         Scene scene = new Scene(root);
+//         stage.setScene(scene);
+//         stage.centerOnScreen();
+//         stage.show();
+//         
+//         RegistrationScreenController controller = loader.getController();         
+//         controller.setUpdate(isUpdate, username);
+//        ObservableList<Job> jobList = FXCollections.observableArrayList();
+//        jobList.add(tableViewJobPosted.getItems().get(tableViewJobPosted.getItems().get));
     }
-      
      
     //find job by posted date
     
@@ -284,16 +300,14 @@ public class MainScreenController implements Initializable {
             public void handle(ActionEvent e) {
                 //get input
                 ObservableList<Job> jobList = null;
-                try{
-                    
+                
+                if( criteria.equals("jobPostDate")){                   
                      
-                     jobList = SearchRecord.searchRecord( criteria , datepicker.getValue().toString());
-                    
+                    jobList = SearchRecord.searchRecord( criteria , datepicker.getValue().toString());               
+                }else{                  
+              
                    
-                    
-                }catch(Exception ex){
-                   
-                    jobList = SearchRecord.searchRecord(criteria , txtSearch.getText());
+                    jobList = SearchRecord.searchRecord( criteria , txtSearch.getText() );
                 }
                 
                  colJobTitle.setCellValueFactory(new PropertyValueFactory<>("jobTitle"));
@@ -301,6 +315,9 @@ public class MainScreenController implements Initializable {
                  colJobType.setCellValueFactory(new PropertyValueFactory<>("jobCategory"));
                  colJobPostdate.setCellValueFactory(new PropertyValueFactory<>("postDate"));
                  tableViewJob.setItems(jobList);
+                 
+                 tabPaneFreelancer.getSelectionModel().selectNext();
+                
             }
         });
         
@@ -310,9 +327,7 @@ public class MainScreenController implements Initializable {
    } 
 
     @FXML
-    private void btnSubmitHandler(ActionEvent event) {
-        
-        
+    private void btnSubmitHandler(ActionEvent event) {       
         
         String jobCategory;
         
@@ -324,12 +339,12 @@ public class MainScreenController implements Initializable {
         }else{
             jobCategory = radbtnHybrid.getText().toLowerCase();
         }
-       System.out.println("Job cat:" +jobCategory);
+
         Job job = new Job(
                 txtJobTitle.getText(),
                 txtAreaDescription.getText(),
                 jobCategory,                
-                LocalDate.now()
+                LocalDateTime.now()
         );
         
         AddRecord.setDbRecord(job, JOB);
@@ -377,31 +392,8 @@ public class MainScreenController implements Initializable {
 //                        });
     }
 
-    @FXML
-    private void btnUpdateHandler(ActionEvent event) throws IOException {
-//        
-//         Stage stage = null;
-//         Parent root;
-//         stage = (Stage) settings.getScene().getWindow();       
-//       
-//        
-//         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/updatePostScreen.fxml"));
-//         root = loader.load();
-//         
-//         Scene scene = new Scene(root);
-//         stage.setScene(scene);
-//         stage.centerOnScreen();
-//         stage.show();
-//         
-//         RegistrationScreenController controller = loader.getController();         
-//         controller.setUpdate(isUpdate, username);
-//        ObservableList<Job> jobList = FXCollections.observableArrayList();
-//        jobList.add(tableViewJobPosted.getItems().get(tableViewJobPosted.getItems().get));
-    }
+    
 
-    @FXML
-    private void btnDeleteHandler(ActionEvent event) {
-    }
     
     
 

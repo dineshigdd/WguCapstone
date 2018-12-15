@@ -6,6 +6,7 @@
 package Model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -16,8 +17,8 @@ public class Job {
     private String jobTitle;
     private String jobDescription;    
     private String jobCategory;
-    private LocalDate postDate;
-    private LocalDate updateDate;
+    private LocalDateTime postDate;
+    private LocalDateTime updateDate;
 
    
 
@@ -25,7 +26,7 @@ public class Job {
     }
 
     
-    public Job( String jobTitle, String jobDescription, String jobCategory ,LocalDate postDate) {
+    public Job( String jobTitle, String jobDescription, String jobCategory ,LocalDateTime postDate) {
         this.jobID = jobID;
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
@@ -60,11 +61,11 @@ public class Job {
         this.jobDescription = jobDescription;
     }
 
-    public LocalDate getPostDate() {
+    public LocalDateTime getPostDate() {
         return postDate;
     }
 
-    public void setPostDate(LocalDate postDate) {
+    public void setPostDate(LocalDateTime postDate) {
         this.postDate = postDate;
     }
 
@@ -84,11 +85,11 @@ public class Job {
         this.jobCategory = jobCategory;
     }
     
-     public LocalDate getUpdateDate() {
+     public LocalDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(LocalDate updateDate) {
+    public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
     

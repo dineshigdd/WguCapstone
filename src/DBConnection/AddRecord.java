@@ -14,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 /**
  *
@@ -143,7 +145,7 @@ public  class AddRecord {
                                 ps.setString( 1, job.getJobTitle());
                                 ps.setString( 2, job.getJobDescription());
                                 ps.setString( 3, job.getJobCategory());
-                                ps.setTimestamp(4, toTimeStamp(job.getPostDate()));
+                                ps.setTimestamp(4, toTimeStampWithTime(job.getPostDate()));
                                 ps.execute();
                  conn.closeDBConnection();       
                 }catch( SQLException e){
@@ -155,5 +157,10 @@ public  class AddRecord {
     
     private static Timestamp toTimeStamp(LocalDate localDate){                
        return Timestamp.valueOf(localDate.atStartOfDay());
+    }
+    
+    
+    private static Timestamp toTimeStampWithTime(LocalDateTime localDateTime){                
+       return Timestamp.valueOf(localDateTime);
     }
 }

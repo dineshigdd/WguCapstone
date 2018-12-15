@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -85,7 +86,7 @@ public class ManagePostScreenController implements Initializable {
         job.setJobCategory(jobCategory);    
         job.setJobTitle(txtJobTitle.getText());
         job.setJobDescription(txtAreaDescription.getText());
-        job.setUpdateDate( LocalDate.now());
+        job.setUpdateDate( LocalDateTime.now());
         
         boolean isUpdated =  UpdateRecord.setUpdateRecord(job, JOB );
         

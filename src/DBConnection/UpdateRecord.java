@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -309,7 +310,7 @@ public class UpdateRecord {
                                 ps.setString( 1, job.getJobTitle());
                                 ps.setString( 2, job.getJobDescription());
                                 ps.setString(3,job.getJobCategory());
-                                ps.setTimestamp(4, toTimeStamp(job.getUpdateDate()));  
+                                ps.setTimestamp(4, toTimeStampWithTime(job.getUpdateDate()));  
                                 
                                 ps.executeUpdate();
                    conn.closeDBConnection();       
@@ -322,7 +323,13 @@ public class UpdateRecord {
         return  isUpdated;
 }
     
-     private static Timestamp toTimeStamp(LocalDate localDate){                
-                 return Timestamp.valueOf(localDate.atStartOfDay());
+    
+    
+    private static Timestamp toTimeStamp(LocalDate localDate){                
+       return Timestamp.valueOf(localDate.atStartOfDay());
+    }
+    
+     private static Timestamp toTimeStampWithTime(LocalDateTime localDateTime){                
+                 return Timestamp.valueOf(localDateTime);
     }
 }

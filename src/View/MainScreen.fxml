@@ -140,7 +140,7 @@
             </Tab>
             <Tab text="Freelancer">
                <content>
-                  <TabPane prefHeight="630.0" prefWidth="881.0" tabClosingPolicy="UNAVAILABLE">
+                  <TabPane fx:id="tabPaneFreelancer" prefHeight="630.0" prefWidth="881.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                       <Tab text="Search for Job">
                         <content>
@@ -155,7 +155,7 @@
                                              </toggleGroup>
                                           </RadioButton>
                                           <RadioButton fx:id="radBtnTitle" mnemonicParsing="false" onAction="#radbtnTitleHandler" text="By Title" toggleGroup="$searchCategory" />
-                                          <RadioButton fx:id="radBtnLocation" mnemonicParsing="false" onAction="#radbtnLocationHandler" text="By Location" toggleGroup="$searchCategory" />
+                                          <RadioButton fx:id="radBtnCategory" mnemonicParsing="false" onAction="#radbtnCategoryHandler" text="By Category" toggleGroup="$searchCategory" />
                                        </children>
                                     </VBox>
                                  </children>

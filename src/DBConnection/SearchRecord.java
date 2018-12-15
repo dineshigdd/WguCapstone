@@ -38,7 +38,10 @@ public class SearchRecord {
         String query = null;
         
         switch( criteria ){
-            case "jobPostDate": query = "select * from job where "+ criteria + " = "+ "'" + criteriaValue + "'";
+            case "jobPostDate": 
+            case "jobCategory":
+                query = "select * from job where "+ criteria + " = "+ "'" + criteriaValue + "'";
+                System.out.println(query);
             break;
             case "jobTitle": query = "select * from job where "+ criteria + " like "+ "'%" + criteriaValue + "%'";
             break;
@@ -57,17 +60,19 @@ public class SearchRecord {
                 sqlResult.getString("jobTitle"),
                 sqlResult.getString("jobDescription"),
                 sqlResult.getString("jobCategory"),
-                sqlResult.getDate("jobPostDate").toLocalDate()
+                sqlResult.getTimestamp("jobPostDate").toLocalDateTime()
                );
                
                job.setJobID(sqlResult.getInt("jobID"));
                jobList.add(job);
             }
+            
         conn.closeDBConnection();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-         
+        
+       
         return jobList;
     }
 }
