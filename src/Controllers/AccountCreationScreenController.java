@@ -10,6 +10,7 @@ import DBConnection.DBConnection;
 import Model.Contact;
 import Model.Contractor;
 import Model.Freelancer;
+import Model.User;
 import Model.UserAccount;
 import java.io.IOException;
 import java.net.URL;
@@ -44,7 +45,7 @@ public class AccountCreationScreenController implements Initializable {
     @FXML
     private Button btnSign;
     
-    private Object obj;
+    private User user;
     private UserAccount userAccount;
     private Contact contact;
     private boolean isNewUser;    
@@ -58,7 +59,7 @@ public class AccountCreationScreenController implements Initializable {
         // TODO
        userAccount = new UserAccount();
        contact = new Contact();
-       obj = new Object();
+       //obj = new Object();
       
      
     }   
@@ -96,16 +97,13 @@ public class AccountCreationScreenController implements Initializable {
                     ps.setString(1, userAccount.getUsername() );
                     ps.setString(2, userAccount.getPassword() );
                     ps.setInt(3, userAccount.getUserType());
-                    ps.execute();
-               //     conn.closeDBConnection();
-                    
-                //    conn.setStatement("select userID where username = " + "'" + userAccount.getUsername() + "'");
+                    ps.execute();               
                     
                
                     conn.setStatement("select LAST_INSERT_ID();");
                     ResultSet sqlResult  = conn.getStatement();
 
-                   // int userID = 0;
+                   
                     try{
                     while( sqlResult.next() ){
                         userAccount.setUserID(sqlResult.getInt("LAST_INSERT_ID()"));
@@ -113,30 +111,27 @@ public class AccountCreationScreenController implements Initializable {
                     }catch(Exception e){
                         e.printStackTrace();
                     }
+                                    
+                                  
                     
-                    
-                    
-                   // query = "update freelancer set(userID) value = "+ userID;
-//                    ps = conn.insertRecord(query);
-//                    ps.setInt( 1, userID);
-//                    ps.execute();
-                //    AddRecord record = new AddRecord();                  
-                    System.out.println("city :" +contact.getCity());
                     AddRecord.setAddress(contact);
+                    user.setUserAccount(userAccount);       
+                    AddRecord.setDbRecord(user, user.getUserAccount().getUserType());
                     
-                    if( userAccount.getUserType() == FREELANCER ){
-                        Freelancer freelancer  = new Freelancer();
-                        freelancer = (Freelancer)obj;
-                        freelancer.setUserAccount(userAccount);                              
-                        AddRecord.setDbRecord(freelancer, freelancer.getUserAccount().getUserType());
-                        
-                    }else{
-                        Contractor contractor = new Contractor();
-                        contractor = ( Contractor)obj;
-                        contractor.setUserAccount(userAccount);
-                        AddRecord.setDbRecord(contractor, contractor.getUserAccount().getUserType());
-                    }
-                    
+//                    if( userAccount.getUserType() == FREELANCER ){
+//                       // user  = new Freelancer();
+//                      //  freelancer = (Freelancer)obj;
+//                        user.setUserAccount(userAccount);                            
+//                        AddRecord.setDbRecord(user, user.getUserAccount().getUserType());
+//                        
+//                    }else{
+//                       // user = new Contractor();
+//                       // contractor = ( Contractor)obj;
+//                        System.out.println( "bEFORE ADDINF:)" + user.getFirstName());
+//                        user.setUserAccount(userAccount);
+//                        AddRecord.setDbRecord(user, user.getUserAccount().getUserType());
+//                    }
+//                    
                     
                     //UPDATE FREELANCER
 //                    conn.setStatement("select LAST_INSERT_ID();");
@@ -146,9 +141,7 @@ public class AccountCreationScreenController implements Initializable {
 //                    ps = conn.insertRecord(query);
 //                    ps.setInt( 1, userID);
 //                    ps.execute();
-//                        Stage stage;
-                    
-                  
+//                        Stage stage;     
                 
                     
                     
@@ -234,14 +227,14 @@ public class AccountCreationScreenController implements Initializable {
             
     }
 
-    public void setNewUser(boolean isNewUser, int userType , Object obj, Contact contact) {
+    public void setNewUser(boolean isNewUser, int userType , User user, Contact contact) {
         System.out.println("Account isNewUser:" + isNewUser);
         this.isNewUser = isNewUser;
        if( isNewUser ){
             btnSign.setVisible( false );
             userAccount.setUserType(userType);
             btnSubmit.setText("Submit");
-            this.obj = obj;
+            this.user= user;            
             this.contact = contact;
           
         }else{

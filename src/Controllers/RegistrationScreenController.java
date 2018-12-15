@@ -86,8 +86,6 @@ public class RegistrationScreenController implements Initializable {
     private HBox hzBoxContracotorType;
     
     @FXML
-    private ToggleGroup user;
-    @FXML
     private Label spinnerLabel;
     @FXML
     private Label spinnerLabel1;
@@ -106,7 +104,8 @@ public class RegistrationScreenController implements Initializable {
      */
     private ObservableList<String> freelancerExperienceList;
     private ObservableList<String> ContractorTypeList;
-    private Object obj;
+    //private Object obj;
+    private User user;
     private Contact contact;
     private boolean isNewUser;
     private boolean isUpdate;
@@ -116,6 +115,8 @@ public class RegistrationScreenController implements Initializable {
     private UpdateRecord record;
     private Freelancer freelancer;
     private Contractor contractor;
+    @FXML
+    private ToggleGroup userGroup;
     
     
     @Override
@@ -176,7 +177,9 @@ public class RegistrationScreenController implements Initializable {
                 stage.show();
 
                 AccountCreationScreenController controller =  loader.getController();
-                controller.setNewUser(isNewUser,userType, obj, contact);
+                
+                 System.out.println( user.getFirstName());
+                controller.setNewUser(isNewUser,userType, user, contact);
                 
            }else if( isUpdate ){
                 Stage stage;
@@ -256,7 +259,7 @@ public class RegistrationScreenController implements Initializable {
           //create contractor object
           String typeOfContractor = spinner.getValue();
            
-                 Contractor contractor = new Contractor( 
+                  user = new Contractor( 
                     firstName,
                     lastName, 
                     DOB, 
@@ -265,7 +268,7 @@ public class RegistrationScreenController implements Initializable {
                );  
 
                               
-                obj = contractor;
+                //user = contractor;
                 userType = CONTRACTOR;
                  
             
@@ -281,7 +284,7 @@ public class RegistrationScreenController implements Initializable {
            
             
            
-            Freelancer freelancer = new Freelancer( 
+               user = new Freelancer( 
                  firstName,
                  lastName, 
                  DOB, 
@@ -290,35 +293,38 @@ public class RegistrationScreenController implements Initializable {
                  selfDescription
              );  
          
-            obj = freelancer;
+           // obj = freelancer;
             userType = FREELANCER;
            //setDbRecord( contact , freelancer , "freelancer");    
         }
        
-       if( isUpdate ){          
+       if( isUpdate ){        
+                contact.setContactId(this.user.getContact().getContactId());
+                this.user.setFirstName(firstName);
+                this.user.setLastName(lastName);
+                this.user.setContact(contact);           
+                this.user.setDOB(DOB);
                    
-           try{           
-                contact.setContactId(this.contractor.getContact().getContactId());
-                this.contractor.setFirstName(firstName);
-                this.contractor.setLastName(lastName);
-                this.contractor.setContact(contact);           
-                this.contractor.setDOB(DOB);
+           //try{           
+                if( user.getUserAccount().getUserType() == CONTRACTOR ){
+                contractor = ( Contractor)user;
                 this.contractor.setTypeOfContractor(spinner.getValue());
                 userType = this.contractor.getUserAccount().getUserType();
-                UpdateRecord.setUpdateRecord( contractor, userType );
+                }else{
+            //    UpdateRecord.setUpdateRecord( user, userType );
             
-           }catch(Exception e){
-                contact.setContactId(this.freelancer.getContact().getContactId());
-                this.freelancer.setFirstName(firstName);
-                this.freelancer.setLastName(lastName);
-                this.freelancer.setContact(contact);           
-                this.freelancer.setDOB(DOB);
+           //}catch(Exception e){
+//                contact.setContactId(this.freelancer.getContact().getContactId());
+//                this.freelancer.setFirstName(firstName);
+//                this.freelancer.setLastName(lastName);
+//                this.freelancer.setContact(contact);           
+//                this.freelancer.setDOB(DOB);
                 this.freelancer.setYearsOfExperince(spinner.getValue());
                 this.freelancer.setSelfDescription(txtAreaDescription.getText());
                 userType = this.freelancer.getUserAccount().getUserType();
-                UpdateRecord.setUpdateRecord( freelancer, userType );
+               // UpdateRecord.setUpdateRecord( freelancer, userType );
            }
-            
+            UpdateRecord.setUpdateRecord( user, userType );
             UpdateRecord.setUpdateContactRecord(contact); //update Database record for the contact
        }
        
@@ -508,8 +514,8 @@ public class RegistrationScreenController implements Initializable {
         
         
         // record= new UpdateRecord();        
-         Object obj = UpdateRecord.getUpdateRecord(username);    
-         setUpdateFields(obj);
+         User user = UpdateRecord.getUpdateRecord(username);    
+         setUpdateFields(user);
         
     }
 
@@ -587,27 +593,30 @@ public class RegistrationScreenController implements Initializable {
 //       
 //    }
 //    
-   public void setUpdateFields( Object obj ){
+   public void setUpdateFields( User user ){
              radBtnContractor.setVisible(false);
              radBtnFreelancer.setVisible(false);
              hzBoxContracotorType.setVisible(true);
              
-       try{            
+      // try{            
              
-             freelancer = (Freelancer)obj;  
+             if( user.getUserAccount().getUserType() == FREELANCER ) {
              
-             txtFirstName.setText(freelancer.getFirstName());
-             txtLastName.setText(freelancer.getLastName());
-             txtStaddress.setText(freelancer.getContact().getStreetAddress());
-             txtApt.setText(freelancer.getContact().getApt());
-             txtCity.setText(freelancer.getContact().getCity());
-             txtZip.setText(freelancer.getContact().getZip());
-             txtState.setText(freelancer.getContact().getState());
-             txtCountry.setText(freelancer.getContact().getCountry());
-             txtPhoneNumber.setText(freelancer.getContact().getPhone());
-             txtEmail.setText(freelancer.getContact().getEmail());
-             datePickerDOB.setValue(freelancer.getDOB());             
+             txtFirstName.setText(user.getFirstName());
+             txtLastName.setText(user.getLastName());
+             txtStaddress.setText(user.getContact().getStreetAddress());
+             txtApt.setText(user.getContact().getApt());
+             txtCity.setText(user.getContact().getCity());
+             txtZip.setText(user.getContact().getZip());
+             txtState.setText(user.getContact().getState());
+             txtCountry.setText(user.getContact().getCountry());
+             txtPhoneNumber.setText(user.getContact().getPhone());
+             txtEmail.setText(user.getContact().getEmail());
+             datePickerDOB.setValue(user.getDOB());             
              
+             freelancer = (Freelancer)user;
+             
+             spinnerLabel.setText("Experience:");
              SpinnerValueFactory<String> valueFactory = 
              new  SpinnerValueFactory.ListSpinnerValueFactory<String>(freelancerExperienceList);
 
@@ -621,26 +630,30 @@ public class RegistrationScreenController implements Initializable {
              spinner.setValueFactory(valueFactory);
              
              textArea.setVisible(true);
+             freelancer = (Freelancer)user;
              txtAreaDescription.setText(freelancer.getSelfDescription());
              
-            
+             this.user = user;
          
-      }
-       catch(ClassCastException e){
-             contractor = (Contractor)obj;
+      }else{
+       //catch(ClassCastException e){
+            // contractor = (Contractor)obj;
              
-             txtFirstName.setText(contractor.getFirstName());
-             txtLastName.setText(contractor.getLastName());
-             txtStaddress.setText(contractor.getContact().getStreetAddress());
-             txtApt.setText(contractor.getContact().getApt());
-             txtCity.setText(contractor.getContact().getCity());
-             txtZip.setText(contractor.getContact().getZip());
-             txtState.setText(contractor.getContact().getState());
-             txtCountry.setText(contractor.getContact().getCountry());
-             txtPhoneNumber.setText(contractor.getContact().getPhone());
-             txtEmail.setText(contractor.getContact().getEmail());
-             datePickerDOB.setValue(contractor.getDOB());
+             txtFirstName.setText(user.getFirstName());
+             txtLastName.setText(user.getLastName());
+             txtStaddress.setText(user.getContact().getStreetAddress());
+             txtApt.setText(user.getContact().getApt());
+             txtCity.setText(user.getContact().getCity());
+             txtZip.setText(user.getContact().getZip());
+             txtState.setText(user.getContact().getState());
+             txtCountry.setText(user.getContact().getCountry());
+             txtPhoneNumber.setText(user.getContact().getPhone());
+             txtEmail.setText(user.getContact().getEmail());
+             datePickerDOB.setValue(user.getDOB());
              
+             contractor = (Contractor)user;
+             
+              spinnerLabel.setText("Type Of Contractor:");
              SpinnerValueFactory<String> valueFactory = 
              new  SpinnerValueFactory.ListSpinnerValueFactory<String>(ContractorTypeList);
 
@@ -652,7 +665,7 @@ public class RegistrationScreenController implements Initializable {
              
              valueFactory.setValue(ContractorTypeList.get(i));                 
              spinner.setValueFactory(valueFactory);
-             
+             this.user = user;
               
              
          }  

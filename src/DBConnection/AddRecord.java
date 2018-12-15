@@ -9,6 +9,7 @@ import Model.Contact;
 import Model.Contractor;
 import Model.Freelancer;
 import Model.Job;
+import Model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -86,23 +87,31 @@ public  class AddRecord {
         switch( userType ){
             
             case CONTRACTOR: 
-                try{
+               try{
+                User user = ( Contractor )obj;
                 Contractor contractor = ( Contractor )obj;
+//                System.out.println( user.getFirstName()); System.out.println( user.getFirstName());
+//                  System.out.println( user.getLastName());
+//                  System.out.println( toTimeStamp(user.getDOB()));
+//                    System.out.println( contractor.getTypeOfContractor());
+//               System.out.println( user.getContact().getContactId());   
+//                 System.out.println(user.getUserAccount().getUserID()); 
+                
                 
                 String query = "";
                
                 query = "INSERT INTO Contractor(firstName,lastName,DOB,contractorType,contactID,userID)" + 
                                             "VALUES( ? , ? , ? ,? ,? , ? );";
               
-                 System.out.println( "USER ID:" + contractor.getUserAccount().getUserID() );   
+                 System.out.println( "USER ID:" + user.getUserAccount().getUserID() );   
                  
                  PreparedStatement ps = conn.insertRecord(query);
-                                ps.setString( 1, contractor.getFirstName());
-                                ps.setString( 2, contractor.getLastName());
-                                ps.setTimestamp(3, toTimeStamp(contractor.getDOB()));
+                                ps.setString( 1, user.getFirstName());
+                                ps.setString( 2, user.getLastName());
+                                ps.setTimestamp(3, toTimeStamp(user.getDOB()));
                                 ps.setString( 4, contractor.getTypeOfContractor());
-                                ps.setInt( 5, contractor.getContact().getContactId());
-                                ps.setInt( 6, contractor.getUserAccount().getUserID());
+                                ps.setInt( 5, user.getContact().getContactId());
+                                ps.setInt( 6, user.getUserAccount().getUserID());
                                 ps.execute();
                  conn.closeDBConnection();                    
                 }catch(SQLException e){
@@ -112,6 +121,8 @@ public  class AddRecord {
                 
             case FREELANCER:
                 try{
+                    
+                User user = ( Freelancer )obj;    
                 Freelancer freelancer = ( Freelancer )obj;
                 
                 String query = "";
@@ -120,19 +131,19 @@ public  class AddRecord {
                                             
                                                 
                  PreparedStatement ps = conn.insertRecord(query);
-                                ps.setString( 1, freelancer.getFirstName());
-                                ps.setString( 2, freelancer.getLastName());
-                                ps.setTimestamp(3,toTimeStamp( freelancer.getDOB()));
+                                ps.setString( 1, user.getFirstName());
+                                ps.setString( 2, user.getLastName());
+                                ps.setTimestamp(3,toTimeStamp( user.getDOB()));
                                 ps.setString(4, freelancer.getYearsOfExperince());
                                 ps.setString(5, freelancer.getSelfDescription());
-                                ps.setInt( 6, freelancer.getContact().getContactId());
-                                ps.setInt( 7, freelancer.getUserAccount().getUserID());
+                                ps.setInt( 6, user.getContact().getContactId());
+                                ps.setInt( 7, user.getUserAccount().getUserID());
                                 ps.execute();
                  conn.closeDBConnection();       
                 }catch( SQLException e){
                     e.printStackTrace();
                 }
-            
+            break;
             case JOB:
                 try{
                 Job job = ( Job )obj;

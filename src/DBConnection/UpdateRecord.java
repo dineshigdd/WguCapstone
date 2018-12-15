@@ -28,12 +28,12 @@ public class UpdateRecord {
     private static final int  CONTRACTOR = 0;
     private static final int  JOB = 3;
     
-    public static Object getUpdateRecord(String username){       
+    public static User getUpdateRecord(String username){       
        
        int userID = 0; 
        int contactID = 0;
        int userType = -1;
-       Object obj = new Object();
+       User user = null;
        UserAccount userAccount = new UserAccount();
        DBConnection conn = new DBConnection();
        conn.connectDatabase();     
@@ -64,7 +64,7 @@ public class UpdateRecord {
        Contractor contractor = null;
        
        if( userType == FREELANCER ){
-                freelancer = new Freelancer();              
+                user = new Freelancer();              
 
                    
                  try{
@@ -72,16 +72,17 @@ public class UpdateRecord {
                      conn.setStatement(query);
                      sqlResult = conn.getStatement();                
                       while( sqlResult.next()){
-                              freelancer.setFirstName( sqlResult.getString("firstName"));
-                              freelancer.setLastName(sqlResult.getString("lastName"));
-                              freelancer.setDOB(sqlResult.getTimestamp("DOB").toLocalDateTime().toLocalDate());
+                              user.setFirstName( sqlResult.getString("firstName"));
+                              user.setLastName(sqlResult.getString("lastName"));
+                              user.setDOB(sqlResult.getTimestamp("DOB").toLocalDateTime().toLocalDate());
+                              freelancer = (Freelancer)user;
                               freelancer.setYearsOfExperince(sqlResult.getString("yearsOfExperience"));
                               freelancer.setSelfDescription(sqlResult.getString("selfDescription"));                      
                               contactID =  sqlResult.getInt("contactID");                    
                         }
                       
                       
-                      freelancer.setUserAccount(userAccount);
+                      user.setUserAccount(userAccount);
                       
                  }catch(SQLException e){
 
@@ -114,7 +115,7 @@ public class UpdateRecord {
 
 //            System.out.println("Freelancer city:" + freelancer.getContact().getCity());
        }else if( userType == CONTRACTOR ){
-                contractor = new Contractor();                       
+                user = new Contractor();                       
 
                    
                  try{
@@ -122,14 +123,15 @@ public class UpdateRecord {
                      conn.setStatement(query);
                      sqlResult = conn.getStatement();                
                       while( sqlResult.next()){
-                              contractor.setFirstName( sqlResult.getString("firstName"));
-                              contractor.setLastName(sqlResult.getString("lastName"));
-                              contractor.setDOB(sqlResult.getTimestamp("DOB").toLocalDateTime().toLocalDate());       
+                              user.setFirstName( sqlResult.getString("firstName"));
+                              user.setLastName(sqlResult.getString("lastName"));
+                              user.setDOB(sqlResult.getTimestamp("DOB").toLocalDateTime().toLocalDate());    
+                              contractor = (Contractor)user;
                               contractor.setTypeOfContractor(sqlResult.getString("contractorType"));
                               contactID =  sqlResult.getInt("contactID");                    
                         }
                       
-                    contractor.setUserAccount(userAccount);  
+                    user.setUserAccount(userAccount);  
                       
                  }catch(SQLException e){
 
@@ -170,17 +172,17 @@ public class UpdateRecord {
 
                  }
         
-        
-                 if( userType == FREELANCER ){
-                     freelancer.setContact(contact);
-                     obj = freelancer;
-                 }else{
-                     contractor.setContact(contact);
-                     obj = contractor;
-                 }
+                 user.setContact(contact);
+//                 if( userType == FREELANCER ){
+//                     user.setContact(contact);
+//                     //obj = freelancer;
+//                 }else{
+//                     contractor.setContact(contact);
+//                     obj = contractor;
+//                 }
+//                 
                  
-                 
-       return obj;
+       return user;
     }
     
     
@@ -234,7 +236,9 @@ public class UpdateRecord {
             
             case CONTRACTOR: 
                 try{
+                User user = ( Contractor )obj;
                 Contractor contractor = ( Contractor )obj;
+                
 //                    System.out.println( "Fk key ID:" + contractor.getContact().getContactId() );
                 String query;
                
@@ -250,12 +254,12 @@ public class UpdateRecord {
                  System.out.println( "First Name:" +  contractor.getFirstName());   
               
                  PreparedStatement ps = conn.insertRecord(query);
-                                ps.setString( 1, contractor.getFirstName());
-                                ps.setString( 2, contractor.getLastName());
-                                ps.setTimestamp(3, toTimeStamp(contractor.getDOB()));
+                                ps.setString( 1, user.getFirstName());
+                                ps.setString( 2, user.getLastName());
+                                ps.setTimestamp(3, toTimeStamp(user.getDOB()));
                                 ps.setString( 4, contractor.getTypeOfContractor());
-                                ps.setInt( 5, contractor.getContact().getContactId());
-                                ps.setInt( 6, contractor.getUserAccount().getUserID());
+                                ps.setInt( 5, user.getContact().getContactId());
+                                ps.setInt( 6, user.getUserAccount().getUserID());
                                 ps.executeUpdate();
                  conn.closeDBConnection();        
                  isUpdated = true;
@@ -266,6 +270,7 @@ public class UpdateRecord {
                 
             case FREELANCER:
                 try{
+                User user = ( Freelancer )obj;
                 Freelancer freelancer = ( Freelancer )obj;
                 
                 String query;
@@ -280,20 +285,20 @@ public class UpdateRecord {
                 
                                     
                  PreparedStatement ps = conn.insertRecord(query);
-                                ps.setString( 1, freelancer.getFirstName());
-                                ps.setString( 2, freelancer.getLastName());
-                                ps.setTimestamp(3,toTimeStamp( freelancer.getDOB()));
+                                ps.setString( 1, user.getFirstName());
+                                ps.setString( 2, user.getLastName());
+                                ps.setTimestamp(3,toTimeStamp( user.getDOB()));
                                 ps.setString(4, freelancer.getYearsOfExperince());
                                 ps.setString(5, freelancer.getSelfDescription());
-                                ps.setInt( 6, freelancer.getContact().getContactId());
-                                ps.setInt( 7, freelancer.getUserAccount().getUserID());
+                                ps.setInt( 6, user.getContact().getContactId());
+                                ps.setInt( 7, user.getUserAccount().getUserID());
                                 ps.executeUpdate();
                  conn.closeDBConnection();    
                  isUpdated = true;
                 }catch( SQLException e){
                     e.printStackTrace();
                 }
-            
+            break;
             case JOB:
                 try{
                     Job job = (Job)obj;
