@@ -78,12 +78,7 @@ public class MainScreenController implements Initializable {
     private AnchorPane searchPane;
     
     
-    private DatePicker datepicker;
-    private TextField txtSearch;
-    private HBox hbox;
-    private Button btnSearch;
-    private String criteria;
-    private LocalDate postDate;
+    
     @FXML
     private Tab tabSearchResult;
     @FXML
@@ -129,8 +124,6 @@ public class MainScreenController implements Initializable {
     @FXML
     private TabPane tabPaneFreelancer;
   
-    private static final int  FREELANCER = 1;
-    private  static final int  CONTRACTOR = 0;
     @FXML
     private TabPane mainTabPane;
     @FXML
@@ -139,9 +132,25 @@ public class MainScreenController implements Initializable {
     private Tab tabContractor;
     @FXML
     private Tab tabFreelancer;
+    
+    
+         
+            
     /**
      * Initializes the controller class.
      */
+    
+    
+    
+    private static final int  FREELANCER = 1;
+    private  static final int  CONTRACTOR = 0;
+    private DatePicker datepicker;
+    private TextField txtSearch;
+    private HBox hbox;
+    private Button btnSearch;
+    private String criteria;
+    private LocalDate postDate;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -287,7 +296,7 @@ public class MainScreenController implements Initializable {
     }
 
     @FXML
-    private void radbtnCategoryHandler(ActionEvent event) {
+    private void radbtnCategoryHandler(ActionEvent event) throws IOException {
         if( hbox.getChildren().isEmpty()){          
              hbox.getChildren().add(btnSearch);
              hbox.getChildren().add(0,txtSearch );
@@ -297,18 +306,18 @@ public class MainScreenController implements Initializable {
         } 
         
          criteria = "jobCategory";
-//         Stage stage = null;
-//         Parent root;
-//         stage = (Stage) settings.getScene().getWindow();       
-//       
-//        
-//         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/updatePostScreen.fxml"));
-//         root = loader.load();
-//         
-//         Scene scene = new Scene(root);
-//         stage.setScene(scene);
-//         stage.centerOnScreen();
-//         stage.show();
+         Stage stage = null;
+         Parent root;
+         stage = (Stage) settings.getScene().getWindow();       
+       
+        
+         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/updatePostScreen.fxml"));
+         root = loader.load();
+         
+         Scene scene = new Scene(root);
+         stage.setScene(scene);
+         stage.centerOnScreen();
+         stage.show();
 //         
 //         RegistrationScreenController controller = loader.getController();         
 //         controller.setUpdate(isUpdate, username);
@@ -419,6 +428,26 @@ public class MainScreenController implements Initializable {
 //                        });
     }
 
+    @FXML
+    private void tableViewJobHandler(MouseEvent event) throws IOException {
+        
+        Stage stage = null;
+         Parent root;
+         stage = (Stage) tableViewJob.getScene().getWindow();       
+       
+        
+         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/ResponseJobPost.fxml"));
+         root = loader.load();
+         
+         Scene scene = new Scene(root);
+         stage.setScene(scene);
+         stage.centerOnScreen();
+         stage.show();
+    }
+
+   
+    
+    
     
 
     
