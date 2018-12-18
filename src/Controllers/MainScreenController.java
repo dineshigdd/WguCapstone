@@ -48,6 +48,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -61,9 +62,6 @@ public class MainScreenController implements Initializable {
     private MenuItem updateMenuItem;
     @FXML
     private MenuButton settings;
-    
-    private String username;
-    private String password;
     @FXML
     private MenuItem deleteMenuItem;
     @FXML
@@ -134,7 +132,8 @@ public class MainScreenController implements Initializable {
     private Tab tabFreelancer;
     
     
-         
+     private String username;
+    private String password;
             
     /**
      * Initializes the controller class.
@@ -233,9 +232,9 @@ public class MainScreenController implements Initializable {
         }
         
         if( userType == FREELANCER ){
-            mainTabPane.getTabs().remove(tabFreelancer);
-        }else{
             mainTabPane.getTabs().remove(tabContractor);
+        }else{
+            mainTabPane.getTabs().remove(tabFreelancer);
         }
     }
      
@@ -311,13 +310,13 @@ public class MainScreenController implements Initializable {
          stage = (Stage) settings.getScene().getWindow();       
        
         
-         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/updatePostScreen.fxml"));
-         root = loader.load();
-         
-         Scene scene = new Scene(root);
-         stage.setScene(scene);
-         stage.centerOnScreen();
-         stage.show();
+//         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/updatePostScreen.fxml"));
+//         root = loader.load();
+//         
+//         Scene scene = new Scene(root);
+//         stage.setScene(scene);
+//         stage.centerOnScreen();
+//         stage.show();
 //         
 //         RegistrationScreenController controller = loader.getController();         
 //         controller.setUpdate(isUpdate, username);
@@ -375,14 +374,20 @@ public class MainScreenController implements Initializable {
         }else{
             jobCategory = radbtnHybrid.getText().toLowerCase();
         }
+        
+         int userID = getUserID();
+
+         //get contractorID          
+        int contractorID = getUserTypeID("contractorID","Contractor",userID);     
 
         Job job = new Job(
                 txtJobTitle.getText(),
                 txtAreaDescription.getText(),
-                jobCategory,                
+                jobCategory,       
                 LocalDateTime.now()
         );
         
+        job.setJobPostedBy(contractorID);
         AddRecord.setDbRecord(job, JOB);
     }
 
@@ -431,27 +436,78 @@ public class MainScreenController implements Initializable {
     @FXML
     private void tableViewJobHandler(MouseEvent event) throws IOException {
         
-        Stage stage = null;
-         Parent root;
-         stage = (Stage) tableViewJob.getScene().getWindow();       
        
+       int jobID = tableViewJob.getSelectionModel().getSelectedItem().getJobID();
+       int jobPostedBy = tableViewJob.getSelectionModel().getSelectedItem().getJobPostedBy();
+       
+       int userID;
+       
+       userID = getUserID();
+       int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
+      
+       
+       Stage response = new Stage();
+       Parent root;
+       FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/ResponseJobPost.fxml"));
+       
+
+        Scene scene = new Scene( loader.load());
+        response.setScene(scene); 
+        response.setTitle("Response to job posted");
+        response.centerOnScreen();
+        response.show();
         
-         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/ResponseJobPost.fxml"));
-         root = loader.load();
-         
-         Scene scene = new Scene(root);
-         stage.setScene(scene);
-         stage.centerOnScreen();
-         stage.show();
+        ResponseJobPostController controller = loader.getController();
+        controller.initialize( jobID, freelancerID );
     }
 
    
+    private int getUserID(){
+         String query = "select userID, username from User where userName ="+ "'" + username + "'";       
+       
+         
+         //get userID
+         int userID = 0;
+         try{
+               DBConnection conn = new DBConnection();
+               conn.connectDatabase();
+               conn.setStatement(query);
+               ResultSet sqlResult = conn.getStatement();
+            while( sqlResult.next()){
+                userID = sqlResult.getInt("userID");
+            }
+            
+              conn.closeDBConnection();
+         }catch(SQLException e){}
+         
+        
+        return userID;
+    }
     
-    
-    
-
-    
-    
-
+  private int getUserTypeID(String userCategoryID, String userCategory , int userID ){
+       String query;
+       int userCategoryId = 0;
+       
+       query = "select " + userCategoryID  + "," +  userCategory + ".userID from " + userCategory + ", User where " +
+               userCategory + ".userID = User.userID and User.userID = " + userID;
+       
+       System.out.println(query);
+       
+       try{
+               DBConnection conn = new DBConnection();
+               conn.connectDatabase();
+               conn.setStatement(query);
+               ResultSet sqlResult = conn.getStatement();
+               
+            while( sqlResult.next()){
+                userCategoryId = sqlResult.getInt(userCategoryID);
+            }
+            
+              conn.closeDBConnection();
+         }catch(SQLException e){}
+       
+       return userCategoryId;
+      
+  }
     
 }

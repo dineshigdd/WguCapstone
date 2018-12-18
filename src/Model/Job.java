@@ -17,6 +17,7 @@ public class Job {
     private String jobTitle;
     private String jobDescription;    
     private String jobCategory;
+    private int jobPostedBy;
     private LocalDateTime postDate;
     private LocalDateTime updateDate;
 
@@ -26,8 +27,7 @@ public class Job {
     }
 
     
-    public Job( String jobTitle, String jobDescription, String jobCategory ,LocalDateTime postDate) {
-        this.jobID = jobID;
+    public Job( String jobTitle, String jobDescription, String jobCategory , LocalDateTime postDate) {
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
         this.jobCategory = jobCategory;
@@ -61,6 +61,15 @@ public class Job {
         this.jobDescription = jobDescription;
     }
 
+    public int getJobPostedBy() {
+        return jobPostedBy;
+    }
+
+    public void setJobPostedBy(int jobPostedBy) {
+        this.jobPostedBy = jobPostedBy;
+    }
+    
+    
     public LocalDateTime getPostDate() {
         return postDate;
     }
@@ -73,7 +82,7 @@ public class Job {
         return jobCategory;
     }
 
-    public void setJobType(String jobType) {
+    public void setJobType(String jobCategory) {
         this.jobCategory = jobCategory;
     }
 

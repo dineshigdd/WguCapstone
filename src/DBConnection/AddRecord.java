@@ -9,6 +9,7 @@ import Model.Contact;
 import Model.Contractor;
 import Model.Freelancer;
 import Model.Job;
+import Model.Message;
 import Model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +17,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 /**
  *
@@ -27,6 +27,7 @@ public  class AddRecord {
     private static final int  FREELANCER = 1;
     private  static final int  CONTRACTOR = 0;
     private static final int JOB = 3;
+    private static final int MESSAGE = 4;
     public AddRecord() {
     }
     
@@ -76,7 +77,7 @@ public  class AddRecord {
     
     
     
-    public static void setDbRecord( Object obj, int userType ){
+    public static void setDbRecord( Object obj, int ObjectType ){
         
         DBConnection  conn = new DBConnection();
         conn.connectDatabase();    
@@ -84,7 +85,7 @@ public  class AddRecord {
        
            // int contactID = setAddress( address );
             //System.out.println( "Fk key ID:" + contactID );
-        switch( userType ){
+        switch( ObjectType ){
             
             case CONTRACTOR: 
                try{
@@ -148,15 +149,37 @@ public  class AddRecord {
                 try{
                 Job job = ( Job )obj;
                 String query = "";
-                query = "INSERT INTO Job(jobTitle,jobDescription,jobCategory,jobPostDate)" + 
-                                            "VALUES( ? , ? , ? ,? );";
+                query = "INSERT INTO Job(jobTitle,jobDescription,jobCategory, jobPostedBy ,jobPostDate)" + 
+                                            "VALUES( ? , ? , ? ,?, ?);";
                                             
                                                 
                  PreparedStatement ps = conn.insertRecord(query);
                                 ps.setString( 1, job.getJobTitle());
                                 ps.setString( 2, job.getJobDescription());
                                 ps.setString( 3, job.getJobCategory());
-                                ps.setTimestamp(4, toTimeStampWithTime(job.getPostDate()));
+                                ps.setInt(4, job.getJobPostedBy());
+                                ps.setTimestamp(5, toTimeStampWithTime(job.getPostDate()));
+                                ps.execute();
+                 conn.closeDBConnection();       
+                }catch( SQLException e){
+                    e.printStackTrace();
+                }
+           
+            break;
+            case MESSAGE:
+                try{
+                Message message = ( Message )obj;
+                String query = "";
+                query = "INSERT INTO Message( message,msgCreateDate,freelancerID,jobID )" + 
+                                            "VALUES( ? , ? , ?, ? );";
+                                            
+                                                
+                 PreparedStatement ps = conn.insertRecord(query);
+                                ps.setString( 1, message.getMessage());
+                                ps.setTimestamp(2, toTimeStampWithTime(message.getMsgCreateDate()));
+                                ps.setInt( 3, message.getFreelancerID());
+                                ps.setInt( 4, message.getJobID());                               
+                                
                                 ps.execute();
                  conn.closeDBConnection();       
                 }catch( SQLException e){

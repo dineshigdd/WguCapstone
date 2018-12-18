@@ -64,6 +64,7 @@ public class SearchRecord {
                );
                
                job.setJobID(sqlResult.getInt("jobID"));
+               job.setJobPostedBy(sqlResult.getInt("jobPostedBy"));
                jobList.add(job);
             }
             
