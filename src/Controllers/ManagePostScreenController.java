@@ -8,6 +8,7 @@ package Controllers;
 import DBConnection.DeleteRecord;
 import DBConnection.UpdateRecord;
 import Model.Job;
+import Model.UserAccount;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -35,6 +36,9 @@ import javafx.stage.Stage;
  *
  * @author Dinesh
  */
+
+
+
 public class ManagePostScreenController implements Initializable {
 
     @FXML
@@ -58,12 +62,14 @@ public class ManagePostScreenController implements Initializable {
     private Button btnCancel;
     @FXML
     private Button btnDelete;
+    private UserAccount userAccount;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        userAccount = new UserAccount();
         job = new Job();
     }    
 
@@ -95,8 +101,10 @@ public class ManagePostScreenController implements Initializable {
          showMainScreen();
     }
 
-    void setJob(Job job) {
+    void setJob(Job job, UserAccount userAccount) {
         this.job = job;
+        this.userAccount = userAccount;
+        
         txtJobTitle.setText(job.getJobTitle());
         txtAreaDescription.setText(job.getJobDescription());
         
@@ -143,6 +151,9 @@ public class ManagePostScreenController implements Initializable {
          stage.setScene(scene);
          stage.centerOnScreen();
          stage.show();
+         
+         MainScreenController controller = loader.getController();
+         controller.setLoginInfo( userAccount );
     }
 
     @FXML

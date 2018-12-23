@@ -198,8 +198,8 @@ public class MainScreenController implements Initializable {
     private static final int  JOB = 3;
     ObservableList<PrgmLanguage> prgmLanguageList = null;
     HashMap <String,Integer> languageMap;
-    private String username;
-    private String password;       
+//    private String username;
+//    private String password;       
     
    
     private DatePicker datepicker;
@@ -215,7 +215,10 @@ public class MainScreenController implements Initializable {
     private Tab tabPostJob;
     private boolean isInviteFreelancer;
     private Assignment assignment;
-    
+    private UserAccount userAccount;
+            
+            
+            
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -224,6 +227,7 @@ public class MainScreenController implements Initializable {
 //           hbox.setLayoutX(250);
 //           hbox.setLayoutY(170);    
 //           searchPane.getChildren().add(hbox);
+           userAccount = new UserAccount();
            btnSearch = new Button("Search");    
          
            ObservableList<String> list = FXCollections.observableArrayList(
@@ -264,7 +268,7 @@ public class MainScreenController implements Initializable {
          stage.show();
          
          RegistrationScreenController controller = loader.getController();         
-         controller.setUpdate(isUpdate, username);
+         controller.setUpdate(isUpdate, userAccount.getUsername());
          
         
     }       
@@ -275,11 +279,11 @@ public class MainScreenController implements Initializable {
         
         //prompt for password
         UserAccount useraccount = new UserAccount();
-        useraccount.setUsername(this.username);
+        useraccount.setUsername(this.userAccount.getUsername());
        if( isPasswordConfirmed("Please Enter Your Password", "Password Confirmation","Password confirmation required") ){
                 
             
-             useraccount.setPassword(password);
+             useraccount.setPassword(this.userAccount.getPassword());
              
              if( alert("Are you sure you want delete your account", "Delete confirmation","Deleting your account",AlertType.CONFIRMATION)){
                      DeleteRecord.deleteUserAccount(useraccount);
@@ -289,15 +293,17 @@ public class MainScreenController implements Initializable {
          }
     }
     
-     void setLoginInfo(String username , String password) {
-        this.username = username;
-        this.password = password;
+     public void setLoginInfo(UserAccount userAccount) {
+//        this.username = username;
+//        this.password = password;
+        this.userAccount = userAccount;
+        //userAccount.setPassword(password);
         int userType = -1;
        
         try {
         DBConnection conn = new DBConnection();
         conn.connectDatabase();
-        conn.setStatement("select userType from user where username =" + "'" + username + "'");
+        conn.setStatement("select userType from user where username =" + "'" + userAccount.getUsername()+ "'");
         ResultSet sqlResult = conn.getStatement();
         while( sqlResult.next()){
               userType = sqlResult.getInt("userType");
@@ -325,7 +331,7 @@ public class MainScreenController implements Initializable {
         dialog.setContentText(message);
         
         Optional<String> result = dialog.showAndWait();
-        return result.get().equals(this.password);
+        return result.get().equals(userAccount.getPassword());
      }
      
      
@@ -551,7 +557,7 @@ public class MainScreenController implements Initializable {
          
          Job job = tableViewJobPosted.getSelectionModel().getSelectedItem();
          ManagePostScreenController controller = loader.getController();         
-         controller.setJob(job);
+         controller.setJob(job , userAccount);
 //        colAllJobTitle.setOnEditCommit( 
 //                         new EventHandler<CellEditEvent<Job,String>>() {  
 //                            @Override
@@ -593,7 +599,7 @@ public class MainScreenController implements Initializable {
 
    
     private int getUserID(){
-         String query = "select userID, username from User where userName ="+ "'" + username + "'";       
+         String query = "select userID, username from User where userName ="+ "'" + userAccount.getUsername() + "'";       
        
          
          //get userID

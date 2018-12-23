@@ -167,8 +167,11 @@ public class AccountCreationScreenController implements Initializable {
                         stage.centerOnScreen();
                         stage.show();
                         
+                        userAccount.setUsername(username);
+                        userAccount.setPassword(password);
+                        
                         MainScreenController controller = loader.getController();
-                        controller.setLoginInfo(username, password);
+                        controller.setLoginInfo(userAccount);
                }else{
                    alert("Your username or password is invalid","Invalid username or password","Invalid Username or Password!",AlertType.ERROR);
                }        
