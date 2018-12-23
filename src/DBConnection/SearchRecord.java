@@ -5,6 +5,7 @@
  */
 package DBConnection;
 
+import Model.Freelancer;
 import Model.Job;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ import javafx.collections.ObservableList;
 public class SearchRecord {
     
     
-    public static ObservableList<Job> searchRecord(String criteria , String criteriaValue){
+    public static ObservableList<Job> searchJob(String criteria , String criteriaValue){
        
         ObservableList<Job> jobList = FXCollections.observableArrayList();
         DBConnection conn = new DBConnection();
@@ -76,4 +77,59 @@ public class SearchRecord {
        
         return jobList;
     }
+    
+    
+      public static ObservableList<Freelancer> searchFreelancer(String criteria , String criteriaValue){
+        ObservableList<Freelancer> freelanecerList = FXCollections.observableArrayList();
+        DBConnection conn = new DBConnection();
+        conn.connectDatabase();
+        
+
+        String query = null;
+        
+        switch( criteria ){
+            case "progLanguage": 
+                   query = "select freelancer.freelancerID,firstName,lastName,yearsOfExperience,selfDescription "+
+                    "from freelancer, programlanguage , freelancerlanguage" +  
+                    " where freelancer.freelancerID = freelancerlanguage.freelancerID "+
+                    "and programlanguage.progLanguageID = freelancerlanguage.progLanguageID and " + criteria + " = '" + criteriaValue + "'";           
+            break;
+            
+            case "yearsOfExperience":
+                  query = "select freelancer.freelancerID,firstName,lastName,yearsOfExperience,selfDescription from freelancer where " + criteria + "= '" + criteriaValue + "'";
+            break;
+            
+            case "city":
+                  query = "select freelancer.freelancerID,firstName,lastName,yearsOfExperience,selfDescription from freelancer, contact"
+                          + " where freelancer.contactID = contact.contactID and " + criteria + "= '" + criteriaValue + "'";
+            break;
+        }
+               
+       
+        conn.setStatement( query );
+        ResultSet sqlResult = conn.getStatement();
+        
+        try {
+            while( sqlResult.next()){
+                Freelancer freelancer = new Freelancer();           
+                freelancer.setFreelancerID(sqlResult.getInt("freelancerID"));
+                System.out.println("freelancer IDDDD :" + freelancer.getFreelancerID());
+                freelancer.setFirstName(sqlResult.getString("firstName"));
+                freelancer.setLastName(sqlResult.getString("lastName"));
+                freelancer.setYearsOfExperince(sqlResult.getString("yearsOfExperience"));
+                freelancer.setSelfDescription(sqlResult.getString("selfDescription"));               
+                freelanecerList.add(freelancer);
+            }
+            
+            
+            
+        conn.closeDBConnection();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+       
+        return freelanecerList;
+      }
+
 }

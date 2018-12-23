@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
@@ -33,9 +34,9 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TabPane prefHeight="591.0" prefWidth="881.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TabPane fx:id="tabPaneContractor" prefHeight="591.0" prefWidth="881.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <tabs>
-                            <Tab text="Post A Job">
+                            <Tab fx:id="tabPostJob" text="Post A Job">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="326.0" prefWidth="611.0">
                                        <children>
@@ -129,9 +130,42 @@
                               </Tab>
                             <Tab text="Search for Freelancer">
                               <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <HBox fx:id="searchHzBoxContractor" layoutX="250.0" layoutY="135.0" prefHeight="31.0" prefWidth="385.0" spacing="10.0" />
+                                          <VBox layoutX="212.0" layoutY="225.0" spacing="20.0">
+                                             <children>
+                                                <RadioButton fx:id="radBtnSkill" mnemonicParsing="false" onAction="#radbtnSkillHandler" text="By Skill">
+                                                   <toggleGroup>
+                                                      <ToggleGroup fx:id="searchCategory1" />
+                                                   </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton fx:id="radBtnExperience" mnemonicParsing="false" onAction="#radbtnExperienceHandler" text="By Experience" toggleGroup="$searchCategory1" />
+                                                <RadioButton fx:id="radBtnCity" mnemonicParsing="false" onAction="#radbtnFreelancerCityHandler" text="By City" toggleGroup="$searchCategory1" />
+                                             </children>
+                                          </VBox>
+                                       </children></AnchorPane>
                               </content>
                             </Tab>
+                              <Tab fx:id="tabFreelancerSearchResult" text="Search result">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <TableView fx:id="tableViewFreelancer" layoutX="57.0" layoutY="114.0" onMouseClicked="#tableViewFreelancerHandler" prefHeight="477.0" prefWidth="881.0" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <columns>
+                                              <TableColumn fx:id="colFreelancerFullName" prefWidth="75.0" text="Full Name" />
+                                              <TableColumn fx:id="colDescription" prefWidth="75.0" text="description" />
+                                                <TableColumn fx:id="colExperience" prefWidth="75.0" text="Experience" />
+                                            </columns>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
+                                          </TableView>
+                                          <Button fx:id="btnInviteFreelancer" layoutX="516.0" layoutY="501.0" mnemonicParsing="false" onAction="#btnInviteFreelancerHandler" text="Button" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
                           </tabs>
                         </TabPane>
                      </children>
@@ -146,15 +180,15 @@
                         <content>
                           <AnchorPane fx:id="searchPane" minHeight="0.0" minWidth="0.0" prefHeight="647.0" prefWidth="881.0">
                                  <children>
-                                    <HBox fx:id="searchHzBox" layoutX="214.0" layoutY="174.0" prefHeight="31.0" prefWidth="385.0" spacing="10.0" />
-                                    <VBox layoutX="214.0" layoutY="251.0" spacing="20.0">
+                                    <HBox fx:id="searchHzBoxFreelancer" layoutX="250.0" layoutY="135.0" prefHeight="31.0" prefWidth="385.0" spacing="10.0" />
+                                    <VBox layoutX="212.0" layoutY="225.0" spacing="20.0">
                                        <children>
                                           <RadioButton fx:id="radBtnDate" mnemonicParsing="false" onAction="#radbtnDateHandler" text="By Date">
                                              <toggleGroup>
                                                 <ToggleGroup fx:id="searchCategory" />
                                              </toggleGroup>
                                           </RadioButton>
-                                          <RadioButton fx:id="radBtnTitle" mnemonicParsing="false" onAction="#radbtnTitleHandler" text="By Title" toggleGroup="$searchCategory" />
+                                          <RadioButton fx:id="radBtnTitle" mnemonicParsing="false" onAction="#radbtnContractorTitleHandler" text="By Title" toggleGroup="$searchCategory" />
                                           <RadioButton fx:id="radBtnCategory" mnemonicParsing="false" onAction="#radbtnCategoryHandler" text="By Category" toggleGroup="$searchCategory" />
                                        </children>
                                     </VBox>
@@ -181,6 +215,40 @@
                               </AnchorPane>
                         </content>
                       </Tab>
+                        <Tab fx:id="tabAddSkills" onSelectionChanged="#tabAddSkillsHandler" text="Add Skills">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <HBox layoutX="110.0" layoutY="14.0" prefHeight="161.0" prefWidth="644.0" spacing="10.0">
+                                       <children>
+                                          <Label prefHeight="30.0" prefWidth="181.0" text="Programming Languages :" />
+                                          <ListView fx:id="ListallPrgmLanguages" prefHeight="200.0" prefWidth="200.0" />
+                                          <AnchorPane>
+                                             <children>
+                                                <Button fx:id="btnRightArrow" layoutY="40.0" mnemonicParsing="false" onAction="#btnRightArrowHandler" text="&gt;&gt;" />
+                                                <Button fx:id="btnLeftArrow" layoutY="91.0" mnemonicParsing="false" onAction="#btnLeftArrowHandler" text="&lt;&lt;" />
+                                             </children>
+                                          </AnchorPane>
+                                          <ListView fx:id="ListselectedPrgmLanguages" prefHeight="200.0" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox layoutX="146.0" layoutY="194.0" prefHeight="123.0" prefWidth="611.0" spacing="10.0">
+                                       <children>
+                                          <Label prefHeight="21.0" prefWidth="156.0" text="Other technical Skills:" />
+                                          <TextArea fx:id="textAreaOtherTech" prefHeight="123.0" prefWidth="475.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox layoutX="153.0" layoutY="342.0" prefHeight="123.0" prefWidth="604.0" spacing="10.0">
+                                       <children>
+                                          <Label prefHeight="21.0" prefWidth="138.0" text="non-technical Skills:" />
+                                          <TextArea fx:id="textAreaNonTech" prefHeight="123.0" prefWidth="457.0" />
+                                       </children>
+                                    </HBox>
+                                    <Button fx:id="btnAddSkills" layoutX="672.0" layoutY="495.0" mnemonicParsing="false" onAction="#btnAddSkillsHandler" text="Add Skills" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
                     </tabs>
                   </TabPane>
                </content>

@@ -18,7 +18,8 @@ public abstract class User {
     protected UserAccount userAccount;
     protected LocalDate DOB;
     protected Contact contact;
-
+   
+    
     public UserAccount getUserAccount() {
         return userAccount;
     }
@@ -46,12 +47,9 @@ public abstract class User {
         return contact;
     }
 
-    public void setContact(Contact contact) {
-        
-       this.contact = contact;
-        
+    public void setContact(Contact contact) {        
+       this.contact = contact;        
     }
-
 
     public String getFirstName() {
         return firstName;
@@ -76,14 +74,8 @@ public abstract class User {
     public void setDOB(LocalDate DOB) {
         this.DOB = DOB;
     }
-
-//    public String getPhone() {
-//        return phone;
-//    }
-//
-//    public void setPhone(String phone) {
-//        this.phone = phone;
-//    }
-//      
     
+    public String getFullName(){
+        return firstName + " "+ lastName;
+    }
 }

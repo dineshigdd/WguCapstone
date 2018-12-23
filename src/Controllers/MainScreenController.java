@@ -9,16 +9,27 @@ import DBConnection.AddRecord;
 import DBConnection.DBConnection;
 import DBConnection.DeleteRecord;
 import DBConnection.SearchRecord;
+import Model.Assignment;
+import Model.Freelancer;
+import Model.FreelancerLanguage;
 import Model.Job;
+import Model.PrgmLanguage;
 import Model.UserAccount;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -32,10 +43,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -70,8 +86,6 @@ public class MainScreenController implements Initializable {
     private RadioButton radBtnDate;
     @FXML
     private RadioButton radBtnTitle;
-    @FXML
-    private HBox searchHzBox;
     @FXML
     private AnchorPane searchPane;
     
@@ -108,9 +122,9 @@ public class MainScreenController implements Initializable {
     @FXML
     private TextArea txtAreaDescription;
     
-    private final int  JOB = 3;
+    
     @FXML
-    private TableColumn<Job, String> colAllJobTitle;
+    private TableColumn<?, ?> colAllJobTitle;
     @FXML
     private TableColumn<?, ?> colAllJobDescription;
     @FXML
@@ -120,8 +134,7 @@ public class MainScreenController implements Initializable {
     @FXML
     private RadioButton radBtnCategory;
     @FXML
-    private TabPane tabPaneFreelancer;
-  
+    private TabPane tabPaneFreelancer;  
     @FXML
     private TabPane mainTabPane;
     @FXML
@@ -132,38 +145,102 @@ public class MainScreenController implements Initializable {
     private Tab tabFreelancer;
     
     
-     private String username;
-    private String password;
-            
+    
     /**
      * Initializes the controller class.
      */
     
     
-    
+   
+    @FXML
+    private HBox searchHzBoxContractor;
+    @FXML
+    private ToggleGroup searchCategory1;
+    @FXML
+    private HBox searchHzBoxFreelancer;
+    @FXML
+    private RadioButton radBtnSkill;
+    @FXML
+    private RadioButton radBtnExperience;
+     @FXML
+    private RadioButton radBtnCity;
+    @FXML
+    private Tab tabAddSkills;      
+    @FXML
+    private Button btnRightArrow;
+    @FXML
+    private Button btnLeftArrow;
+    @FXML
+    private ListView<String> ListallPrgmLanguages;
+    @FXML
+    private ListView<String> ListselectedPrgmLanguages; 
+    @FXML
+    private Button btnAddSkills;  
+    @FXML
+    private TextArea textAreaOtherTech;
+    @FXML
+    private TextArea textAreaNonTech;
+    @FXML
+    private Tab tabFreelancerSearchResult;
+    @FXML
+    private TableColumn<?, ?> colDescription;
+    @FXML
+    private TableColumn<?, ?> colExperience;
+    @FXML
+    private TableView<Freelancer> tableViewFreelancer;
+    @FXML
+    private TabPane tabPaneContractor;
+    @FXML
+    private TableColumn<Freelancer, String> colFreelancerFullName;
+   
     private static final int  FREELANCER = 1;
     private  static final int  CONTRACTOR = 0;
+    private static final int  JOB = 3;
+    ObservableList<PrgmLanguage> prgmLanguageList = null;
+    HashMap <String,Integer> languageMap;
+    private String username;
+    private String password;       
+    
+   
     private DatePicker datepicker;
     private TextField txtSearch;
     private HBox hbox;
     private Button btnSearch;
     private String criteria;
     private LocalDate postDate;
+    private ComboBox comboBox;
+    @FXML
+    private Button btnInviteFreelancer;
+    @FXML
+    private Tab tabPostJob;
+    private boolean isInviteFreelancer;
+    private Assignment assignment;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-           hbox = new HBox();           
-           hbox.setSpacing(15);
-           hbox.setLayoutX(250);
-           hbox.setLayoutY(170);    
-           searchPane.getChildren().add(hbox);
-           btnSearch = new Button("Search");
+//           hbox = new HBox();           
+//           hbox.setSpacing(15);
+//           hbox.setLayoutX(250);
+//           hbox.setLayoutY(170);    
+//           searchPane.getChildren().add(hbox);
+           btnSearch = new Button("Search");    
+         
+           ObservableList<String> list = FXCollections.observableArrayList(
+              "less than 1 year",
+              "1 year",
+              "1 - 5 years",
+              "more than 5 years");
+           
+           comboBox = new ComboBox(list);
+           comboBox.setPromptText("Select Years Of Experience");
+           
            datepicker = new DatePicker();
            txtSearch = new TextField();        
            
           
-           searchJob();
+         
+          
            
      }    
 
@@ -233,8 +310,10 @@ public class MainScreenController implements Initializable {
         
         if( userType == FREELANCER ){
             mainTabPane.getTabs().remove(tabContractor);
+            searchJob();           
         }else{
             mainTabPane.getTabs().remove(tabFreelancer);
+            searchFreelancer();
         }
     }
      
@@ -268,26 +347,27 @@ public class MainScreenController implements Initializable {
     @FXML
     private void radbtnDateHandler(ActionEvent event) throws IOException {
         
-         if( hbox.getChildren().isEmpty()){
-             hbox.getChildren().add(datepicker);
-             hbox.getChildren().add(btnSearch);
-         }else if( hbox.getChildren().get(0).equals(txtSearch)){
-             hbox.getChildren().remove(0);
-             hbox.getChildren().add(0,datepicker);            
+         if( searchHzBoxFreelancer.getChildren().isEmpty()){
+             searchHzBoxFreelancer.getChildren().add(datepicker);
+             searchHzBoxFreelancer.getChildren().add(btnSearch);
+         }else if( searchHzBoxFreelancer.getChildren().get(0).equals(txtSearch)){
+             searchHzBoxFreelancer.getChildren().remove(0);
+             searchHzBoxFreelancer.getChildren().add(0,datepicker);            
          }
          criteria = "jobPostDate";
+         
     }
 
     @FXML
-    private void radbtnTitleHandler(ActionEvent event) {
+    private void radbtnContractorTitleHandler(ActionEvent event) {
         
         
-        if( hbox.getChildren().isEmpty()){
-             hbox.getChildren().add(btnSearch);
-             hbox.getChildren().add(0,txtSearch );
-        }else if( hbox.getChildren().get(0).equals(datepicker) ){
-             hbox.getChildren().remove(0);
-             hbox.getChildren().add(0,txtSearch );
+        if( searchHzBoxFreelancer.getChildren().isEmpty()){
+             searchHzBoxFreelancer.getChildren().add(btnSearch);
+             searchHzBoxFreelancer.getChildren().add(0,txtSearch );
+        }else if( searchHzBoxFreelancer.getChildren().get(0).equals(datepicker) ){
+             searchHzBoxFreelancer.getChildren().remove(0);
+             searchHzBoxFreelancer.getChildren().add(0,txtSearch );
         }   
         
          criteria = "jobTitle";
@@ -296,12 +376,12 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void radbtnCategoryHandler(ActionEvent event) throws IOException {
-        if( hbox.getChildren().isEmpty()){          
-             hbox.getChildren().add(btnSearch);
-             hbox.getChildren().add(0,txtSearch );
-        }else if( hbox.getChildren().get(0).equals(datepicker) ){
-             hbox.getChildren().remove(0);
-             hbox.getChildren().add(0,txtSearch );
+        if( searchHzBoxFreelancer.getChildren().isEmpty()){          
+             searchHzBoxFreelancer.getChildren().add(btnSearch);
+             searchHzBoxFreelancer.getChildren().add(0,txtSearch );
+        }else if( searchHzBoxFreelancer.getChildren().get(0).equals(datepicker) ){
+             searchHzBoxFreelancer.getChildren().remove(0);
+             searchHzBoxFreelancer.getChildren().add(0,txtSearch );
         } 
         
          criteria = "jobCategory";
@@ -324,6 +404,8 @@ public class MainScreenController implements Initializable {
 //        jobList.add(tableViewJobPosted.getItems().get(tableViewJobPosted.getItems().get));
     }
      
+    
+    
     //find job by posted date
     
    private void searchJob(){
@@ -338,11 +420,11 @@ public class MainScreenController implements Initializable {
                 
                 if( criteria.equals("jobPostDate")){                   
                      
-                    jobList = SearchRecord.searchRecord( criteria , datepicker.getValue().toString());               
+                    jobList = SearchRecord.searchJob( criteria , datepicker.getValue().toString());               
                 }else{                  
               
                    
-                    jobList = SearchRecord.searchRecord( criteria , txtSearch.getText() );
+                    jobList = SearchRecord.searchJob( criteria , txtSearch.getText() );
                 }
                 
                  colJobTitle.setCellValueFactory(new PropertyValueFactory<>("jobTitle"));
@@ -361,6 +443,44 @@ public class MainScreenController implements Initializable {
      
    } 
 
+   private void searchFreelancer(){
+       
+       
+        //get Input        
+        btnSearch.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                //get input
+                
+                ObservableList<Freelancer> freelancerList = null;
+                
+                if( criteria.equals("yearsOfExperience")){
+                      freelancerList  = SearchRecord.searchFreelancer( criteria , comboBox.getValue().toString() );
+                }else{
+                      freelancerList  = SearchRecord.searchFreelancer( criteria , txtSearch.getText() );
+                }   
+               
+                
+                
+                colFreelancerFullName.setCellValueFactory(
+                cellData -> Bindings.concat(
+                    cellData.getValue().getFirstName(),
+                            " ", 
+                    cellData.getValue().getLastName()));      
+                
+                 colDescription.setCellValueFactory(new PropertyValueFactory<>("selfDescription"));
+                 colExperience.setCellValueFactory(new PropertyValueFactory<>("yearsOfExperince"));
+                
+                 tableViewFreelancer.setItems(freelancerList);                 
+                 tabPaneContractor.getSelectionModel().selectNext();
+                
+            }
+        });
+        
+                   
+     
+   } 
+   
     @FXML
     private void btnSubmitHandler(ActionEvent event) {       
         
@@ -388,13 +508,23 @@ public class MainScreenController implements Initializable {
         );
         
         job.setJobPostedBy(contractorID);
-        AddRecord.setDbRecord(job, JOB);
+        int jobID ;
+        jobID = AddRecord.setDbRecord(job, JOB);
+        
+       
+        if ( isInviteFreelancer ){
+            
+            assignment.setContractorID(contractorID);       
+            assignment.setJobID(jobID);
+            
+            AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+        }
     }
 
     @FXML
     private void tabAllJobsHandler(Event event) {
         
-        ObservableList<Job> jobList = SearchRecord.searchRecord("", "*");
+        ObservableList<Job> jobList = SearchRecord.searchJob("", "*");
                  colAllJobTitle.setCellValueFactory(new PropertyValueFactory<>("jobTitle"));
               //   colAllJobTitle.setCellFactory(TextFieldTableCell.forTableColumn());               
                  colAllJobDescription.setCellValueFactory(new PropertyValueFactory<>("jobDescription"));
@@ -509,5 +639,202 @@ public class MainScreenController implements Initializable {
        return userCategoryId;
       
   }
+
+    @FXML
+    private void radbtnSkillHandler(ActionEvent event) {
+        
+        if( searchHzBoxContractor.getChildren().isEmpty()){
+             searchHzBoxContractor.getChildren().add(txtSearch);
+             searchHzBoxContractor.getChildren().add(btnSearch);
+         }else if( searchHzBoxContractor.getChildren().get(0).equals(comboBox)){
+             searchHzBoxContractor.getChildren().remove(0);
+             searchHzBoxContractor.getChildren().add(0,txtSearch);            
+         }        
+        
+        
+        criteria = "progLanguage";
+    }
+
+    @FXML
+    private void radbtnExperienceHandler(ActionEvent event) {
+        
+        if( searchHzBoxContractor.getChildren().isEmpty()){
+             searchHzBoxContractor.getChildren().add(comboBox);
+             searchHzBoxContractor.getChildren().add(btnSearch);
+         }else if( searchHzBoxContractor.getChildren().get(0).equals(txtSearch)){
+             searchHzBoxContractor.getChildren().remove(0);
+             searchHzBoxContractor.getChildren().add(0,comboBox);            
+         }
+        criteria = "yearsOfExperience";
+    }
+
+    @FXML
+    private void radbtnFreelancerCityHandler(ActionEvent event) {
+        
+        if( searchHzBoxContractor.getChildren().isEmpty()){
+             searchHzBoxContractor.getChildren().add(txtSearch);
+             searchHzBoxContractor.getChildren().add(btnSearch);
+         }else if( searchHzBoxContractor.getChildren().get(0).equals(comboBox)){
+             searchHzBoxContractor.getChildren().remove(0);
+             searchHzBoxContractor.getChildren().add(0,txtSearch); 
+         }
+        criteria = "city";
+    }
+
     
+    @FXML
+    private void tabAddSkillsHandler(Event event) {
+        
+     if( ListallPrgmLanguages.getItems().isEmpty() && ListselectedPrgmLanguages.getItems().isEmpty()  ){ 
+        prgmLanguageList =  FXCollections.observableArrayList();
+//        prgmLanguageList = FXCollections.observableArrayList(
+//                    "Java","C","Python","C++","Visual Basic .NET","C#","JavaScript","PHP",
+//                    "SQL","Objective-C","Delphi/Object Pascal","Assembly language","MATLAB",
+//                    "Swift","Go","R","RubyprgmLanguageList","Perl","Other"
+//         );
+//        
+         PrgmLanguage progrmLanguage;
+         DBConnection conn = new DBConnection();
+         conn.connectDatabase();
+         conn.setStatement("select * from programlanguage");
+         ResultSet sqlResult = conn.getStatement();
+        
+         languageMap = new HashMap<>();
+
+        try {
+            while( sqlResult.next()){
+                progrmLanguage = new PrgmLanguage();
+                progrmLanguage.setProgLanguageID(sqlResult.getInt("progLanguageID"));
+                progrmLanguage.setProgLanguage(sqlResult.getString("progLanguage"));              
+                
+                languageMap.put(  progrmLanguage.getProgLanguage(),progrmLanguage.getProgLanguageID());
+                prgmLanguageList.add(progrmLanguage);
+            }
+        } catch (SQLException ex) {
+        }
+        
+        
+        for(int i = 0; i < prgmLanguageList.size(); i++ ){
+           ListallPrgmLanguages.getItems().add(prgmLanguageList.get(i).getProgLanguage());
+        }
+     }
+    }
+
+    @FXML
+    private void btnRightArrowHandler(ActionEvent event) {
+        
+        if( !ListallPrgmLanguages.getSelectionModel().isEmpty() ){
+            
+            ListselectedPrgmLanguages.getItems().add(       
+                    ListallPrgmLanguages.getSelectionModel().getSelectedItem());
+
+            ListallPrgmLanguages.getItems().remove(ListallPrgmLanguages.getSelectionModel().getSelectedIndex());
+        }
+       
+    }
+
+    @FXML
+    private void btnLeftArrowHandler(ActionEvent event) {
+        
+        if(  !ListselectedPrgmLanguages.getSelectionModel().isEmpty() ){
+            
+            ListallPrgmLanguages.getItems().add(       
+                        ListselectedPrgmLanguages.getSelectionModel().getSelectedItem());   
+
+            ListselectedPrgmLanguages.getItems().remove(
+                        ListselectedPrgmLanguages.getSelectionModel().getSelectedItem());       
+        }
+            
+                  
+    }
+
+    @FXML
+    private void btnAddSkillsHandler(ActionEvent event) {
+        
+        //get Prgramming laguagues
+        int userID;
+        int freelancerID;
+        int size = ListselectedPrgmLanguages.getItems().size();
+        userID = getUserID();
+        freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
+       
+        
+        for( int i = 0 ; i < size; i++ ){
+                int progLanguageID = languageMap.get(ListselectedPrgmLanguages.getItems().get(i));        
+       
+        
+        
+        FreelancerLanguage freelancerLanguage = new FreelancerLanguage(
+                    freelancerID,
+                    progLanguageID        
+        );
+        
+        
+         AddRecord.setDbRecord(freelancerLanguage, AddRecord.FREELANCER_PRGM_LANGUAGE);
+        }
+        
+        
+        addOtherSkills( textAreaOtherTech.getText(), textAreaNonTech.getText());
+        
+    }
+
+    
+    private void addOtherSkills(String otherTech, String nonTech){
+        try{
+                DBConnection  conn = new DBConnection();
+                conn.connectDatabase();   
+                
+                String query;
+                query = "Update Freelancer set "
+                        + "otherTechSkills = ?," 
+                        + "nonTechSkills = ?";
+                       
+                
+                                    
+                 PreparedStatement ps = conn.insertRecord(query);
+                                ps.setString( 1, otherTech);
+                                ps.setString( 2, nonTech);                                
+                                ps.executeUpdate();
+                 conn.closeDBConnection();    
+                 
+                }catch( SQLException e){
+                }
+    }
+
+   
+    @FXML
+    private void tableViewFreelancerHandler(MouseEvent event) {
+        String fullName =  tableViewFreelancer.getSelectionModel().getSelectedItem().getFullName();
+        int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
+        btnInviteFreelancer.setText( "Post a Job to " + fullName );
+        
+        System.out.println("freelancerID:" + freelancerID);
+        assignment = new Assignment();        
+        assignment.setFreelancerID(freelancerID);
+//       Stage invite = new Stage();
+//       Parent root;
+//       FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/InviteFreelancer.fxml"));
+//       
+//
+//        Scene scene = new Scene( loader.load());
+//        invite.setScene(scene); 
+//        invite.setTitle("Invite the Freelancer");
+//        invite.centerOnScreen();
+//        invite.show();
+//        
+//        InviteFreelancerController controller = loader.getController();
+//        controller.initialize( tableViewFreelancer.getSelectionModel().getSelectedItem());
+    }
+
+    @FXML
+    private void btnInviteFreelancerHandler(ActionEvent event) {
+        
+        tabPaneContractor.getSelectionModel().select(tabPostJob);
+        isInviteFreelancer = true;
+    }
+
+    
+   
+   
+     
 }

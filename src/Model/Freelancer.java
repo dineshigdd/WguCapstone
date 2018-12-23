@@ -13,9 +13,12 @@ import java.util.Date;
  * @author Dinesh
  */
 public class Freelancer extends User{
+     
+    private int freelancerID;
     private String yearsOfExperince;
     private String selfDescription;
-
+    private String otherTechSkills;
+    private String nonTechSkills;
  
 public Freelancer() {
        
@@ -30,6 +33,14 @@ public Freelancer(String firstName, String lastName, LocalDate DOB,Contact conta
         this.yearsOfExperince = yearsOfExperience;  
         this.selfDescription = selfDescription;
     }   
+
+    public int getFreelancerID() {
+        return freelancerID;
+    }
+
+    public void setFreelancerID(int freelancerID) {
+        this.freelancerID = freelancerID;
+    }
     
     
     public String getYearsOfExperince() {
@@ -47,6 +58,22 @@ public Freelancer(String firstName, String lastName, LocalDate DOB,Contact conta
     public void setSelfDescription(String selfDescription) {
         this.selfDescription = selfDescription;
     }
+
+    public String getOtherTechSkills() {
+        return otherTechSkills;
+    }
+
+    public void setOtherTechSkills(String otherTechSkills) {
+        this.otherTechSkills = otherTechSkills;
+    }
+
+    public String getNonTechSkills() {
+        return nonTechSkills;
+    }
+
+    public void setNonTechSkills(String nonTechSkills) {
+        this.nonTechSkills = nonTechSkills;
+    }
         
-    
+      
 }

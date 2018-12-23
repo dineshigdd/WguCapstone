@@ -5,9 +5,11 @@
  */
 package DBConnection;
 
+import Model.Assignment;
 import Model.Contact;
 import Model.Contractor;
 import Model.Freelancer;
+import Model.FreelancerLanguage;
 import Model.Job;
 import Model.Message;
 import Model.User;
@@ -28,6 +30,9 @@ public  class AddRecord {
     private  static final int  CONTRACTOR = 0;
     private static final int JOB = 3;
     private static final int MESSAGE = 4;
+    public static final int FREELANCER_PRGM_LANGUAGE = 5;
+    public static final int ASSIGNMENT = 6;
+    
     public AddRecord() {
     }
     
@@ -77,8 +82,8 @@ public  class AddRecord {
     
     
     
-    public static void setDbRecord( Object obj, int ObjectType ){
-        
+    public static int setDbRecord( Object obj, int ObjectType ){
+        int ID = 0;
         DBConnection  conn = new DBConnection();
         conn.connectDatabase();    
         
@@ -147,21 +152,30 @@ public  class AddRecord {
             break;
             case JOB:
                 try{
-                Job job = ( Job )obj;
-                String query = "";
-                query = "INSERT INTO Job(jobTitle,jobDescription,jobCategory, jobPostedBy ,jobPostDate)" + 
-                                            "VALUES( ? , ? , ? ,?, ?);";
-                                            
-                                                
-                 PreparedStatement ps = conn.insertRecord(query);
-                                ps.setString( 1, job.getJobTitle());
-                                ps.setString( 2, job.getJobDescription());
-                                ps.setString( 3, job.getJobCategory());
-                                ps.setInt(4, job.getJobPostedBy());
-                                ps.setTimestamp(5, toTimeStampWithTime(job.getPostDate()));
-                                ps.execute();
-                 conn.closeDBConnection();       
-                }catch( SQLException e){
+                    Job job = ( Job )obj;
+                    String query = "";
+                    query = "INSERT INTO Job(jobTitle,jobDescription,jobCategory, jobPostedBy ,jobPostDate)" + 
+                                                "VALUES( ? , ? , ? ,?, ?);";
+
+
+                    PreparedStatement ps = conn.insertRecord(query);
+                                    ps.setString( 1, job.getJobTitle());
+                                    ps.setString( 2, job.getJobDescription());
+                                    ps.setString( 3, job.getJobCategory());
+                                    ps.setInt(4, job.getJobPostedBy());
+                                    ps.setTimestamp(5, toTimeStampWithTime(job.getPostDate()));
+                                    ps.execute();
+
+                    conn.setStatement("select LAST_INSERT_ID();");
+                    ResultSet sqlResult  = conn.getStatement();
+
+                            while( sqlResult.next() ){
+                                     ID = sqlResult.getInt("LAST_INSERT_ID()");               
+                                   
+                            }
+                    conn.closeDBConnection();      
+                 }
+                catch( SQLException e){
                     e.printStackTrace();
                 }
            
@@ -185,8 +199,44 @@ public  class AddRecord {
                 }catch( SQLException e){
                     e.printStackTrace();
                 }
+            break;    
+            case FREELANCER_PRGM_LANGUAGE:
+                try{
+                FreelancerLanguage freelancerLanguage = ( FreelancerLanguage )obj;
+                String query = "";
+                query = "INSERT INTO FreelancerLanguage( freelancerID,progLanguageID)" + 
+                                            "VALUES( ? , ? );";
+                                            
+                                                
+                 PreparedStatement ps = conn.insertRecord(query);
+                                ps.setInt( 1, freelancerLanguage.getFreelancerID());
+                                ps.setInt( 2, freelancerLanguage.getProgLanguageID());                     
+                                ps.execute();
+                 conn.closeDBConnection();       
+                }catch( SQLException e){
+                    e.printStackTrace();
+                }
+            break;
+            
+            case ASSIGNMENT:
+                try{
+                Assignment assignment = ( Assignment )obj;
+                String query = "";
+                query = "INSERT INTO Assignment( contractorID, freelancerID, jobID )" + 
+                                            "VALUES( ? , ? , ? );";
+                                            
+                                                
+                 PreparedStatement ps = conn.insertRecord(query);
+                                ps.setInt( 1, assignment.getContractorID());
+                                ps.setInt( 2, assignment.getFreelancerID());
+                                ps.setInt( 3, assignment.getJobID());                     
+                                ps.execute();
+                 conn.closeDBConnection();       
+                }catch( SQLException e){
+                    e.printStackTrace();
+                }    
         }  
-        
+       return ID; 
     }
     
     private static Timestamp toTimeStamp(LocalDate localDate){                
