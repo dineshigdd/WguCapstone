@@ -128,7 +128,7 @@
                                     </AnchorPane>
                                 </content>
                               </Tab>
-                            <Tab text="Search for Freelancer">
+                            <Tab fx:id="tabSearch" onSelectionChanged="#tabSearchHandler" text="Search for Freelancer">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
@@ -142,6 +142,7 @@
                                                 </RadioButton>
                                                 <RadioButton fx:id="radBtnExperience" mnemonicParsing="false" onAction="#radbtnExperienceHandler" text="By Experience" toggleGroup="$searchCategory1" />
                                                 <RadioButton fx:id="radBtnCity" mnemonicParsing="false" onAction="#radbtnFreelancerCityHandler" text="By City" toggleGroup="$searchCategory1" />
+                                                <RadioButton fx:id="radBtnAllFreelancers" mnemonicParsing="false" onAction="#radBtnAllFreelancersHandler" text="Show All Freelancers" toggleGroup="$searchCategory1" />
                                              </children>
                                           </VBox>
                                        </children></AnchorPane>
@@ -151,7 +152,7 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <TableView fx:id="tableViewFreelancer" layoutX="57.0" layoutY="114.0" onMouseClicked="#tableViewFreelancerHandler" prefHeight="477.0" prefWidth="881.0" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <TableView fx:id="tableViewFreelancer" layoutX="57.0" layoutY="114.0" onMouseClicked="#tableViewFreelancerHandler" prefHeight="477.0" prefWidth="881.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <columns>
                                               <TableColumn fx:id="colFreelancerFullName" prefWidth="75.0" text="Full Name" />
                                               <TableColumn fx:id="colDescription" prefWidth="75.0" text="description" />
@@ -161,7 +162,12 @@
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                              </columnResizePolicy>
                                           </TableView>
-                                          <Button fx:id="btnInviteFreelancer" layoutX="516.0" layoutY="501.0" mnemonicParsing="false" onAction="#btnInviteFreelancerHandler" text="Button" />
+                                          <ButtonBar fx:id="searchResultHzBar" buttonMinWidth="0.0" layoutX="150.0" layoutY="496.0" prefHeight="31.0" prefWidth="709.0">
+                                             <buttons>
+                                                <Button fx:id="btnAssignedJob" mnemonicParsing="false" onAction="#btnAssignedJobHandler" prefHeight="31.0" prefWidth="244.0" text="Assigned Job to the freelancer" />
+                                                <Button fx:id="btnInviteFreelancer" mnemonicParsing="false" onAction="#btnInviteFreelancerHandler" text="Invite the freelancer for a job " />
+                                                <Button fx:id="btnSave" mnemonicParsing="false" onAction="#btnSaveHandler" text="Save Freelancer" />
+                                             </buttons></ButtonBar>
                                        </children>
                                     </AnchorPane>
                                 </content>

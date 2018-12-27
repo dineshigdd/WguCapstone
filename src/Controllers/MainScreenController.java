@@ -14,12 +14,14 @@ import Model.Freelancer;
 import Model.FreelancerLanguage;
 import Model.Job;
 import Model.PrgmLanguage;
+import Model.SavedFreelancer;
 import Model.UserAccount;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -42,6 +44,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
@@ -192,16 +195,33 @@ public class MainScreenController implements Initializable {
     private TabPane tabPaneContractor;
     @FXML
     private TableColumn<Freelancer, String> colFreelancerFullName;
+    @FXML
+    private Button btnInviteFreelancer;
+    @FXML
+    private Tab tabPostJob;
+    @FXML
+    private RadioButton radBtnAllFreelancers;
+   
+    
+//    private String username;
+//    private String password;       
+    
+       
+    
+    @FXML
+    private Tab tabSearch;  
+    @FXML
+    private ButtonBar searchResultHzBar;
    
     private static final int  FREELANCER = 1;
     private  static final int  CONTRACTOR = 0;
     private static final int  JOB = 3;
-    ObservableList<PrgmLanguage> prgmLanguageList = null;
-    HashMap <String,Integer> languageMap;
-//    private String username;
-//    private String password;       
-    
-   
+    private final int APPLIED_FREELANCER = 1;
+    private final int INVITED_FREELANCER = 2;
+    private final int JOB_ASSIGNED_FREELANCER = 3;
+    ObservableList<PrgmLanguage> prgmLanguageList;
+    ObservableList<Freelancer> freelancerList;
+    HashMap <String,Integer> languageMap;    
     private DatePicker datepicker;
     private TextField txtSearch;
     private HBox hbox;
@@ -209,15 +229,19 @@ public class MainScreenController implements Initializable {
     private String criteria;
     private LocalDate postDate;
     private ComboBox comboBox;
-    @FXML
-    private Button btnInviteFreelancer;
-    @FXML
-    private Tab tabPostJob;
+    
     private boolean isInviteFreelancer;
     private Assignment assignment;
     private UserAccount userAccount;
-            
-            
+    @FXML
+    private Button btnSave;
+    @FXML
+    private Button btnAssignedJob;
+    private boolean isAssignedJob;
+  
+  
+   
+             
             
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -227,6 +251,8 @@ public class MainScreenController implements Initializable {
 //           hbox.setLayoutX(250);
 //           hbox.setLayoutY(170);    
 //           searchPane.getChildren().add(hbox);
+           
+                   
            userAccount = new UserAccount();
            btnSearch = new Button("Search");    
          
@@ -240,10 +266,8 @@ public class MainScreenController implements Initializable {
            comboBox.setPromptText("Select Years Of Experience");
            
            datepicker = new DatePicker();
-           txtSearch = new TextField();        
-           
-          
-         
+           txtSearch = new TextField();  
+           criteria = null;
           
            
      }    
@@ -319,12 +343,12 @@ public class MainScreenController implements Initializable {
             searchJob();           
         }else{
             mainTabPane.getTabs().remove(tabFreelancer);
-            searchFreelancer();
+           
         }
     }
      
      
-     private boolean isPasswordConfirmed(String message, String title,String header){
+    private boolean isPasswordConfirmed(String message, String title,String header){
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle(title);
         dialog.setHeaderText(header);
@@ -439,6 +463,7 @@ public class MainScreenController implements Initializable {
                  colJobPostdate.setCellValueFactory(new PropertyValueFactory<>("postDate"));
                  tableViewJob.setItems(jobList);
                  
+                 
                  tabPaneFreelancer.getSelectionModel().selectNext();
                 
             }
@@ -452,40 +477,47 @@ public class MainScreenController implements Initializable {
    private void searchFreelancer(){
        
        
-        //get Input        
-        btnSearch.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
+        
+//        if( criteria.equals("all")){
+////            freelancerList  = SearchRecord.searchFreelancer( criteria , "");
+//             
+//        }
+        //else{
+            btnSearch.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
                 //get input
-                
-                ObservableList<Freelancer> freelancerList = null;
-                
-                if( criteria.equals("yearsOfExperience")){
-                      freelancerList  = SearchRecord.searchFreelancer( criteria , comboBox.getValue().toString() );
-                }else{
-                      freelancerList  = SearchRecord.searchFreelancer( criteria , txtSearch.getText() );
-                }   
+                    if( criteria.equals("yearsOfExperience")){
+                          freelancerList  = SearchRecord.searchFreelancer( criteria , comboBox.getValue().toString() );
+
+                    } else{                    
+                          freelancerList  = SearchRecord.searchFreelancer( criteria , txtSearch.getText());
+                    }         
+                    setTableViewFreelancer();
+                    tabPaneContractor.getSelectionModel().selectNext();
+                } 
                
-                
-                
-                colFreelancerFullName.setCellValueFactory(
-                cellData -> Bindings.concat(
-                    cellData.getValue().getFirstName(),
-                            " ", 
-                    cellData.getValue().getLastName()));      
-                
-                 colDescription.setCellValueFactory(new PropertyValueFactory<>("selfDescription"));
-                 colExperience.setCellValueFactory(new PropertyValueFactory<>("yearsOfExperince"));
-                
-                 tableViewFreelancer.setItems(freelancerList);                 
-                 tabPaneContractor.getSelectionModel().selectNext();
-                
-            }
-        });
+            });
+       
+       // }
         
                    
+                     
      
    } 
+   
+   private void setTableViewFreelancer(){
+      colFreelancerFullName.setCellValueFactory(
+                    cellData -> Bindings.concat(
+                        cellData.getValue().getFirstName(),
+                                " ", 
+                        cellData.getValue().getLastName()));      
+
+                     colDescription.setCellValueFactory(new PropertyValueFactory<>("selfDescription"));
+                     colExperience.setCellValueFactory(new PropertyValueFactory<>("yearsOfExperince"));
+
+                     tableViewFreelancer.setItems(freelancerList);       
+   }
    
     @FXML
     private void btnSubmitHandler(ActionEvent event) {       
@@ -501,7 +533,7 @@ public class MainScreenController implements Initializable {
             jobCategory = radbtnHybrid.getText().toLowerCase();
         }
         
-         int userID = getUserID();
+        int userID = getUserID();
 
          //get contractorID          
         int contractorID = getUserTypeID("contractorID","Contractor",userID);     
@@ -522,7 +554,7 @@ public class MainScreenController implements Initializable {
             
             assignment.setContractorID(contractorID);       
             assignment.setJobID(jobID);
-            
+            assignment.setContractStatus(INVITED_FREELANCER);
             AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
         }
     }
@@ -688,6 +720,8 @@ public class MainScreenController implements Initializable {
     }
 
     
+    
+    
     @FXML
     private void tabAddSkillsHandler(Event event) {
         
@@ -753,6 +787,17 @@ public class MainScreenController implements Initializable {
             
                   
     }
+    
+    @FXML
+    private void radBtnAllFreelancersHandler(ActionEvent event) {
+         if( !searchHzBoxContractor.getChildren().isEmpty()){
+             searchHzBoxContractor.getChildren().remove(0, 2);
+        }
+       
+        freelancerList  = SearchRecord.searchFreelancer( "all" , "");
+        setTableViewFreelancer();
+        tabPaneContractor.getSelectionModel().selectNext();
+    }
 
     @FXML
     private void btnAddSkillsHandler(ActionEvent event) {
@@ -810,11 +855,8 @@ public class MainScreenController implements Initializable {
    
     @FXML
     private void tableViewFreelancerHandler(MouseEvent event) {
-        String fullName =  tableViewFreelancer.getSelectionModel().getSelectedItem().getFullName();
+        //String fullName =  tableViewFreelancer.getSelectionModel().getSelectedItem().getFullName();
         int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
-        btnInviteFreelancer.setText( "Post a Job to " + fullName );
-        
-        System.out.println("freelancerID:" + freelancerID);
         assignment = new Assignment();        
         assignment.setFreelancerID(freelancerID);
 //       Stage invite = new Stage();
@@ -839,8 +881,41 @@ public class MainScreenController implements Initializable {
         isInviteFreelancer = true;
     }
 
-    
+    @FXML
+    private void tabSearchHandler(Event event) {
+         searchFreelancer();
+    }
+
+    @FXML
+    private void btnSaveHandler(ActionEvent event) {
+        int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
+        int userID = getUserID();
+        int contractorID = getUserTypeID("contractorID","Contractor",userID);      
+        SavedFreelancer savedFreelancer = new SavedFreelancer();
+        savedFreelancer.setContractorID(contractorID);
+        savedFreelancer.setFreelancerID(freelancerID);
+       
+        int inserRecord =  AddRecord.setDbRecord(savedFreelancer , AddRecord.SAVED_FREELANCER);
+        
+        if( inserRecord == AddRecord.ERROR ){
+            alert("You have already saved this freelancer", "Saving Freelancer","",AlertType.INFORMATION);
+        }  
+        
+    }
+
+    @FXML
+    private void btnAssignedJobHandler(ActionEvent event) {
+        isAssignedJob = true;
+    }
+
    
-   
-     
+//    private void alert(String message, String title,String header, AlertType alertType ){
+//        Alert alert = new Alert(alertType);
+//        alert.setTitle(title);
+//        alert.setHeaderText(header);
+//        alert.setContentText(message);
+//
+//        alert.showAndWait();     
+//            
+//    }
 }

@@ -86,22 +86,27 @@ public class SearchRecord {
         
 
         String query = null;
-        
+        String projection = " freelancer.freelancerID,firstName,lastName,yearsOfExperience,selfDescription ";
         switch( criteria ){
+           
             case "progLanguage": 
-                   query = "select freelancer.freelancerID,firstName,lastName,yearsOfExperience,selfDescription "+
+                   query = "select" + projection +
                     "from freelancer, programlanguage , freelancerlanguage" +  
                     " where freelancer.freelancerID = freelancerlanguage.freelancerID "+
                     "and programlanguage.progLanguageID = freelancerlanguage.progLanguageID and " + criteria + " = '" + criteriaValue + "'";           
             break;
             
             case "yearsOfExperience":
-                  query = "select freelancer.freelancerID,firstName,lastName,yearsOfExperience,selfDescription from freelancer where " + criteria + "= '" + criteriaValue + "'";
+                  query = "select" + projection + "from freelancer "+
+                          "where " + criteria + "= '" + criteriaValue + "'";
             break;
             
             case "city":
-                  query = "select freelancer.freelancerID,firstName,lastName,yearsOfExperience,selfDescription from freelancer, contact"
+                  query = "select" + projection +  "from freelancer, contact"
                           + " where freelancer.contactID = contact.contactID and " + criteria + "= '" + criteriaValue + "'";
+            break;
+            case "all":
+                query = "select" + projection + "from freelancer";
             break;
         }
                

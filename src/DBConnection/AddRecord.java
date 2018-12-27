@@ -12,6 +12,7 @@ import Model.Freelancer;
 import Model.FreelancerLanguage;
 import Model.Job;
 import Model.Message;
+import Model.SavedFreelancer;
 import Model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 
 /**
  *
@@ -30,9 +32,10 @@ public  class AddRecord {
     private  static final int  CONTRACTOR = 0;
     private static final int JOB = 3;
     private static final int MESSAGE = 4;
-    public static final int FREELANCER_PRGM_LANGUAGE = 5;
-    public static final int ASSIGNMENT = 6;
-    
+    public static final int FREELANCER_PRGM_LANGUAGE = 5;    
+    public static final int SAVED_FREELANCER = 6;
+    public static final int ASSIGNMENT = 7;
+    public static final int  ERROR = -1;
     public AddRecord() {
     }
     
@@ -123,8 +126,7 @@ public  class AddRecord {
                 }catch(SQLException e){
                     e.printStackTrace();
                 }
-                break;
-                
+                break;                
             case FREELANCER:
                 try{
                     
@@ -217,19 +219,37 @@ public  class AddRecord {
                     e.printStackTrace();
                 }
             break;
-            
+            case SAVED_FREELANCER:
+                try{
+                SavedFreelancer savedFreelancer = ( SavedFreelancer )obj;
+                String query = "";
+                query = "INSERT INTO savedFreelancer( contractorID, freelancerID )" + 
+                                            "VALUES( ? , ?  );";
+                                            
+                                                
+                 PreparedStatement ps = conn.insertRecord(query);
+                                ps.setInt( 1, savedFreelancer.getContractorID());
+                                ps.setInt( 2, savedFreelancer.getFreelancerID());
+                                                                  
+                                ps.execute();
+                 conn.closeDBConnection();       
+                }catch( SQLException e){
+                    return ERROR;
+                }
+            break;
             case ASSIGNMENT:
                 try{
                 Assignment assignment = ( Assignment )obj;
                 String query = "";
-                query = "INSERT INTO Assignment( contractorID, freelancerID, jobID )" + 
-                                            "VALUES( ? , ? , ? );";
+                query = "INSERT INTO Assignment( contractorID, freelancerID, jobID, contractStatus )" + 
+                                            "VALUES( ? , ? , ?, ? );";
                                             
                                                 
                  PreparedStatement ps = conn.insertRecord(query);
                                 ps.setInt( 1, assignment.getContractorID());
                                 ps.setInt( 2, assignment.getFreelancerID());
-                                ps.setInt( 3, assignment.getJobID());                     
+                                ps.setInt( 3, assignment.getJobID());   
+                                ps.setInt(4, assignment.getContractStatus());
                                 ps.execute();
                  conn.closeDBConnection();       
                 }catch( SQLException e){

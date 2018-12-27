@@ -9,11 +9,12 @@ package Model;
  *
  * @author Dinesh
  */
-public class Assignment {
-    private int contractorID;
-    private int freelancerID;
+public class Assignment extends SavedFreelancer{    
+  
+  
     private int jobID;
-    private boolean contractStatus;
+    private int contractStatus;
+   
 
     public Assignment(int contractorID, int freelancerID, int jobID) {
         this.contractorID = contractorID;
@@ -24,23 +25,8 @@ public class Assignment {
     public Assignment() {
         
     }
- 
-    public int getContractorID() {
-        return contractorID;
-    }
-
-    public void setContractorID(int contractorID) {
-        this.contractorID = contractorID;
-    }
-
-    public int getFreelancerID() {
-        return freelancerID;
-    }
-
-    public void setFreelancerID(int freelancerID) {
-        this.freelancerID = freelancerID;
-    }
-
+    
+   
     public int getJobID() {
         return jobID;
     }
@@ -49,13 +35,12 @@ public class Assignment {
         this.jobID = jobID;
     }
 
-    public boolean isContractStatus() {
+    public int getContractStatus() {
         return contractStatus;
     }
 
-    public void setContractStatus(boolean contractStatus) {
+    public void setContractStatus(int contractStatus) {
         this.contractStatus = contractStatus;
     }
-    
-    
+
 }
