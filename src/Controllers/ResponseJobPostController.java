@@ -7,6 +7,8 @@ package Controllers;
 
 import DBConnection.AddRecord;
 import DBConnection.DBConnection;
+import Model.Assignment;
+import Model.Job;
 import Model.Message;
 import java.io.IOException;
 import java.net.URL;
@@ -37,8 +39,6 @@ public class ResponseJobPostController {
     @FXML
     private AnchorPane paneMainResponse;
     @FXML
-    private RadioButton radbtnShowInterest;
-    @FXML
     private ToggleGroup responsetoJobGroup;
     @FXML
     private RadioButton radbtnLeaveMsg;
@@ -53,17 +53,22 @@ public class ResponseJobPostController {
     private int jobID;
     private int freelancerID;
     private final static int MESSAGE = 4;
-    
-    public void initialize( int jobID,  int freelancerID ){
+    @FXML
+    private RadioButton radbtnApplyJob;
+    private boolean isApplyForJob;
+    private int contractorID;
+    public void initialize( Job job,  int freelancerID ){
         // TODO
-        this.jobID = jobID;
+        this.jobID = job.getJobID();
         this.freelancerID = freelancerID;
+        this.contractorID = job.getJobPostedBy();
     }    
 
     @FXML
     private void radbtnLeaveMsgHandler(ActionEvent event) throws IOException {
-        
+        isApplyForJob = false;
         textareaMsg.setDisable(false);
+        textareaMsg.setPromptText("");
         btnSubmit.setDisable(false);
     
     }
@@ -77,10 +82,32 @@ public class ResponseJobPostController {
                 freelancerID,
                 jobID              
         );
+      AddRecord.setDbRecord(message, MESSAGE );
+      
+      
+      if( isApplyForJob ){
+          
+          Assignment assignment = new Assignment(                  
+               contractorID,
+               freelancerID,
+               jobID 
+          );
+          
+          //set contract status
+          assignment.setContractStatus(MainScreenController.APPLIED_FREELANCER);
+          //write int to assignment table
+          
+          AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+      }
+    }
+
+    @FXML
+    private void radbtnApplyJobHandler(ActionEvent event) {
+        textareaMsg.setDisable(false);
+        textareaMsg.setPromptText("Optional message");
+        btnSubmit.setDisable(false);
         
-        
-        
-    AddRecord.setDbRecord(message, MESSAGE );
+        isApplyForJob = true;
     }
     
     

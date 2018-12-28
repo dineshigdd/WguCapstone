@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.MenuButton?>
@@ -108,7 +109,7 @@
                                     </AnchorPane>
                               </content>
                             </Tab>
-                              <Tab fx:id="tabAllJobs" onSelectionChanged="#tabAllJobsHandler" text="Manage Post">
+                             <Tab fx:id="tabAllJobs" onSelectionChanged="#tabAllJobsHandler" text="Manage Post">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
@@ -127,7 +128,7 @@
                                        </children>
                                     </AnchorPane>
                                 </content>
-                              </Tab>
+                            </Tab>
                             <Tab fx:id="tabSearch" onSelectionChanged="#tabSearchHandler" text="Search for Freelancer">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -152,7 +153,7 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <TableView fx:id="tableViewFreelancer" layoutX="57.0" layoutY="114.0" onMouseClicked="#tableViewFreelancerHandler" prefHeight="477.0" prefWidth="881.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <TableView fx:id="tableViewFreelancer" layoutX="57.0" layoutY="114.0" onMouseClicked="#tableViewFreelancerHandler" prefHeight="477.0" prefWidth="881.0" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <columns>
                                               <TableColumn fx:id="colFreelancerFullName" prefWidth="75.0" text="Full Name" />
                                               <TableColumn fx:id="colDescription" prefWidth="75.0" text="description" />
@@ -172,7 +173,33 @@
                                     </AnchorPane>
                                 </content>
                               </Tab>
+                              <Tab fx:id="tabAssignJob" onSelectionChanged="#tabAssignJobHandler" text="Assign Jobs / Manage Freelancers">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <ListView fx:id="listSavedFreelancer" layoutX="28.0" layoutY="76.0" onMouseClicked="#listSavedFreelancerHandler" prefHeight="200.0" prefWidth="200.0" />
+                                          <Label layoutX="69.0" layoutY="38.0" text="Saved Freelancers" />
+                                          <ListView fx:id="listAppliedFreelancer" layoutX="321.0" layoutY="76.0" onMouseClicked="#listAppliedFreelancerHandler" prefHeight="200.0" prefWidth="200.0" />
+                                          <Label layoutX="308.0" layoutY="38.0" text="Freelancers applied for job posted" />
+                                          <ListView fx:id="listInvitedFreelancer" layoutX="597.0" layoutY="76.0" onMouseClicked="#listInvitedFreelancerHandler" prefHeight="200.0" prefWidth="200.0" />
+                                          <Label layoutX="635.0" layoutY="38.0" text="Invited Freelancers" />
+                                          <Label layoutX="40.0" layoutY="355.0" text="Assigned the Job" />
+                                          <ComboBox fx:id="cmbBoxJob" layoutX="160.0" layoutY="350.0" onAction="#cmbBoxJobHandler" prefHeight="31.0" prefWidth="296.0" promptText="Select the Job to assign" />
+                                          <Label fx:id="lblFreelancer" layoutX="471.0" layoutY="355.0" text="label" />
+                                          <ButtonBar layoutX="617.0" layoutY="452.0" prefHeight="40.0" prefWidth="200.0">
+                                            <buttons>
+                                              <Button fx:id="btnOk" mnemonicParsing="false" onAction="#btnOkHandler" text="Ok" />
+                                                <Button mnemonicParsing="false" text="Cancel" />
+                                            </buttons>
+                                          </ButtonBar>
+                                          <Label layoutX="40.0" layoutY="315.0" text="The Job Freelancer applied/Invited:" />
+                                          <Label fx:id="lblJobInfo" layoutX="286.0" layoutY="315.0" text="Label" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
                           </tabs>
+                          
                         </TabPane>
                      </children>
                   </AnchorPane>
@@ -187,7 +214,7 @@
                           <AnchorPane fx:id="searchPane" minHeight="0.0" minWidth="0.0" prefHeight="647.0" prefWidth="881.0">
                                  <children>
                                     <HBox fx:id="searchHzBoxFreelancer" layoutX="250.0" layoutY="135.0" prefHeight="31.0" prefWidth="385.0" spacing="10.0" />
-                                    <VBox layoutX="212.0" layoutY="225.0" spacing="20.0">
+                                    <VBox layoutX="212.0" layoutY="225.0" prefHeight="144.0" prefWidth="128.0" spacing="20.0">
                                        <children>
                                           <RadioButton fx:id="radBtnDate" mnemonicParsing="false" onAction="#radbtnDateHandler" text="By Date">
                                              <toggleGroup>
@@ -196,6 +223,7 @@
                                           </RadioButton>
                                           <RadioButton fx:id="radBtnTitle" mnemonicParsing="false" onAction="#radbtnContractorTitleHandler" text="By Title" toggleGroup="$searchCategory" />
                                           <RadioButton fx:id="radBtnCategory" mnemonicParsing="false" onAction="#radbtnCategoryHandler" text="By Category" toggleGroup="$searchCategory" />
+                                          <RadioButton fx:id="radBtnShowAllJobs" mnemonicParsing="false" onAction="#radBtnShowAllJobsHandler" text="Show All Jobs" toggleGroup="$searchCategory" />
                                        </children>
                                     </VBox>
                                  </children>

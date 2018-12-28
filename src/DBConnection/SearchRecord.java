@@ -5,6 +5,7 @@
  */
 package DBConnection;
 
+import Controllers.MainScreenController;
 import Model.Freelancer;
 import Model.Job;
 import java.sql.ResultSet;
@@ -57,7 +58,7 @@ public class SearchRecord {
         
         try {
             while( sqlResult.next()){
-               Job job = new Job(               
+               Job job = new Job(   
                 sqlResult.getString("jobTitle"),
                 sqlResult.getString("jobDescription"),
                 sqlResult.getString("jobCategory"),
@@ -86,7 +87,7 @@ public class SearchRecord {
         
 
         String query = null;
-        String projection = " freelancer.freelancerID,firstName,lastName,yearsOfExperience,selfDescription ";
+        String projection = " Freelancer.freelancerID,Freelancer.firstName,Freelancer.lastName,yearsOfExperience,selfDescription ";
         switch( criteria ){
            
             case "progLanguage": 
@@ -105,6 +106,24 @@ public class SearchRecord {
                   query = "select" + projection +  "from freelancer, contact"
                           + " where freelancer.contactID = contact.contactID and " + criteria + "= '" + criteriaValue + "'";
             break;
+            case "savedFreelancer":                
+                 query = "select" + projection + "from savedFreelancer, Freelancer"
+                         + " where Freelancer.freelancerID = savedFreelancer.freelancerID"
+                         + " and contractorID =" + Integer.parseInt(criteriaValue);
+            break;
+            case "appliedFreelancer":
+                  query = "select" + projection + "from Freelancer , Assignment "
+                         + " where Freelancer.freelancerID = Assignment.freelancerID and"
+                         + " contractorID =" + Integer.parseInt(criteriaValue)+ " and "
+                         +  "contractStatus = " + MainScreenController.APPLIED_FREELANCER;
+                
+            break;    
+            case "invitedFreelancer":
+                 query = "select" + projection + "from Freelancer , Assignment "
+                         + " where Freelancer.freelancerID = Assignment.freelancerID and"
+                         + " contractorID =" + Integer.parseInt(criteriaValue)+ " and "
+                         +  "contractStatus = " + MainScreenController.INVITED_FREELANCER;
+            break;             
             case "all":
                 query = "select" + projection + "from freelancer";
             break;

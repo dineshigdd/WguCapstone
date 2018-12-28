@@ -11,7 +11,7 @@ package Model;
  */
 public class Assignment extends SavedFreelancer{    
   
-  
+    private int assignmentID;   
     private int jobID;
     private int contractStatus;
    
@@ -26,7 +26,14 @@ public class Assignment extends SavedFreelancer{
         
     }
     
-   
+   public int getAssignmentID() {
+        return assignmentID;
+    }
+
+    public void setAssignmentID(int assignmentID) {
+        this.assignmentID = assignmentID;
+    }
+    
     public int getJobID() {
         return jobID;
     }

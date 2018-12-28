@@ -21,15 +21,12 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,15 +43,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -67,7 +62,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -216,12 +210,16 @@ public class MainScreenController implements Initializable {
     private static final int  FREELANCER = 1;
     private  static final int  CONTRACTOR = 0;
     private static final int  JOB = 3;
-    private final int APPLIED_FREELANCER = 1;
-    private final int INVITED_FREELANCER = 2;
-    private final int JOB_ASSIGNED_FREELANCER = 3;
+    public final static int APPLIED_FREELANCER = 1;
+    public final static int INVITED_FREELANCER = 2;
+    public final static int JOB_ASSIGNED_FREELANCER = 3;
     ObservableList<PrgmLanguage> prgmLanguageList;
     ObservableList<Freelancer> freelancerList;
-    HashMap <String,Integer> languageMap;    
+    private HashMap <String,Integer> languageMap;
+    private HashMap<Integer,Integer> jobMap; 
+    private HashMap<Integer,Integer> savedFreelancerMap;
+    private HashMap<Integer,Integer> appliedFreelancerMap;
+    private HashMap<Integer,Integer> invitedFreelancerMap;
     private DatePicker datepicker;
     private TextField txtSearch;
     private HBox hbox;
@@ -233,11 +231,33 @@ public class MainScreenController implements Initializable {
     private boolean isInviteFreelancer;
     private Assignment assignment;
     private UserAccount userAccount;
+    private int jobID;
+    private int freelancerID;
+    
     @FXML
     private Button btnSave;
     @FXML
     private Button btnAssignedJob;
     private boolean isAssignedJob;
+    @FXML
+    private ListView<String> listSavedFreelancer;
+    @FXML
+    private ListView<String> listAppliedFreelancer;
+    @FXML
+    private ListView<String> listInvitedFreelancer;
+    @FXML
+    private Tab tabAssignJob;
+    @FXML
+    private ComboBox<String> cmbBoxJob;
+    @FXML
+    private Label lblFreelancer;
+    @FXML
+    private Button btnOk;
+    private boolean isSavedFreelancer;
+    @FXML
+    private RadioButton radBtnShowAllJobs;
+    @FXML
+    private Label lblJobInfo;
   
   
    
@@ -604,15 +624,10 @@ public class MainScreenController implements Initializable {
     @FXML
     private void tableViewJobHandler(MouseEvent event) throws IOException {
         
-       
-       int jobID = tableViewJob.getSelectionModel().getSelectedItem().getJobID();
-       int jobPostedBy = tableViewJob.getSelectionModel().getSelectedItem().getJobPostedBy();
-       
        int userID;
        
        userID = getUserID();
-       int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
-      
+       int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);      
        
        Stage response = new Stage();
        Parent root;
@@ -625,8 +640,9 @@ public class MainScreenController implements Initializable {
         response.centerOnScreen();
         response.show();
         
+        Job job = tableViewJob.getSelectionModel().getSelectedItem();
         ResponseJobPostController controller = loader.getController();
-        controller.initialize( jobID, freelancerID );
+        controller.initialize( job, freelancerID );
     }
 
    
@@ -908,14 +924,162 @@ public class MainScreenController implements Initializable {
         isAssignedJob = true;
     }
 
+    @FXML
+    private void tabAssignJobHandler(Event event) {
+        
+        
+        int userID = getUserID();
+        int contractorID = getUserTypeID("contractorID","Contractor",userID); 
+        
+        //saved Freelancer
+        freelancerList = SearchRecord.searchFreelancer("savedFreelancer", String.valueOf(contractorID));
+        savedFreelancerMap = new HashMap();  
+         
+        for( int i = 0; i < freelancerList.size(); i++ ){
+           savedFreelancerMap.put(freelancerList.get(i).getFreelancerID(), i );
+        }
+        
+        if( listSavedFreelancer.getItems().isEmpty()){
+            for(int i = 0; i < freelancerList.size(); i++ ){
+                listSavedFreelancer.getItems().add(freelancerList.get(i).getFullName());
+            }
+        }
+        
+        //AppliedFreelancer
+        freelancerList = SearchRecord.searchFreelancer("appliedFreelancer", String.valueOf(contractorID));
+        appliedFreelancerMap = new HashMap(); 
+        for( int i = 0; i < freelancerList.size(); i++ ){
+           appliedFreelancerMap.put(freelancerList.get(i).getFreelancerID(), i );
+        }
+        
+        if( listAppliedFreelancer.getItems().isEmpty()){
+            for(int i = 0; i < freelancerList.size(); i++ ){
+                listAppliedFreelancer.getItems().add(freelancerList.get(i).getFullName());
+            }
+        }
+        
+        //Invited Freelancer
+        freelancerList = SearchRecord.searchFreelancer("invitedFreelancer", String.valueOf(contractorID));
+        invitedFreelancerMap = new HashMap(); 
+        for( int i = 0; i < freelancerList.size(); i++ ){
+           invitedFreelancerMap.put(freelancerList.get(i).getFreelancerID(), i );
+        }
+        
+        if( listInvitedFreelancer.getItems().isEmpty()){
+            for(int i = 0; i < freelancerList.size(); i++ ){
+                listInvitedFreelancer.getItems().add(freelancerList.get(i).getFullName());
+            }
+        }
+//        
+         
+        ObservableList<Job> jobList = SearchRecord.searchJob("all", "*");
+        jobMap = new HashMap();    
+        
+        for( int i = 0; i < jobList.size(); i++ ){
+            jobMap.put( jobList.get(i).getJobID(), i );
+        }
+        for(int i = 0; i < jobList.size(); i++ ){
+            cmbBoxJob.getItems().add( jobList.get(i).getJobTitle());
+        }
+        
+    }
+
+    @FXML
+    private void listSavedFreelancerHandler(MouseEvent event) {
+        isSavedFreelancer = true;
+         for( Map.Entry entry : savedFreelancerMap.entrySet() ){
+            if( listSavedFreelancer.getSelectionModel().getSelectedIndex() == (int)entry.getValue()){
+                freelancerID = (int) entry.getKey();
+                break;
+            }
+            
+        }
+       // freelancerID = getFreelancerID( listSavedFreelancer , savedFreelancerMap );
+        lblJobInfo
+        lblFreelancer.setText(" to " + listSavedFreelancer.getSelectionModel().getSelectedItem());
+    }
+    
+    @FXML
+    private void listAppliedFreelancerHandler(MouseEvent event) {
+        isSavedFreelancer = false;
+        for( Map.Entry entry : appliedFreelancerMap.entrySet() ){
+            if( listAppliedFreelancer.getSelectionModel().getSelectedIndex() == (int)entry.getValue()){
+                freelancerID = (int) entry.getKey();
+                break;
+            }
+            
+        }
+        lblFreelancer.setText(" to " + listAppliedFreelancer.getSelectionModel().getSelectedItem());
+    }
+
+    @FXML
+    private void listInvitedFreelancerHandler(MouseEvent event) {
+        isSavedFreelancer = false;
+        for( Map.Entry entry : invitedFreelancerMap.entrySet() ){
+            if( listInvitedFreelancer.getSelectionModel().getSelectedIndex() == (int)entry.getValue()){
+                freelancerID = (int) entry.getKey();
+                break;
+            }
+            
+        }
+         lblFreelancer.setText(" to " + listInvitedFreelancer.getSelectionModel().getSelectedItem());
+    }
+    
+    
+    @FXML
+    private void cmbBoxJobHandler(ActionEvent event) {
+     
+        
+       for( Map.Entry entry : jobMap.entrySet() ){
+            if( cmbBoxJob.getSelectionModel().getSelectedIndex() == (int)entry.getValue()){
+                System.out.println("ID :" +cmbBoxJob.getSelectionModel().getSelectedIndex());
+                jobID = (int) entry.getKey();
+                break;
+            }
+            
+       }
+      
+     
+    }
+
+    
+    
+    @FXML
+    private void btnOkHandler(ActionEvent event) {
+        
+        int userID = getUserID();
+        int contractorID = getUserTypeID("contractorID","Contractor",userID); 
+        
+        System.out.println("ContractorID:" + contractorID + "\n" + 
+                            "Job ID:" + jobID + "\n" +
+                            "FreelancerID:" + freelancerID );
+        
+        Assignment assignment = new Assignment(
+                contractorID,
+                freelancerID,
+                jobID);
+        assignment.setContractStatus(JOB_ASSIGNED_FREELANCER);
+        if( isSavedFreelancer ){
+            AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+        }
+        
+    }
+
+    @FXML
+    private void radBtnShowAllJobsHandler(ActionEvent event) {
+          ObservableList<Job> jobList = SearchRecord.searchJob("", "*");
+                 colJobTitle.setCellValueFactory(new PropertyValueFactory<>("jobTitle"));
+              //   colAllJobTitle.setCellFactory(TextFieldTableCell.forTableColumn());               
+                 colJobDescription.setCellValueFactory(new PropertyValueFactory<>("jobDescription"));
+                 colJobType.setCellValueFactory(new PropertyValueFactory<>("jobCategory"));
+                 colJobPostdate.setCellValueFactory(new PropertyValueFactory<>("postDate"));
+                 tableViewJob.setItems(jobList);
+                 
+          tabPaneFreelancer.getSelectionModel().selectNext();
+    }
+
+
    
-//    private void alert(String message, String title,String header, AlertType alertType ){
-//        Alert alert = new Alert(alertType);
-//        alert.setTitle(title);
-//        alert.setHeaderText(header);
-//        alert.setContentText(message);
-//
-//        alert.showAndWait();     
-//            
-//    }
+    
+    
 }
