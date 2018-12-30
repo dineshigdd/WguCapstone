@@ -6,6 +6,7 @@
 package DBConnection;
 
 import Controllers.MainScreenController;
+import Model.Assignment;
 import Model.Freelancer;
 import Model.Job;
 import java.sql.ResultSet;
@@ -46,6 +47,12 @@ public class SearchRecord {
                 System.out.println(query);
             break;
             case "jobTitle": query = "select * from job where "+ criteria + " like "+ "'%" + criteriaValue + "%'";
+            break;
+            case "jobAppliedOrInvited": 
+                    query = "select * from job, assignment "
+                    + "where job.jobID = assignment.jobID and " 
+                    + "job.jobPostedBy = assignment.contractorID and "
+                    + "assignment.freelancerID ="+ Integer.parseInt(criteriaValue);
             break;
             default :query = "select " + criteriaValue + " from job";
             break;
@@ -156,4 +163,41 @@ public class SearchRecord {
         return freelanecerList;
       }
 
+      
+     public static Assignment searchAssignment(String criteria , Assignment assignment){
+                ObservableList<Assignment> assignmentList = FXCollections.observableArrayList();
+                DBConnection conn = new DBConnection();
+                conn.connectDatabase();
+        
+
+                 String query = null;
+                 
+                 
+                 switch( criteria ){
+                     
+                   case "jobAppliedOrInvited": 
+                        query = "select assignmentID from assignment "
+                        + "where assignment.jobID = " + assignment.getJobID() + " and " 
+                        + "assignment.contractorID = " + assignment.getContractorID() + " and "
+                        + "assignment.freelancerID ="+ assignment.getFreelancerID();
+                    break;
+                 }
+                 
+                conn.setStatement( query );
+                ResultSet sqlResult = conn.getStatement();
+
+                try {
+                    while( sqlResult.next()){
+                      assignment.setAssignmentID(sqlResult.getInt("assignmentID"));
+                      
+                    }
+
+                conn.closeDBConnection();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+
+                return assignment;
+        }
 }

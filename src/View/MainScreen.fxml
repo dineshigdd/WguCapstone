@@ -175,7 +175,7 @@
                               </Tab>
                               <Tab fx:id="tabAssignJob" onSelectionChanged="#tabAssignJobHandler" text="Assign Jobs / Manage Freelancers">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                  <AnchorPane fx:id="anchorPaneJobAssigned" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
                                           <ListView fx:id="listSavedFreelancer" layoutX="28.0" layoutY="76.0" onMouseClicked="#listSavedFreelancerHandler" prefHeight="200.0" prefWidth="200.0" />
                                           <Label layoutX="69.0" layoutY="38.0" text="Saved Freelancers" />
@@ -183,17 +183,21 @@
                                           <Label layoutX="308.0" layoutY="38.0" text="Freelancers applied for job posted" />
                                           <ListView fx:id="listInvitedFreelancer" layoutX="597.0" layoutY="76.0" onMouseClicked="#listInvitedFreelancerHandler" prefHeight="200.0" prefWidth="200.0" />
                                           <Label layoutX="635.0" layoutY="38.0" text="Invited Freelancers" />
-                                          <Label layoutX="40.0" layoutY="355.0" text="Assigned the Job" />
-                                          <ComboBox fx:id="cmbBoxJob" layoutX="160.0" layoutY="350.0" onAction="#cmbBoxJobHandler" prefHeight="31.0" prefWidth="296.0" promptText="Select the Job to assign" />
-                                          <Label fx:id="lblFreelancer" layoutX="471.0" layoutY="355.0" text="label" />
+                                          <HBox fx:id="hzBoxJob" layoutX="40.0" layoutY="362.0" prefHeight="38.0" prefWidth="773.0" spacing="10.0">
+                                             <children>
+                                                <Label text="Assigned the Job" />
+                                                <ComboBox fx:id="cmbBoxJob" onAction="#cmbBoxJobHandler" prefHeight="31.0" prefWidth="296.0" promptText="Select the Job to assign" />
+                                                <Label fx:id="lblFreelancer" text="label" />
+                                             </children>
+                                          </HBox>
+                                          <Label layoutX="40.0" layoutY="315.0" text="The Job Freelancer applied/Invited:" />
+                                          <Label fx:id="lblJobInfo" layoutX="286.0" layoutY="315.0" text="Label" />
                                           <ButtonBar layoutX="617.0" layoutY="452.0" prefHeight="40.0" prefWidth="200.0">
                                             <buttons>
                                               <Button fx:id="btnOk" mnemonicParsing="false" onAction="#btnOkHandler" text="Ok" />
                                                 <Button mnemonicParsing="false" text="Cancel" />
                                             </buttons>
                                           </ButtonBar>
-                                          <Label layoutX="40.0" layoutY="315.0" text="The Job Freelancer applied/Invited:" />
-                                          <Label fx:id="lblJobInfo" layoutX="286.0" layoutY="315.0" text="Label" />
                                        </children>
                                     </AnchorPane>
                                 </content>

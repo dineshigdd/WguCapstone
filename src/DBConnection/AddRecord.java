@@ -253,7 +253,7 @@ public  class AddRecord {
                                 ps.execute();
                  conn.closeDBConnection();       
                 }catch( SQLException e){
-                    e.printStackTrace();
+                    return ERROR;
                 }    
         }  
        return ID; 

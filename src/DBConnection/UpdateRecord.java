@@ -5,6 +5,7 @@
  */
 package DBConnection;
 
+import Model.Assignment;
 import Model.Contact;
 import Model.Contractor;
 import Model.Freelancer;
@@ -27,6 +28,7 @@ public class UpdateRecord {
     private static final int  FREELANCER = 1;
     private static final int  CONTRACTOR = 0;
     private static final int  JOB = 3;
+    public static final int  ASSIGNMENT = 4;
     
     public static User getUpdateRecord(String username){       
        
@@ -323,6 +325,26 @@ public class UpdateRecord {
                 }catch(SQLException e){
                      e.printStackTrace();
                 }
+            break; 
+            case ASSIGNMENT:
+                try{
+                    Assignment assignment = (Assignment)obj;
+                    String query;
+                    query = "Update Assignment set "
+                        + "contractStatus = ? " 
+                        + "where assignmentID = ?" ;
+                
+                                    
+                    PreparedStatement ps = conn.insertRecord(query);
+                                ps.setInt( 1, assignment.getContractStatus());
+                                ps.setInt(2, assignment.getAssignmentID());
+                                ps.executeUpdate();
+                   conn.closeDBConnection();       
+                   isUpdated = true;
+                }catch(SQLException e){
+                     e.printStackTrace();
+                }
+                break;
         }
         
         return  isUpdated;
