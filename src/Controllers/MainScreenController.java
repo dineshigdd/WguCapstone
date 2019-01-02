@@ -995,8 +995,7 @@ public class MainScreenController implements Initializable {
             
         }
        // freelancerID = getFreelancerID( listSavedFreelancer , savedFreelancerMap );
-        lblJobInfo
-        lblFreelancer.setText(" to " + listSavedFreelancer.getSelectionModel().getSelectedItem());
+        
     }
     
     @FXML
