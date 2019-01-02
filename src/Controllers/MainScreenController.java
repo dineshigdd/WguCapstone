@@ -1016,14 +1016,23 @@ public class MainScreenController implements Initializable {
     @FXML
     private void listSavedFreelancerHandler(MouseEvent event) {
         
+       
+        
         if( ! listSavedFreelancer.getItems().isEmpty()){
             isSavedFreelancer = true;              
-             
+              anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+              hzBoxJob.setLayoutY(362);
+               anchorPaneJobAssigned.getChildren().add(hzBoxJob); 
             if( isCheckBoxAdded ){
                isCheckBoxRemoved = anchorPaneJobAssigned.getChildren().remove(chkBox);
                isCheckBoxAdded = false;
-               hzBoxJob.setLayoutY(362);
-               anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+              
+                       /*aused by: java.lang.IllegalArgumentException: Children: duplicate children added: parent = AnchorPane[id=anchorPaneJobAssigned]
+	at javafx.scene.Parent$2.onProposedChange(Parent.java:454)
+	at com.sun.javafx.collections.VetoableListDecorator.add(VetoableListDecorator.java:206)
+	at Controllers.MainScreenController.listSavedFreelancerHandler(MainScreenController.java:1026)
+	... 45 more
+error to fix */
             }
                 
             
@@ -1051,6 +1060,11 @@ public class MainScreenController implements Initializable {
               //  anchorPaneJobAssigned.getChildren().add(hzBoxJob)
             }
             
+             if ( chkBox.isSelected()){
+                 anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+               }else{
+                      anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+               }
             
 //             chkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 //                public void changed(ObservableValue ov,Boolean old_val, Boolean new_val) {
@@ -1133,7 +1147,7 @@ public class MainScreenController implements Initializable {
     private void cmbBoxJobHandler(ActionEvent event) {     
        
        jobID = jobMap.get(cmbBoxJob.getSelectionModel().getSelectedIndex() );      
-      
+       System.out.println("Job ID in combo:"+ jobID);
      
     }
 
@@ -1164,7 +1178,7 @@ public class MainScreenController implements Initializable {
                      }
                 }else{            
 
-                    assignment = SearchRecord.searchAssignment("jobAppliedOrInvited", assignment);
+                    //assignment = SearchRecord.searchAssignment("jobAppliedOrInvited", assignment);
                     UpdateRecord.setUpdateRecord(assignment, UpdateRecord.ASSIGNMENT);
                 }
             }catch( Exception e){

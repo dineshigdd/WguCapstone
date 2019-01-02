@@ -332,12 +332,15 @@ public class UpdateRecord {
                     String query;
                     query = "Update Assignment set "
                         + "contractStatus = ? " 
-                        + "where assignmentID = ?" ;
+                        + "where contractorID = ? and freelancerID = ? and jobID = ?" ;
                 
                                     
                     PreparedStatement ps = conn.insertRecord(query);
                                 ps.setInt( 1, assignment.getContractStatus());
-                                ps.setInt(2, assignment.getAssignmentID());
+                               // ps.setInt(2, assignment.getAssignmentID());
+                                ps.setInt( 2, assignment.getContractorID());
+                                ps.setInt(3, assignment.getFreelancerID());
+                                ps.setInt( 4, assignment.getJobID());
                                 ps.executeUpdate();
                    conn.closeDBConnection();       
                    isUpdated = true;
