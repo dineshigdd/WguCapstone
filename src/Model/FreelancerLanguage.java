@@ -18,6 +18,10 @@ public class FreelancerLanguage {
         this.progLanguageID = progLanguageID;
     }
 
+    public FreelancerLanguage() {
+        
+    }
+
     public int getFreelancerID() {
         return freelancerID;
     }

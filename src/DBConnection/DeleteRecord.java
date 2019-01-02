@@ -5,6 +5,7 @@
  */
 package DBConnection;
 
+import Model.FreelancerLanguage;
 import Model.UserAccount;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
@@ -78,15 +79,36 @@ public class DeleteRecord {
          
     }
 
-    public static void deleteJob(int jobID) throws SQLException {
+    public static boolean deleteJob(int jobID) throws SQLException {
+        try{
          DBConnection  conn = new DBConnection();
          conn.connectDatabase();
          PreparedStatement ps = conn.insertRecord("delete from job where jobID = ?");
              ps.setInt( 1,jobID) ;                                         
              ps.execute();
+             return true;
+        }catch(Exception e){
+            return false;
+        }
              
         
     }
 
     
+   public static boolean deleteFreelancerLanguage(FreelancerLanguage freelancerLangauge){
+       System.out.println( "Freelancer ID :" + freelancerLangauge.getFreelancerID());
+       System.out.println( "progLanguage ID :" + freelancerLangauge.getProgLanguageID());
+       try{
+         DBConnection  conn = new DBConnection();
+         conn.connectDatabase();
+         PreparedStatement ps = conn.insertRecord("delete from FreelancerLanguage where freelancerID = ? and progLanguageID = ?");
+             ps.setInt( 1,freelancerLangauge.getFreelancerID()) ;     
+             ps.setInt( 2,freelancerLangauge.getProgLanguageID()) ;  
+             ps.execute();
+             return true;
+        }catch(Exception e){
+            return false;
+        }
+             
+   }
 }

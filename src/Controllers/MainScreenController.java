@@ -218,8 +218,9 @@ public class MainScreenController implements Initializable {
     public final static int INVITED_FREELANCER = 2;
     public final static int JOB_ASSIGNED_FREELANCER = 3;
     ObservableList<PrgmLanguage> prgmLanguageList;
+    ObservableList<PrgmLanguage> selectedLanguageList; 
     ObservableList<Freelancer> freelancerList;
-    private HashMap <String,Integer> languageMap;
+    private HashMap <Integer,String> languageMap;
     private HashMap<Integer,Integer> jobMap; 
     private HashMap<Integer,Integer> savedFreelancerMap;
     private HashMap<Integer,Integer> appliedFreelancerMap;
@@ -300,7 +301,7 @@ public class MainScreenController implements Initializable {
            txtSearch = new TextField();  
            criteria = null;
           
-           
+          
      }    
 
     
@@ -372,6 +373,7 @@ public class MainScreenController implements Initializable {
         if( userType == FREELANCER ){
             mainTabPane.getTabs().remove(tabContractor);
             searchJob();           
+            setSkills();
         }else{
             mainTabPane.getTabs().remove(tabFreelancer);
            
@@ -746,76 +748,7 @@ public class MainScreenController implements Initializable {
         criteria = "city";
     }
 
-    
-    
-    
-    @FXML
-    private void tabAddSkillsHandler(Event event) {
-        
-     if( ListallPrgmLanguages.getItems().isEmpty() && ListselectedPrgmLanguages.getItems().isEmpty()  ){ 
-        prgmLanguageList =  FXCollections.observableArrayList();
-//        prgmLanguageList = FXCollections.observableArrayList(
-//                    "Java","C","Python","C++","Visual Basic .NET","C#","JavaScript","PHP",
-//                    "SQL","Objective-C","Delphi/Object Pascal","Assembly language","MATLAB",
-//                    "Swift","Go","R","RubyprgmLanguageList","Perl","Other"
-//         );
-//        
-         PrgmLanguage progrmLanguage;
-         DBConnection conn = new DBConnection();
-         conn.connectDatabase();
-         conn.setStatement("select * from programlanguage");
-         ResultSet sqlResult = conn.getStatement();
-        
-         languageMap = new HashMap<>();
-
-        try {
-            while( sqlResult.next()){
-                progrmLanguage = new PrgmLanguage();
-                progrmLanguage.setProgLanguageID(sqlResult.getInt("progLanguageID"));
-                progrmLanguage.setProgLanguage(sqlResult.getString("progLanguage"));              
-                
-                languageMap.put(  progrmLanguage.getProgLanguage(),progrmLanguage.getProgLanguageID());
-                prgmLanguageList.add(progrmLanguage);
-            }
-        } catch (SQLException ex) {
-        }
-        
-        
-        for(int i = 0; i < prgmLanguageList.size(); i++ ){
-           ListallPrgmLanguages.getItems().add(prgmLanguageList.get(i).getProgLanguage());
-        }
-     }
-    }
-
-    @FXML
-    private void btnRightArrowHandler(ActionEvent event) {
-        
-        if( !ListallPrgmLanguages.getSelectionModel().isEmpty() ){
-            
-            ListselectedPrgmLanguages.getItems().add(       
-                    ListallPrgmLanguages.getSelectionModel().getSelectedItem());
-
-            ListallPrgmLanguages.getItems().remove(ListallPrgmLanguages.getSelectionModel().getSelectedIndex());
-        }
-       
-    }
-
-    @FXML
-    private void btnLeftArrowHandler(ActionEvent event) {
-        
-        if(  !ListselectedPrgmLanguages.getSelectionModel().isEmpty() ){
-            
-            ListallPrgmLanguages.getItems().add(       
-                        ListselectedPrgmLanguages.getSelectionModel().getSelectedItem());   
-
-            ListselectedPrgmLanguages.getItems().remove(
-                        ListselectedPrgmLanguages.getSelectionModel().getSelectedItem());       
-        }
-            
-                  
-    }
-    
-    @FXML
+     @FXML
     private void radBtnAllFreelancersHandler(ActionEvent event) {
          if( !searchHzBoxContractor.getChildren().isEmpty()){
              searchHzBoxContractor.getChildren().remove(0, 2);
@@ -825,6 +758,144 @@ public class MainScreenController implements Initializable {
         setTableViewFreelancer();
         tabPaneContractor.getSelectionModel().selectNext();
     }
+    
+    private void setSkills(){
+       
+        int  userID = getUserID();
+        int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);     
+        selectedLanguageList = SearchRecord.searchLanguage("freelancerLanguages", Integer.toString(freelancerID));           
+            
+         prgmLanguageList = SearchRecord.searchLanguage("all", "*");    
+         languageMap = new HashMap<>();
+//         for(int i = 0; i < prgmLanguageList.size(); i++ ){
+//                  languageMap.put(ListallPrgmLanguages.getItems().indexOf(ListallPrgmLanguages.getItems().get(i)),
+//                          prgmLanguageList.get(i).getProgLanguage());
+//         }
+                  
+       if( selectedLanguageList.isEmpty() ){            
+            
+            for(int i = 0; i < prgmLanguageList.size(); i++ ){
+               ListallPrgmLanguages.getItems().add(prgmLanguageList.get(i).getProgLanguage());
+            
+            }                
+            
+        }else {
+           
+          // prgmLanguageList = SearchRecord.searchLanguage("all", "*"); 
+           for(int i = 0; i < selectedLanguageList.size(); i++ ){
+               ListselectedPrgmLanguages.getItems().add(selectedLanguageList.get(i).getProgLanguage());              
+               
+              
+           }
+           
+                    
+                  
+           int temp;           
+           
+           for(int i = 0; i < prgmLanguageList.size(); i++ ){
+                temp = prgmLanguageList.get(i).getProgLanguageID();   
+                
+                int r = 0;
+                boolean isFound = false;
+                while( r < selectedLanguageList.size() &&  !isFound ) {
+                    if( temp != selectedLanguageList.get(r).getProgLanguageID() ){
+                     r++;      
+                    }else{                     
+                            isFound = true;
+                    }
+                }
+//               if( prgmLanguageList.get(i).getProgLanguageID() == selectedLanguageList.get(i).getProgLanguageID()){
+//                   
+//                   prgmLanguageList.remove(i);
+//                }
+                if( ! isFound )
+                     ListallPrgmLanguages.getItems().add( prgmLanguageList.get(i).getProgLanguage());   
+
+            }
+       }
+       
+       
+       //set other skills and non techical
+       ObservableList<Freelancer> freelancerOtherSkills  = SearchRecord.searchFreelancer("otherSkills", Integer.toString(freelancerID));
+       textAreaOtherTech.setText(freelancerOtherSkills.get(0).getOtherTechSkills());
+       textAreaNonTech.setText(freelancerOtherSkills.get(0).getNonTechSkills());
+       
+    }
+    
+    
+    @FXML
+    private void tabAddSkillsHandler(Event event) {
+        
+        
+    }
+
+    @FXML
+    private void btnRightArrowHandler(ActionEvent event) {      
+       
+            
+            
+        if( !ListallPrgmLanguages.getSelectionModel().isEmpty() ){
+            
+             int  userID = getUserID();
+          int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
+          FreelancerLanguage freelancerLanguage = new FreelancerLanguage();
+                  
+           for( int i = 0; i < prgmLanguageList.size(); i++ ){
+                      
+                     if( ListallPrgmLanguages.getSelectionModel().getSelectedItem().equals(prgmLanguageList.get(i).getProgLanguage())){
+                            
+                           freelancerLanguage.setProgLanguageID(prgmLanguageList.get(i).getProgLanguageID());
+                     }
+                }        
+            
+            freelancerLanguage.setFreelancerID(freelancerID);
+            int isRecordAdded =   AddRecord.setDbRecord( freelancerLanguage, AddRecord.FREELANCER_PRGM_LANGUAGE);  
+            
+            ListselectedPrgmLanguages.getItems().add(       
+                    ListallPrgmLanguages.getSelectionModel().getSelectedItem());
+            
+         
+            ListallPrgmLanguages.getItems().remove(ListallPrgmLanguages.getSelectionModel().getSelectedIndex());
+        }
+        
+        
+       
+         
+    }
+
+    @FXML
+    private void btnLeftArrowHandler(ActionEvent event) {
+        
+        
+    
+        if(  !ListselectedPrgmLanguages.getSelectionModel().isEmpty() ){
+            
+          int  userID = getUserID();
+          int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
+          FreelancerLanguage freelancerLanguage = new FreelancerLanguage();
+                  
+           for( int i = 0; i < prgmLanguageList.size(); i++ ){
+                      
+                     if( ListselectedPrgmLanguages.getSelectionModel().getSelectedItem().equals(prgmLanguageList.get(i).getProgLanguage())){
+                            
+                           freelancerLanguage.setProgLanguageID(prgmLanguageList.get(i).getProgLanguageID());
+                     }
+                }        
+            
+            freelancerLanguage.setFreelancerID(freelancerID);           
+            boolean isRecordDeleted =   DeleteRecord.deleteFreelancerLanguage(freelancerLanguage);   
+            
+            ListallPrgmLanguages.getItems().add(       
+                        ListselectedPrgmLanguages.getSelectionModel().getSelectedItem());   
+
+            ListselectedPrgmLanguages.getItems().remove(
+                        ListselectedPrgmLanguages.getSelectionModel().getSelectedItem());       
+        }
+          
+            
+    }
+    
+   
 
     @FXML
     private void btnAddSkillsHandler(ActionEvent event) {
@@ -832,25 +903,49 @@ public class MainScreenController implements Initializable {
         //get Prgramming laguagues
         int userID;
         int freelancerID;
-        int size = ListselectedPrgmLanguages.getItems().size();
-        userID = getUserID();
-        freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
-       
-        
-        for( int i = 0 ; i < size; i++ ){
-                int progLanguageID = languageMap.get(ListselectedPrgmLanguages.getItems().get(i));        
-       
+        int progLanguageID;
+        int size = 0;
         
         
-        FreelancerLanguage freelancerLanguage = new FreelancerLanguage(
-                    freelancerID,
-                    progLanguageID        
-        );
-        
-        
-         AddRecord.setDbRecord(freelancerLanguage, AddRecord.FREELANCER_PRGM_LANGUAGE);
-        }
-        
+//        userID = getUserID();
+//        freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
+//        
+//       
+//       if( ListselectedPrgmLanguages.getItems().size() >= selectedLanguageList.size() ){
+//           size = ListselectedPrgmLanguages.getItems().size();
+//       }else{
+//           size = selectedLanguageList.size();
+//       }
+//       
+//        for( int i = 0 ; i <  selectedLanguageList.size(); i++ ){             
+//             FreelancerLanguage freelancerLanguage = new FreelancerLanguage();
+//            
+//            for( int x = 0; x < ListselectedPrgmLanguages.getItems().size(); x++ ){
+//                
+//                //get already selected language for freelancer and compare with the newly selected list
+//                if( !( selectedLanguageList.get(i).getProgLanguage().equals( ListselectedPrgmLanguages.getItems().get(x))) ){
+//                    freelancerLanguage.setFreelancerID(freelancerID);
+//                  
+//                //get the ID of the newly added language  
+//                for( int r = 0; r < prgmLanguageList.size(); r++ ){
+//                      
+//                     if( ListselectedPrgmLanguages.getItems().get(x).equals(prgmLanguageList.get(r).getProgLanguage())){
+//                            
+//                           freelancerLanguage.setProgLanguageID(prgmLanguageList.get(r).getProgLanguageID());
+//                     }
+//                }
+//               
+//                
+//            }
+//            
+//            
+//                
+//              int isRecordAdded =   AddRecord.setDbRecord(freelancerLanguage, AddRecord.FREELANCER_PRGM_LANGUAGE);  
+//        }
+//                   
+//        
+//        }     
+    
         
         addOtherSkills( textAreaOtherTech.getText(), textAreaNonTech.getText());
         
@@ -862,17 +957,22 @@ public class MainScreenController implements Initializable {
                 DBConnection  conn = new DBConnection();
                 conn.connectDatabase();   
                 
+                int userID = getUserID();
+                freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
+                System.out.println("freelancer ID:"+ freelancerID);
                 String query;
                 query = "Update Freelancer set "
                         + "otherTechSkills = ?," 
-                        + "nonTechSkills = ?";
-                       
-                
+                        + "nonTechSkills = ?"
+                        + " where freelancerID = ?";
+                                       
                                     
                  PreparedStatement ps = conn.insertRecord(query);
                                 ps.setString( 1, otherTech);
-                                ps.setString( 2, nonTech);                                
+                                ps.setString( 2, nonTech);      
+                                ps.setInt(3, freelancerID);
                                 ps.executeUpdate();
+                                
                  conn.closeDBConnection();    
                  
                 }catch( SQLException e){
@@ -939,7 +1039,7 @@ public class MainScreenController implements Initializable {
     private void tabAssignJobHandler(Event event) {
         
         
-         int userID = getUserID();
+        int userID = getUserID();
         int contractorID = getUserTypeID("contractorID","Contractor",userID); 
         
         //saved Freelancer
@@ -1019,7 +1119,7 @@ public class MainScreenController implements Initializable {
        
         
         if( ! listSavedFreelancer.getItems().isEmpty()){
-            isSavedFreelancer = true;              
+              isSavedFreelancer = true;              
               anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
               hzBoxJob.setLayoutY(362);
                anchorPaneJobAssigned.getChildren().add(hzBoxJob); 

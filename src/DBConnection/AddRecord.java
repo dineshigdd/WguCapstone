@@ -216,7 +216,7 @@ public  class AddRecord {
                                 ps.execute();
                  conn.closeDBConnection();       
                 }catch( SQLException e){
-                    e.printStackTrace();
+                    return ERROR;
                 }
             break;
             case SAVED_FREELANCER:

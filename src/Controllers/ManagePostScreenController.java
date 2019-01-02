@@ -159,14 +159,20 @@ public class ManagePostScreenController implements Initializable {
     @FXML
     private void btnDeleteHandler(ActionEvent event) throws SQLException, IOException {
        
-        if( alert("Are you sure you want to delete your post ?","Deleting job post","",AlertType.CONFIRMATION )){
-               DeleteRecord.deleteJob(job.getJobID());
+        if( alert("Are you sure you want to delete your post ?","Deleting job post","",AlertType.CONFIRMATION )){ 
+            
+               boolean isRecordDeleted = DeleteRecord.deleteJob(job.getJobID());
+               if( !isRecordDeleted ){
+                   alert("This job is associated to freelancer in the form of invitation, freelancer application or assignement to a freelancer.\n "
+                           + "you must first delete the association with this job","Deleting job post","", AlertType.CONFIRMATION);
+               }else{
                txtJobTitle.setText("");
                radbtnRemote.setSelected(false);
                radbtnOnsite.setSelected(false);
                radbtnHybrid.setSelected(false);
                txtAreaDescription.setText("");
                alert("Your Post has been deleted","Job post removal","",AlertType.INFORMATION );
+               }
                showMainScreen();
         }
         

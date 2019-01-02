@@ -9,11 +9,13 @@ import Controllers.MainScreenController;
 import Model.Assignment;
 import Model.Freelancer;
 import Model.Job;
+import Model.PrgmLanguage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -43,8 +45,8 @@ public class SearchRecord {
         switch( criteria ){
             case "jobPostDate": 
             case "jobCategory":
-                query = "select * from job where "+ criteria + " = "+ "'" + criteriaValue + "'";
-                System.out.println(query);
+                query = "select * from job where DATE("+ criteria + ") = "+ "'" + criteriaValue + "'";
+                
             break;
             case "jobTitle": query = "select * from job where "+ criteria + " like "+ "'%" + criteriaValue + "%'";
             break;
@@ -94,7 +96,7 @@ public class SearchRecord {
         
 
         String query = null;
-        String projection = " Freelancer.freelancerID,Freelancer.firstName,Freelancer.lastName,yearsOfExperience,selfDescription ";
+        String projection = " Freelancer.freelancerID,Freelancer.firstName,Freelancer.lastName,yearsOfExperience,selfDescription,otherTechSkills,nonTechSkills ";
         switch( criteria ){
            
             case "progLanguage": 
@@ -130,7 +132,11 @@ public class SearchRecord {
                          + " where Freelancer.freelancerID = Assignment.freelancerID and"
                          + " contractorID =" + Integer.parseInt(criteriaValue)+ " and "
                          +  "contractStatus = " + MainScreenController.INVITED_FREELANCER;
-            break;             
+            break;   
+            case "otherSkills":
+                query = "select" + projection + "from Freelancer "
+                        + "where freelancerID ="+ Integer.parseInt(criteriaValue);
+            break;
             case "all":
                 query = "select" + projection + "from freelancer";
             break;
@@ -149,6 +155,8 @@ public class SearchRecord {
                 freelancer.setLastName(sqlResult.getString("lastName"));
                 freelancer.setYearsOfExperince(sqlResult.getString("yearsOfExperience"));
                 freelancer.setSelfDescription(sqlResult.getString("selfDescription"));               
+                freelancer.setOtherTechSkills(sqlResult.getString("otherTechSkills"));      
+                freelancer.setNonTechSkills(sqlResult.getString("nonTechSkills"));
                 freelanecerList.add(freelancer);
             }
             
@@ -163,7 +171,47 @@ public class SearchRecord {
         return freelanecerList;
       }
 
-      
+     public static ObservableList<PrgmLanguage>  searchLanguage(String criteria , String criteriaValue ){
+           ObservableList<PrgmLanguage> prgmLanguageList =  FXCollections.observableArrayList();
+    //        prgmLanguageList = FXCollections.observableArrayList(
+    //                    "Java","C","Python","C++","Visual Basic .NET","C#","JavaScript","PHP",
+    //                    "SQL","Objective-C","Delphi/Object Pascal","Assembly language","MATLAB",
+    //                    "Swift","Go","R","RubyprgmLanguageList","Perl","Other"
+    //         );
+    //        
+             PrgmLanguage progrmLanguage;
+             DBConnection conn = new DBConnection();
+             conn.connectDatabase();
+             ResultSet sqlResult = null;
+             String query = "";
+        switch( criteria ) {
+            case "all":          
+                 query = "select " + criteriaValue + " from programlanguage";       
+            break;
+            case "freelancerLanguages":
+                 query = "select programlanguage.progLanguageID, progLanguage from freelancerlanguage , programlanguage "
+                         + "where freelancerlanguage.progLanguageID = programlanguage.progLanguageID and "
+                         + "freelancerID = "+ Integer.parseInt(criteriaValue);
+        
+            break;
+        }
+        
+        
+         try {
+              conn.setStatement(query);
+              sqlResult = conn.getStatement();
+                while( sqlResult.next()){
+                    progrmLanguage = new PrgmLanguage();
+                    progrmLanguage.setProgLanguageID(sqlResult.getInt("progLanguageID"));
+                    progrmLanguage.setProgLanguage(sqlResult.getString("progLanguage"));               
+                    prgmLanguageList.add(progrmLanguage);
+                }
+            } catch (SQLException ex) {
+            }
+        return prgmLanguageList;
+     }
+     
+     
      public static Assignment searchAssignment(String criteria , Assignment assignment){
                 ObservableList<Assignment> assignmentList = FXCollections.observableArrayList();
                 DBConnection conn = new DBConnection();

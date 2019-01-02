@@ -282,7 +282,7 @@
                                           <TextArea fx:id="textAreaNonTech" prefHeight="123.0" prefWidth="457.0" />
                                        </children>
                                     </HBox>
-                                    <Button fx:id="btnAddSkills" layoutX="672.0" layoutY="495.0" mnemonicParsing="false" onAction="#btnAddSkillsHandler" text="Add Skills" />
+                                    <Button fx:id="btnAddSkills" layoutX="672.0" layoutY="495.0" mnemonicParsing="false" onAction="#btnAddSkillsHandler" prefHeight="31.0" prefWidth="83.0" text="Ok" />
                                  </children>
                               </AnchorPane>
                           </content>
