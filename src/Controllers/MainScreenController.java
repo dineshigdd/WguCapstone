@@ -9,6 +9,7 @@ import DBConnection.AddRecord;
 import DBConnection.DBConnection;
 import DBConnection.DeleteRecord;
 import DBConnection.SearchRecord;
+import DBConnection.UpdateRecord;
 import Model.Assignment;
 import Model.Freelancer;
 import Model.FreelancerLanguage;
@@ -28,6 +29,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -43,6 +46,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -258,6 +262,13 @@ public class MainScreenController implements Initializable {
     private RadioButton radBtnShowAllJobs;
     @FXML
     private Label lblJobInfo;
+    @FXML
+    private AnchorPane anchorPaneJobAssigned;
+    private CheckBox chkBox;
+    private boolean isCheckBoxAdded;
+    private boolean isCheckBoxRemoved;
+    @FXML
+    private HBox hzBoxJob;
   
   
    
@@ -928,15 +939,33 @@ public class MainScreenController implements Initializable {
     private void tabAssignJobHandler(Event event) {
         
         
-        int userID = getUserID();
+         int userID = getUserID();
         int contractorID = getUserTypeID("contractorID","Contractor",userID); 
         
         //saved Freelancer
         freelancerList = SearchRecord.searchFreelancer("savedFreelancer", String.valueOf(contractorID));
         savedFreelancerMap = new HashMap();  
-         
+        
+        chkBox = new CheckBox();
+        chkBox.setText("Check if you need to assign a new job");
+        chkBox.setLayoutX(40);
+        chkBox.setLayoutY(356);
+        isCheckBoxAdded = false;
+        isCheckBoxRemoved = true;
+        
+        
+        chkBox.setOnAction((chkevent) -> {
+                   if( chkBox.isSelected() ){
+                      anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+                 }
+                 else{
+                     anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+                 };
+            });
+      
+                
         for( int i = 0; i < freelancerList.size(); i++ ){
-           savedFreelancerMap.put(freelancerList.get(i).getFreelancerID(), i );
+           savedFreelancerMap.put( i , freelancerList.get(i).getFreelancerID());
         }
         
         if( listSavedFreelancer.getItems().isEmpty()){
@@ -949,7 +978,7 @@ public class MainScreenController implements Initializable {
         freelancerList = SearchRecord.searchFreelancer("appliedFreelancer", String.valueOf(contractorID));
         appliedFreelancerMap = new HashMap(); 
         for( int i = 0; i < freelancerList.size(); i++ ){
-           appliedFreelancerMap.put(freelancerList.get(i).getFreelancerID(), i );
+           appliedFreelancerMap.put( i , freelancerList.get(i).getFreelancerID());
         }
         
         if( listAppliedFreelancer.getItems().isEmpty()){
@@ -962,7 +991,7 @@ public class MainScreenController implements Initializable {
         freelancerList = SearchRecord.searchFreelancer("invitedFreelancer", String.valueOf(contractorID));
         invitedFreelancerMap = new HashMap(); 
         for( int i = 0; i < freelancerList.size(); i++ ){
-           invitedFreelancerMap.put(freelancerList.get(i).getFreelancerID(), i );
+           invitedFreelancerMap.put( i , freelancerList.get(i).getFreelancerID());
         }
         
         if( listInvitedFreelancer.getItems().isEmpty()){
@@ -976,7 +1005,7 @@ public class MainScreenController implements Initializable {
         jobMap = new HashMap();    
         
         for( int i = 0; i < jobList.size(); i++ ){
-            jobMap.put( jobList.get(i).getJobID(), i );
+            jobMap.put( i , jobList.get(i).getJobID());
         }
         for(int i = 0; i < jobList.size(); i++ ){
             cmbBoxJob.getItems().add( jobList.get(i).getJobTitle());
@@ -986,58 +1015,140 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void listSavedFreelancerHandler(MouseEvent event) {
-        isSavedFreelancer = true;
-         for( Map.Entry entry : savedFreelancerMap.entrySet() ){
-            if( listSavedFreelancer.getSelectionModel().getSelectedIndex() == (int)entry.getValue()){
-                freelancerID = (int) entry.getKey();
-                break;
-            }
-            
-        }
-       // freelancerID = getFreelancerID( listSavedFreelancer , savedFreelancerMap );
         
+       
+        
+        if( ! listSavedFreelancer.getItems().isEmpty()){
+            isSavedFreelancer = true;              
+              anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+              hzBoxJob.setLayoutY(362);
+               anchorPaneJobAssigned.getChildren().add(hzBoxJob); 
+            if( isCheckBoxAdded ){
+               isCheckBoxRemoved = anchorPaneJobAssigned.getChildren().remove(chkBox);
+               isCheckBoxAdded = false;
+              
+                       /*aused by: java.lang.IllegalArgumentException: Children: duplicate children added: parent = AnchorPane[id=anchorPaneJobAssigned]
+	at javafx.scene.Parent$2.onProposedChange(Parent.java:454)
+	at com.sun.javafx.collections.VetoableListDecorator.add(VetoableListDecorator.java:206)
+	at Controllers.MainScreenController.listSavedFreelancerHandler(MainScreenController.java:1026)
+	... 45 more
+error to fix */
+            }
+                
+            
+            System.out.println(" isCheckBoxAdded save:"+ isCheckBoxAdded + " and " + "isCheckBoxRemoved:" + isCheckBoxRemoved);
+            freelancerID = savedFreelancerMap.get(listSavedFreelancer.getSelectionModel().getSelectedIndex()); 
+    //        ObservableList<Job> jobList  = SearchRecord.searchJob("jobApplied", Integer.toString(freelancerID));
+    //        lblJobInfo.setText("Title:" + jobList.get(0).getJobTitle()+ "   " + "Category:" + jobList.get(0).getJobCategory());
+            lblFreelancer.setText(" to " + listSavedFreelancer.getSelectionModel().getSelectedItem());
+        }
+
     }
     
     @FXML
     private void listAppliedFreelancerHandler(MouseEvent event) {
-        isSavedFreelancer = false;
-        for( Map.Entry entry : appliedFreelancerMap.entrySet() ){
-            if( listAppliedFreelancer.getSelectionModel().getSelectedIndex() == (int)entry.getValue()){
-                freelancerID = (int) entry.getKey();
-                break;
+        
+        if( ! listAppliedFreelancer.getItems().isEmpty()){
+            isSavedFreelancer = false;
+             
+              anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+            if( isCheckBoxRemoved ){
+                isCheckBoxAdded = anchorPaneJobAssigned.getChildren().add(chkBox);
+                isCheckBoxRemoved = false;
+               
+                hzBoxJob.setLayoutX(40);
+                hzBoxJob.setLayoutY(407);
+              //  anchorPaneJobAssigned.getChildren().add(hzBoxJob)
             }
             
-        }
-        lblFreelancer.setText(" to " + listAppliedFreelancer.getSelectionModel().getSelectedItem());
+             if ( chkBox.isSelected()){
+                 anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+               }else{
+                      anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+               }
+            
+//             chkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+//                public void changed(ObservableValue ov,Boolean old_val, Boolean new_val) {
+//                         if( chkBox.isSelected() ){
+//                      anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+//                 }
+//                 else{
+//                     anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+//                 }
+//                }
+//            });
+                   
+             
+//            chkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+//                @Override
+//                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//                    
+//                    System.out.println("chkBox.isSelected():"  +chkBox.isSelected());
+////                                     if( chkBox.isSelected() ){
+////                      anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+////                 }
+////                 else{
+////                     anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+////                 }
+//                    
+//                    
+//                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//                }
+//                
+//            
+//            });
+            
+            
+            
+            
+  
+               
+            
+            System.out.println(" isCheckBoxAdded save:"+ isCheckBoxAdded + " and " + "isCheckBoxRemoved:" + isCheckBoxRemoved);
+            freelancerID = appliedFreelancerMap.get( listAppliedFreelancer.getSelectionModel().getSelectedIndex());
+            ObservableList<Job> jobList  = SearchRecord.searchJob("jobAppliedOrInvited", Integer.toString(freelancerID));
+            jobID = jobList.get(0).getJobID();
+            lblJobInfo.setText("Title:" + jobList.get(0).getJobTitle()+ "   " + "Category:" + jobList.get(0).getJobCategory());
+            lblFreelancer.setText(" to " + listAppliedFreelancer.getSelectionModel().getSelectedItem());
+            }
     }
 
     @FXML
     private void listInvitedFreelancerHandler(MouseEvent event) {
-        isSavedFreelancer = false;
-        for( Map.Entry entry : invitedFreelancerMap.entrySet() ){
-            if( listInvitedFreelancer.getSelectionModel().getSelectedIndex() == (int)entry.getValue()){
-                freelancerID = (int) entry.getKey();
-                break;
+        if( ! listInvitedFreelancer.getItems().isEmpty()){
+            isSavedFreelancer = false;
+            
+                anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+           if( isCheckBoxRemoved ){
+                isCheckBoxAdded = anchorPaneJobAssigned.getChildren().add(chkBox);
+                isCheckBoxRemoved = false;
+                
+                hzBoxJob.setLayoutX(40);
+                hzBoxJob.setLayoutY(407);
             }
             
+           
+               if ( chkBox.isSelected()){
+                 anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+               }else{
+                      anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+               }
+            System.out.println(" isCheckBoxAdded save:"+ isCheckBoxAdded + " and " + "isCheckBoxRemoved:" + isCheckBoxRemoved);
+            freelancerID = invitedFreelancerMap.get( listInvitedFreelancer.getSelectionModel().getSelectedIndex());
+            ObservableList<Job> jobList  = SearchRecord.searchJob("jobAppliedOrInvited", Integer.toString(freelancerID));
+            jobID = jobList.get(0).getJobID();
+            lblJobInfo.setText("Title:" + jobList.get(0).getJobTitle()+ "   " + "Category:" + jobList.get(0).getJobCategory());
+            lblFreelancer.setText(" to " + listInvitedFreelancer.getSelectionModel().getSelectedItem());
         }
-         lblFreelancer.setText(" to " + listInvitedFreelancer.getSelectionModel().getSelectedItem());
     }
     
     
+    
     @FXML
-    private void cmbBoxJobHandler(ActionEvent event) {
-     
-        
-       for( Map.Entry entry : jobMap.entrySet() ){
-            if( cmbBoxJob.getSelectionModel().getSelectedIndex() == (int)entry.getValue()){
-                System.out.println("ID :" +cmbBoxJob.getSelectionModel().getSelectedIndex());
-                jobID = (int) entry.getKey();
-                break;
-            }
-            
-       }
-      
+    private void cmbBoxJobHandler(ActionEvent event) {     
+       
+       jobID = jobMap.get(cmbBoxJob.getSelectionModel().getSelectedIndex() );      
+       System.out.println("Job ID in combo:"+ jobID);
      
     }
 
@@ -1058,9 +1169,25 @@ public class MainScreenController implements Initializable {
                 freelancerID,
                 jobID);
         assignment.setContractStatus(JOB_ASSIGNED_FREELANCER);
-        if( isSavedFreelancer ){
-            AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
-        }
+        
+            try{
+                if( isSavedFreelancer || chkBox.isSelected()){
+                     int insertStatus = AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+                     
+                     if( insertStatus == -1 ){
+                         alert("Please choose a job to assign","","",AlertType.INFORMATION);
+                     }
+                }else{            
+
+                    //assignment = SearchRecord.searchAssignment("jobAppliedOrInvited", assignment);
+                    UpdateRecord.setUpdateRecord(assignment, UpdateRecord.ASSIGNMENT);
+                }
+            }catch( Exception e){
+               if( jobID == 0 ){
+                   alert("Please choose a job to assign","","",AlertType.INFORMATION);
+               }
+      
+            }
         
     }
 
