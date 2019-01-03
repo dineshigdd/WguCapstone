@@ -29,6 +29,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -256,12 +257,14 @@ public class AccountCreationScreenController implements Initializable {
          root = loader.load();
          
          Scene scene = new Scene(root);
+   
          stage.setScene(scene);
+        
          stage.centerOnScreen();
          stage.show();
          
     
-        stage.show(); 
+             
     }
    
     
