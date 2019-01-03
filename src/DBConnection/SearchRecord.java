@@ -10,6 +10,7 @@ import Model.Assignment;
 import Model.Freelancer;
 import Model.Job;
 import Model.PrgmLanguage;
+import Reports.FreelancerJob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -248,4 +249,45 @@ public class SearchRecord {
 
                 return assignment;
         }
+     
+     
+     public static ObservableList<?> getReportData(String criteria){
+          ObservableList<FreelancerJob> list =  FXCollections.observableArrayList();
+          DBConnection conn = new DBConnection();
+          conn.connectDatabase();
+          String query = "";
+          
+          switch( criteria ){
+              
+              case "FreelancerJob":
+                      query = "select freelancer.firstName, freelancer.lastName , job.jobTitle, jobPostDate from freelancer, assignment , job" + 
+                    " where freelancer.freelancerID = assignment.freelancerID and assignment.jobID = job.jobID and contractStatus = 3";
+                      
+                    break;
+                    
+                    
+              
+                      
+          }
+      
+            conn.setStatement( query );
+            ResultSet sqlResult = conn.getStatement();
+            try {
+                    while( sqlResult.next()){
+                            FreelancerJob freelancerJob = new FreelancerJob();
+                            freelancerJob.setName(sqlResult.getString("firstName") + " " + sqlResult.getString("lastName") );
+                            freelancerJob.setJob(sqlResult.getString("jobTitle"));
+
+                            list.add(freelancerJob);
+
+                    }
+             } catch (SQLException ex) {
+            
+               }
+            
+
+
+            return list;
+            
+     }
 }

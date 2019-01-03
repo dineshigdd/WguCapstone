@@ -17,6 +17,7 @@ import Model.Job;
 import Model.PrgmLanguage;
 import Model.SavedFreelancer;
 import Model.UserAccount;
+import Reports.FreelancerJob;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -28,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -58,6 +61,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableView.ResizeFeatures;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
@@ -66,6 +70,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -270,6 +275,12 @@ public class MainScreenController implements Initializable {
     private boolean isCheckBoxRemoved;
     @FXML
     private HBox hzBoxJob;
+    @FXML
+    private VBox VBoxReports;
+    @FXML
+    private Tab tabReports;
+    @FXML
+    private Button btnAllFreelancerContractor;
   
   
    
@@ -1304,8 +1315,71 @@ error to fix */
           tabPaneFreelancer.getSelectionModel().selectNext();
     }
 
+    @FXML
+    private void tabReportsHandler(Event event) {
+        
+       btnAllFreelancerContractor.setText("All Freelancer and Contracts");
+        
+    }
+
+    @FXML
+    private void btnAllFreelancerContractorHandler(ActionEvent event) throws IOException {
+        
+        ObservableList<FreelancerJob> list =  (ObservableList<FreelancerJob>) SearchRecord.getReportData("FreelancerJob");
+        TableView<FreelancerJob> tableview = new TableView();
+        tableview.setPrefSize(881, 447);
+    
+        
+        TableColumn name = new TableColumn("Name");
+        name.setMinWidth(20);
+        name.setPrefWidth(150);
+        name.setMaxWidth(5000);
+        name.setResizable(true);
+        TableColumn job = new TableColumn("Job Assigned");
+        job.setMinWidth(20);
+        job.setPrefWidth(150);
+        job.setMaxWidth(5000);
+        job.setResizable(true);
+        
+        tableview.getColumns().addAll(name,job);
+        tableview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+       
+        name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        job.setCellValueFactory(new PropertyValueFactory<>("job"));
+        tableview.setItems(list);
+        
+         Stage stage = new Stage();
+         Scene scene = new Scene(tableview);
+        
+         stage.setScene(scene);        
+         stage.centerOnScreen();
+         stage.show();
+    }
+
 
    
     
     
 }
+//private void tableViewJobHandler(MouseEvent event) throws IOException {
+//        
+//       int userID;
+//       
+//       userID = getUserID();
+//       int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);      
+//       
+//       Stage response = new Stage();
+//       Parent root;
+//       FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/ResponseJobPost.fxml"));
+//       
+//
+//        Scene scene = new Scene( loader.load());
+//        response.setScene(scene); 
+//        response.setTitle("Response to job posted");
+//        response.centerOnScreen();
+//        response.show();
+//        
+//        Job job = tableViewJob.getSelectionModel().getSelectedItem();
+//        ResponseJobPostController controller = loader.getController();
+//        controller.initialize( job, freelancerID );
+//    }
