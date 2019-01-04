@@ -241,8 +241,8 @@ public  class AddRecord {
                 try{
                 Assignment assignment = ( Assignment )obj;
                 String query = "";
-                query = "INSERT INTO Assignment( contractorID, freelancerID, jobID, contractStatus )" + 
-                                            "VALUES( ? , ? , ?, ? );";
+                query = "INSERT INTO Assignment( contractorID, freelancerID, jobID, contractStatus,jobAssignedDate )" + 
+                                            "VALUES( ? , ? , ?, ? ,? );";
                                             
                                                 
                  PreparedStatement ps = conn.insertRecord(query);
@@ -250,6 +250,7 @@ public  class AddRecord {
                                 ps.setInt( 2, assignment.getFreelancerID());
                                 ps.setInt( 3, assignment.getJobID());   
                                 ps.setInt(4, assignment.getContractStatus());
+                                ps.setTimestamp(5, toTimeStampWithTime(assignment.getJobAssignedDate()));
                                 ps.execute();
                  conn.closeDBConnection();       
                 }catch( SQLException e){

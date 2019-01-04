@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +58,7 @@ public class SearchRecord {
                     + "job.jobPostedBy = assignment.contractorID and "
                     + "assignment.freelancerID ="+ Integer.parseInt(criteriaValue);
             break;
-            default :query = "select " + criteriaValue + " from job";
+            case "all": query = "select * from job where jobPostedBy = " + Integer.parseInt(criteriaValue);
             break;
         }
        
@@ -210,48 +211,10 @@ public class SearchRecord {
             } catch (SQLException ex) {
             }
         return prgmLanguageList;
-     }
+     }  
      
      
-     public static Assignment searchAssignment(String criteria , Assignment assignment){
-                ObservableList<Assignment> assignmentList = FXCollections.observableArrayList();
-                DBConnection conn = new DBConnection();
-                conn.connectDatabase();
-        
-
-                 String query = null;
-                 
-                 
-                 switch( criteria ){
-                     
-                   case "jobAppliedOrInvited": 
-                        query = "select assignmentID from assignment "
-                        + "where assignment.jobID = " + assignment.getJobID() + " and " 
-                        + "assignment.contractorID = " + assignment.getContractorID() + " and "
-                        + "assignment.freelancerID ="+ assignment.getFreelancerID();
-                    break;
-                 }
-                 
-                conn.setStatement( query );
-                ResultSet sqlResult = conn.getStatement();
-
-                try {
-                    while( sqlResult.next()){
-                      assignment.setAssignmentID(sqlResult.getInt("assignmentID"));
-                      
-                    }
-
-                conn.closeDBConnection();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-
-
-                return assignment;
-        }
-     
-     
-     public static ObservableList<?> getReportData(String criteria){
+     public static ObservableList<?> getReportData(String criteria , String criteriaValue ){
           ObservableList<FreelancerJob> list =  FXCollections.observableArrayList();
           DBConnection conn = new DBConnection();
           conn.connectDatabase();
@@ -260,12 +223,14 @@ public class SearchRecord {
           switch( criteria ){
               
               case "FreelancerJob":
-                      query = "select freelancer.firstName, freelancer.lastName , job.jobTitle, jobPostDate from freelancer, assignment , job" + 
-                    " where freelancer.freelancerID = assignment.freelancerID and assignment.jobID = job.jobID and contractStatus = 3";
+                      query = "select freelancer.firstName, freelancer.lastName , job.jobTitle, jobAssignedDate from freelancer, assignment , job " + 
+                    " where freelancer.freelancerID = assignment.freelancerID"
+                     + " and assignment.jobID = job.jobID and contractStatus = 3"
+                     + " and assignment.contractorID = " + Integer.parseInt(criteriaValue);
                       
                     break;
                     
-                    
+                 
               
                       
           }
@@ -277,7 +242,7 @@ public class SearchRecord {
                             FreelancerJob freelancerJob = new FreelancerJob();
                             freelancerJob.setName(sqlResult.getString("firstName") + " " + sqlResult.getString("lastName") );
                             freelancerJob.setJob(sqlResult.getString("jobTitle"));
-
+                            freelancerJob.setJobAssignedDate(sqlResult.getTimestamp("jobAssignedDate").toLocalDateTime());
                             list.add(freelancerJob);
 
                     }

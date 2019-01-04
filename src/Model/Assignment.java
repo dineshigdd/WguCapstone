@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.time.LocalDateTime;
+
 /**
  *
  * @author Dinesh
@@ -14,7 +16,9 @@ public class Assignment extends SavedFreelancer{
     private int assignmentID;   
     private int jobID;
     private int contractStatus;
-   
+    private LocalDateTime jobAssignedDate;
+
+    
 
     public Assignment(int contractorID, int freelancerID, int jobID) {
         this.contractorID = contractorID;
@@ -49,5 +53,14 @@ public class Assignment extends SavedFreelancer{
     public void setContractStatus(int contractStatus) {
         this.contractStatus = contractStatus;
     }
+    
+    public LocalDateTime getJobAssignedDate() {
+        return jobAssignedDate;
+    }
+
+    public void setJobAssignedDate(LocalDateTime jobAssignedDate) {
+        this.jobAssignedDate = jobAssignedDate;
+    }
+   
 
 }

@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -39,6 +40,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -69,6 +71,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -248,7 +252,7 @@ public class MainScreenController implements Initializable {
     private Button btnSave;
     @FXML
     private Button btnAssignedJob;
-    private boolean isAssignedJob;
+   // private boolean isAssignedJob;
     @FXML
     private ListView<String> listSavedFreelancer;
     @FXML
@@ -281,6 +285,28 @@ public class MainScreenController implements Initializable {
     private Tab tabReports;
     @FXML
     private Button btnAllFreelancerContractor;
+    @FXML
+    private Button btnReportTwo;
+    @FXML
+    private GridPane gridpaneJobPost;
+    @FXML
+    private AnchorPane anchorPanePostJob;
+    @FXML
+    private RadioButton radBtnInvite;
+    @FXML
+    private ToggleGroup jobPostToggle;
+    @FXML
+    private RadioButton radBtnNewJobPost;
+    private ComboBox comboBoxInvite;
+    private ComboBox comboBoxJobPost;
+    @FXML
+    private HBox hBoxCategory;
+    @FXML
+    private Label lblCategory;
+    @FXML
+    private Label lblDescription;
+    private VBox vbox;
+  
   
   
    
@@ -403,11 +429,13 @@ public class MainScreenController implements Initializable {
      }
      
      
-      private boolean alert(String message, String title,String header, Alert.AlertType alertType ){
+      private boolean alert(String message, String title,String header, Alert.AlertType alertType,boolean ... isNobtn ){
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(message);
+        
+        
         
         boolean isConfirmed = false;
         Optional<ButtonType> result = alert.showAndWait();
@@ -418,6 +446,23 @@ public class MainScreenController implements Initializable {
         return isConfirmed;   
     }
 
+      private boolean alert(String message, String title,String header, Alert.AlertType alertType, ButtonType noBtn ){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.getButtonTypes().add(noBtn);
+        
+        
+        boolean isConfirmed = false;
+        Optional<ButtonType> result = alert.showAndWait();
+        if( result.get() == ButtonType.OK ){
+            isConfirmed = true;
+        }
+            
+        return isConfirmed;   
+    }
+      
     @FXML
     private void radbtnDateHandler(ActionEvent event) throws IOException {
         
@@ -605,8 +650,9 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void tabAllJobsHandler(Event event) {
-        
-        ObservableList<Job> jobList = SearchRecord.searchJob("", "*");
+        int userID = getUserID();
+        int contractorID = getUserTypeID("contractorID","Contractor",userID);  
+        ObservableList<Job> jobList = SearchRecord.searchJob("all", Integer.toString(contractorID));
                  colAllJobTitle.setCellValueFactory(new PropertyValueFactory<>("jobTitle"));
               //   colAllJobTitle.setCellFactory(TextFieldTableCell.forTableColumn());               
                  colAllJobDescription.setCellValueFactory(new PropertyValueFactory<>("jobDescription"));
@@ -1013,12 +1059,82 @@ public class MainScreenController implements Initializable {
     }
 
     @FXML
-    private void btnInviteFreelancerHandler(ActionEvent event) {
+    private void btnInviteFreelancerHandler(ActionEvent event) {     
+             tabPaneContractor.getSelectionModel().select(tabPostJob); 
         
-        tabPaneContractor.getSelectionModel().select(tabPostJob);
-        isInviteFreelancer = true;
+    }
+    
+    @FXML
+    private void radBtnInviteHandler(ActionEvent event) {
+         int userID = getUserID();
+        int contractorID = getUserTypeID("contractorID","Contractor",userID);  
+        
+             vbox= new VBox();
+             vbox.setLayoutX(350);
+             vbox.setLayoutY(135);
+             vbox.setSpacing(10);
+             
+             Label label = new Label("Choose the job to invite");
+             Button btnSubmit = new Button("Submit");
+             
+             comboBoxJobPost = new ComboBox();
+             comboBoxJobPost.setPromptText("Please select the Job post");
+             
+             vbox.getChildren().addAll(label,comboBoxJobPost,btnSubmit);
+             
+            
+             
+             anchorPanePostJob.getChildren().remove(gridpaneJobPost);
+             anchorPanePostJob.getChildren().add(vbox);
+             ObservableList<Job> jobList = SearchRecord.searchJob("all", Integer.toString(contractorID ));
+             jobMap = new HashMap();    
+        
+            for( int i = 0; i < jobList.size(); i++ ){
+                jobMap.put( i , jobList.get(i).getJobID());
+            }
+            for(int i = 0; i < jobList.size(); i++ ){
+                comboBoxJobPost.getItems().add( jobList.get(i).getJobTitle());
+            }
+        
+            
+                btnSubmit.setOnAction((e) -> {
+                       try{
+                            int jobID = jobMap.get(comboBoxJobPost.getSelectionModel().getSelectedIndex() ); 
+                            
+                             assignment.setContractorID(contractorID);       
+                            assignment.setJobID(jobID);
+                             assignment.setContractStatus(INVITED_FREELANCER);
+            AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+                       }catch(Exception x){
+                            System.out.println("Please choose a job to invite");
+                       }
+                       
+                       
+                      
+
+               });
+            
+            
+             
+//                 
+//           
+            
+        
     }
 
+    @FXML
+    private void radBtnNewJobPostHandler(ActionEvent event) {
+        
+         anchorPanePostJob.getChildren().remove(vbox);
+         anchorPanePostJob.getChildren().add(gridpaneJobPost);
+          
+           
+            
+            
+    }
+
+    
+    
     @FXML
     private void tabSearchHandler(Event event) {
          searchFreelancer();
@@ -1043,7 +1159,7 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void btnAssignedJobHandler(ActionEvent event) {
-        isAssignedJob = true;
+        //isAssignedJob = true;
     }
 
     @FXML
@@ -1064,7 +1180,7 @@ public class MainScreenController implements Initializable {
         isCheckBoxAdded = false;
         isCheckBoxRemoved = true;
         
-        
+                
         chkBox.setOnAction((chkevent) -> {
                    if( chkBox.isSelected() ){
                       anchorPaneJobAssigned.getChildren().add(hzBoxJob);
@@ -1112,7 +1228,7 @@ public class MainScreenController implements Initializable {
         }
 //        
          
-        ObservableList<Job> jobList = SearchRecord.searchJob("all", "*");
+        ObservableList<Job> jobList = SearchRecord.searchJob("all", Integer.toString(contractorID ));
         jobMap = new HashMap();    
         
         for( int i = 0; i < jobList.size(); i++ ){
@@ -1283,6 +1399,7 @@ error to fix */
         
             try{
                 if( isSavedFreelancer || chkBox.isSelected()){
+                     assignment.setJobAssignedDate(LocalDateTime.now());
                      int insertStatus = AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
                      
                      if( insertStatus == -1 ){
@@ -1291,6 +1408,7 @@ error to fix */
                 }else{            
 
                     //assignment = SearchRecord.searchAssignment("jobAppliedOrInvited", assignment);
+                    assignment.setJobAssignedDate(LocalDateTime.now());
                     UpdateRecord.setUpdateRecord(assignment, UpdateRecord.ASSIGNMENT);
                 }
             }catch( Exception e){
@@ -1325,7 +1443,10 @@ error to fix */
     @FXML
     private void btnAllFreelancerContractorHandler(ActionEvent event) throws IOException {
         
-        ObservableList<FreelancerJob> list =  (ObservableList<FreelancerJob>) SearchRecord.getReportData("FreelancerJob");
+        int userID = getUserID();
+        int contractorID = getUserTypeID("contractorID","Contractor",userID); 
+        
+        ObservableList<FreelancerJob> list =  (ObservableList<FreelancerJob>) SearchRecord.getReportData("FreelancerJob" , Integer.toString(contractorID));
         TableView<FreelancerJob> tableview = new TableView();
         tableview.setPrefSize(881, 447);
     
@@ -1335,17 +1456,27 @@ error to fix */
         name.setPrefWidth(150);
         name.setMaxWidth(5000);
         name.setResizable(true);
+        
         TableColumn job = new TableColumn("Job Assigned");
         job.setMinWidth(20);
         job.setPrefWidth(150);
         job.setMaxWidth(5000);
         job.setResizable(true);
         
-        tableview.getColumns().addAll(name,job);
+        TableColumn jobAssignedDate = new TableColumn("Job Aissgend Date");
+        job.setMinWidth(20);
+        job.setPrefWidth(150);
+        job.setMaxWidth(5000);
+        job.setResizable(true);
+        
+        tableview.getColumns().addAll(name,job,jobAssignedDate);
         tableview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
        
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         job.setCellValueFactory(new PropertyValueFactory<>("job"));
+        jobAssignedDate.setCellValueFactory( new PropertyValueFactory<>("jobAssignedDate"));
+        
+      
         tableview.setItems(list);
         
          Stage stage = new Stage();
@@ -1356,8 +1487,15 @@ error to fix */
          stage.show();
     }
 
+    @FXML
+    private void btnReportTwoHandler(ActionEvent event) {
+        
+        
+    }
 
-   
+    
+
+        
     
     
 }
