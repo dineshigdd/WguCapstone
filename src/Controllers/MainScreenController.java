@@ -281,11 +281,19 @@ public class MainScreenController implements Initializable {
     @FXML
     private HBox hzBoxJob;
     private Button btnAllFreelancerContractor;
+    @FXML
     private GridPane gridpaneJobPost;
+    @FXML
     private AnchorPane anchorPanePostJob;
     private ComboBox comboBoxInvite;
     private ComboBox comboBoxJobPost;
     private VBox vbox;
+    @FXML
+    private RadioButton radBtnNewJobPost;
+    @FXML
+    private RadioButton radBtnInvite;
+    @FXML
+    private ToggleGroup jobPostCategory;
   
   
   
@@ -1050,9 +1058,10 @@ public class MainScreenController implements Initializable {
              
     }
     
-    private void radBtnInviteHandler(ActionEvent event) {
+    @FXML
+    private void radBtnInviteHandler(MouseEvent event) {
          int userID = getUserID();
-        int contractorID = getUserTypeID("contractorID","Contractor",userID);  
+         int contractorID = getUserTypeID("contractorID","Contractor",userID);  
         
              vbox= new VBox();
              vbox.setLayoutX(350);
@@ -1065,9 +1074,7 @@ public class MainScreenController implements Initializable {
              comboBoxJobPost = new ComboBox();
              comboBoxJobPost.setPromptText("Please select the Job post");
              
-             vbox.getChildren().addAll(label,comboBoxJobPost,btnSubmit);
-             
-            
+             vbox.getChildren().addAll(label,comboBoxJobPost,btnSubmit);   
              
              anchorPanePostJob.getChildren().remove(gridpaneJobPost);
              anchorPanePostJob.getChildren().add(vbox);
@@ -1088,6 +1095,7 @@ public class MainScreenController implements Initializable {
                             int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
                             assignment = new Assignment(contractorID, freelancerID, jobID);        
                             assignment.setContractStatus(INVITED_FREELANCER);
+                            assignment.setJobAssignedDate(null);
                             AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
                        }catch(Exception x){
                             System.out.println("Please choose a job to invite");
@@ -1106,7 +1114,8 @@ public class MainScreenController implements Initializable {
         
     }
 
-    private void radBtnNewJobPostHandler(ActionEvent event) {
+    @FXML
+    private void radBtnNewJobPostHandler(MouseEvent event) {
         
          anchorPanePostJob.getChildren().remove(vbox);
          anchorPanePostJob.getChildren().add(gridpaneJobPost);
@@ -1467,6 +1476,8 @@ error to fix */
          stage.centerOnScreen();
          stage.show();
     }
+
+  
 
    
 

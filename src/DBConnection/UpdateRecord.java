@@ -331,16 +331,18 @@ public class UpdateRecord {
                     Assignment assignment = (Assignment)obj;
                     String query;
                     query = "Update Assignment set "
-                        + "contractStatus = ? " 
+                        + "contractStatus = ?," 
+                        + "jobAssignedDate = ? "
                         + "where contractorID = ? and freelancerID = ? and jobID = ?" ;
                 
                                     
                     PreparedStatement ps = conn.insertRecord(query);
                                 ps.setInt( 1, assignment.getContractStatus());
-                               // ps.setInt(2, assignment.getAssignmentID());
-                                ps.setInt( 2, assignment.getContractorID());
-                                ps.setInt(3, assignment.getFreelancerID());
-                                ps.setInt( 4, assignment.getJobID());
+                                ps.setTimestamp(2, toTimeStampWithTime(assignment.getJobAssignedDate()));
+                                ps.setInt( 3, assignment.getContractorID());
+                                ps.setInt(4, assignment.getFreelancerID());
+                                ps.setInt( 5, assignment.getJobID());
+                               
                                 ps.executeUpdate();
                    conn.closeDBConnection();       
                    isUpdated = true;
