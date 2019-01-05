@@ -280,6 +280,7 @@ public class MainScreenController implements Initializable {
     private boolean isCheckBoxRemoved;
     @FXML
     private HBox hzBoxJob;
+    @FXML
     private Button btnAllFreelancerContractor;
     @FXML
     private GridPane gridpaneJobPost;
@@ -294,6 +295,8 @@ public class MainScreenController implements Initializable {
     private RadioButton radBtnInvite;
     @FXML
     private ToggleGroup jobPostCategory;
+    @FXML
+    private Tab tabReport;
   
   
   
@@ -1425,12 +1428,14 @@ error to fix */
           tabPaneFreelancer.getSelectionModel().selectNext();
     }
 
+    @FXML
     private void tabReportsHandler(Event event) {
         
        btnAllFreelancerContractor.setText("All Freelancer and Contracts");
         
     }
 
+    @FXML
     private void btnAllFreelancerContractorHandler(ActionEvent event) throws IOException {
         
         int userID = getUserID();
