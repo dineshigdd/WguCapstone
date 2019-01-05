@@ -39,39 +39,37 @@
                           <tabs>
                             <Tab fx:id="tabPostJob" text="Post A Job">
                               <content>
-                                <AnchorPane fx:id="anchorPanePostJob" minHeight="0.0" minWidth="0.0" prefHeight="326.0" prefWidth="611.0">
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="326.0" prefWidth="611.0">
                                        <children>
-                                          <GridPane fx:id="gridpaneJobPost" layoutX="150.0" layoutY="90.0" prefHeight="371.0" prefWidth="540.0">
+                                          <GridPane layoutX="151.0" layoutY="112.0" prefHeight="189.0" prefWidth="484.0">
                                             <columnConstraints>
-                                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="229.0" minWidth="10.0" prefWidth="100.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="440.0" minWidth="10.0" prefWidth="440.0" />
+                                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="229.0" minWidth="10.0" prefWidth="101.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="409.0" minWidth="10.0" prefWidth="367.0" />
                                             </columnConstraints>
                                             <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                              <RowConstraints vgrow="SOMETIMES" />
                                               <RowConstraints vgrow="SOMETIMES" />
                                               <RowConstraints maxHeight="55.0" minHeight="34.0" prefHeight="55.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="124.0" minHeight="103.0" prefHeight="103.0" vgrow="SOMETIMES" />
+                                              <RowConstraints maxHeight="124.0" minHeight="103.0" prefHeight="103.0" vgrow="SOMETIMES" />
                                                 <RowConstraints maxHeight="124.0" minHeight="103.0" prefHeight="103.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <children>
-                                                <Label prefHeight="21.0" prefWidth="39.0" text="Title :" GridPane.rowIndex="1" />
-                                                <Label fx:id="lblCategory" prefHeight="21.0" prefWidth="72.0" text="Category :" GridPane.rowIndex="3">
+                                                <Label prefHeight="21.0" prefWidth="39.0" text="Title :" />
+                                                <Label prefHeight="21.0" prefWidth="72.0" text="Category :" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets bottom="5.0" top="25.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <Label fx:id="lblDescription" prefHeight="21.0" prefWidth="82.0" text="Decription :" GridPane.rowIndex="4">
+                                                <Label prefHeight="21.0" prefWidth="82.0" text="Decription :" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets top="15.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <TextField fx:id="txtJobTitle" prefHeight="39.0" prefWidth="440.0" promptText="Ex: Web Developer" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                <TextField fx:id="txtJobTitle" prefHeight="31.0" prefWidth="378.0" promptText="Ex: Web Developer" GridPane.columnIndex="1">
                                                    <GridPane.margin>
                                                       <Insets bottom="5.0" top="5.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <HBox fx:id="hBoxCategory" prefHeight="100.0" prefWidth="200.0" spacing="50.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                <HBox prefHeight="100.0" prefWidth="200.0" spacing="50.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                    <children>
                                                       <RadioButton fx:id="radbtnRemote" mnemonicParsing="false" text="Remote" translateY="20.0">
                                                          <HBox.margin>
@@ -99,21 +97,14 @@
                                                       <Insets left="25.0" />
                                                    </padding>
                                                 </HBox>
-                                                <TextArea fx:id="txtAreaDescription" prefHeight="200.0" prefWidth="375.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                <TextArea fx:id="txtAreaDescription" prefHeight="200.0" prefWidth="375.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets top="25.0" />
                                                    </GridPane.margin>
                                                 </TextArea>
-                                                <Button fx:id="btnSubmit" mnemonicParsing="false" onAction="#btnSubmitHandler" text="Submit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-                                                <AnchorPane prefHeight="34.0" prefWidth="403.0" GridPane.columnIndex="1" />
+                                                <Button fx:id="btnSubmit" mnemonicParsing="false" onAction="#btnSubmitHandler" text="Submit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
                                              </children>
                                           </GridPane>
-                                          <RadioButton fx:id="radBtnInvite" layoutX="470.0" layoutY="70.0" mnemonicParsing="false" onAction="#radBtnInviteHandler" text="Invite for an existing job post">
-                                             <toggleGroup>
-                                                <ToggleGroup fx:id="jobPostToggle" />
-                                             </toggleGroup>
-                                          </RadioButton>
-                                          <RadioButton fx:id="radBtnNewJobPost" layoutX="222.0" layoutY="70.0" mnemonicParsing="false" onAction="#radBtnNewJobPostHandler" selected="true" text="Create a new Job Post" toggleGroup="$jobPostToggle" />
                                        </children>
                                     </AnchorPane>
                               </content>
@@ -299,20 +290,6 @@
                     </tabs>
                   </TabPane>
                </content>
-            </Tab>
-            <Tab fx:id="tabReports" onSelectionChanged="#tabReportsHandler" text="Reports">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <VBox fx:id="VBoxReports" layoutX="341.0" layoutY="129.0" prefHeight="200.0" prefWidth="310.0" spacing="15.0">
-                           <children>
-                              <Button fx:id="btnAllFreelancerContractor" mnemonicParsing="false" onAction="#btnAllFreelancerContractorHandler" text="Button" />
-                              <Button fx:id="btnReportTwo" mnemonicParsing="false" onAction="#btnReportTwoHandler" text="Button" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </AnchorPane>
-              </content>
             </Tab>
          </tabs>
       </TabPane>

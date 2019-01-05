@@ -241,16 +241,29 @@ public  class AddRecord {
                 try{
                 Assignment assignment = ( Assignment )obj;
                 String query = "";
-                query = "INSERT INTO Assignment( contractorID, freelancerID, jobID, contractStatus,jobAssignedDate )" + 
+                
+                if( assignment.getJobAssignedDate() != null ){
+                      query = "INSERT INTO Assignment( contractorID, freelancerID, jobID, contractStatus,jobAssignedDate )" + 
                                             "VALUES( ? , ? , ?, ? ,? );";
+                }else{
+                       query = "INSERT INTO Assignment( contractorID, freelancerID, jobID, contractStatus )" + 
+                                            "VALUES( ? , ? , ?, ? );";
+                }
                                             
-                                                
+                 System.out.println(assignment.getContractorID());
+                 System.out.println(assignment.getFreelancerID());
+                 System.out.println(assignment.getJobID());
+                 System.out.println(assignment.getJobAssignedDate());
+               
                  PreparedStatement ps = conn.insertRecord(query);
                                 ps.setInt( 1, assignment.getContractorID());
                                 ps.setInt( 2, assignment.getFreelancerID());
                                 ps.setInt( 3, assignment.getJobID());   
                                 ps.setInt(4, assignment.getContractStatus());
-                                ps.setTimestamp(5, toTimeStampWithTime(assignment.getJobAssignedDate()));
+                                
+                                if(  assignment.getJobAssignedDate() != null ){
+                                     ps.setTimestamp(5, toTimeStampWithTime(assignment.getJobAssignedDate()));
+                                }
                                 ps.execute();
                  conn.closeDBConnection();       
                 }catch( SQLException e){

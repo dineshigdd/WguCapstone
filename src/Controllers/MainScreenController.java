@@ -59,6 +59,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.SortEvent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -279,32 +280,11 @@ public class MainScreenController implements Initializable {
     private boolean isCheckBoxRemoved;
     @FXML
     private HBox hzBoxJob;
-    @FXML
-    private VBox VBoxReports;
-    @FXML
-    private Tab tabReports;
-    @FXML
     private Button btnAllFreelancerContractor;
-    @FXML
-    private Button btnReportTwo;
-    @FXML
     private GridPane gridpaneJobPost;
-    @FXML
     private AnchorPane anchorPanePostJob;
-    @FXML
-    private RadioButton radBtnInvite;
-    @FXML
-    private ToggleGroup jobPostToggle;
-    @FXML
-    private RadioButton radBtnNewJobPost;
     private ComboBox comboBoxInvite;
     private ComboBox comboBoxJobPost;
-    @FXML
-    private HBox hBoxCategory;
-    @FXML
-    private Label lblCategory;
-    @FXML
-    private Label lblDescription;
     private VBox vbox;
   
   
@@ -608,45 +588,7 @@ public class MainScreenController implements Initializable {
                      tableViewFreelancer.setItems(freelancerList);       
    }
    
-    @FXML
-    private void btnSubmitHandler(ActionEvent event) {       
-        
-        String jobCategory;
-        
-        
-        if( radbtnRemote.isSelected() ){
-            jobCategory = radbtnRemote.getText().toLowerCase();
-        }else if( radbtnOnsite.isSelected()){
-            jobCategory = radbtnOnsite.getText().toLowerCase();
-        }else{
-            jobCategory = radbtnHybrid.getText().toLowerCase();
-        }
-        
-        int userID = getUserID();
-
-         //get contractorID          
-        int contractorID = getUserTypeID("contractorID","Contractor",userID);     
-
-        Job job = new Job(
-                txtJobTitle.getText(),
-                txtAreaDescription.getText(),
-                jobCategory,       
-                LocalDateTime.now()
-        );
-        
-        job.setJobPostedBy(contractorID);
-        int jobID ;
-        jobID = AddRecord.setDbRecord(job, JOB);
-        
-       
-        if ( isInviteFreelancer ){
-            
-            assignment.setContractorID(contractorID);       
-            assignment.setJobID(jobID);
-            assignment.setContractStatus(INVITED_FREELANCER);
-            AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
-        }
-    }
+   
 
     @FXML
     private void tabAllJobsHandler(Event event) {
@@ -1057,14 +999,57 @@ public class MainScreenController implements Initializable {
 //        InviteFreelancerController controller = loader.getController();
 //        controller.initialize( tableViewFreelancer.getSelectionModel().getSelectedItem());
     }
+   
+    
+     @FXML
+    private void btnSubmitHandler(ActionEvent event) {       
+        
+        String jobCategory;
+        
+        
+        if( radbtnRemote.isSelected() ){
+            jobCategory = radbtnRemote.getText().toLowerCase();
+        }else if( radbtnOnsite.isSelected()){
+            jobCategory = radbtnOnsite.getText().toLowerCase();
+        }else{
+            jobCategory = radbtnHybrid.getText().toLowerCase();
+        }
+        
+        int userID = getUserID();
 
+         //get contractorID          
+        int contractorID = getUserTypeID("contractorID","Contractor",userID);     
+
+        Job job = new Job(
+                txtJobTitle.getText(),
+                txtAreaDescription.getText(),
+                jobCategory,       
+                LocalDateTime.now()
+        );
+        
+        job.setJobPostedBy(contractorID);
+        int jobID ;
+        jobID = AddRecord.setDbRecord(job, JOB);
+        
+       
+        if ( isInviteFreelancer ){
+            
+            assignment.setContractorID(contractorID);       
+            assignment.setJobID(jobID);
+            assignment.setContractStatus(INVITED_FREELANCER);
+            assignment.setJobAssignedDate(null);
+            AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+        }
+    }
+    
+    
     @FXML
     private void btnInviteFreelancerHandler(ActionEvent event) {     
              tabPaneContractor.getSelectionModel().select(tabPostJob); 
-        
+             isInviteFreelancer = true;
+             
     }
     
-    @FXML
     private void radBtnInviteHandler(ActionEvent event) {
          int userID = getUserID();
         int contractorID = getUserTypeID("contractorID","Contractor",userID);  
@@ -1100,11 +1085,10 @@ public class MainScreenController implements Initializable {
                 btnSubmit.setOnAction((e) -> {
                        try{
                             int jobID = jobMap.get(comboBoxJobPost.getSelectionModel().getSelectedIndex() ); 
-                            
-                             assignment.setContractorID(contractorID);       
-                            assignment.setJobID(jobID);
-                             assignment.setContractStatus(INVITED_FREELANCER);
-            AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+                            int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
+                            assignment = new Assignment(contractorID, freelancerID, jobID);        
+                            assignment.setContractStatus(INVITED_FREELANCER);
+                            AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
                        }catch(Exception x){
                             System.out.println("Please choose a job to invite");
                        }
@@ -1122,7 +1106,6 @@ public class MainScreenController implements Initializable {
         
     }
 
-    @FXML
     private void radBtnNewJobPostHandler(ActionEvent event) {
         
          anchorPanePostJob.getChildren().remove(vbox);
@@ -1433,14 +1416,12 @@ error to fix */
           tabPaneFreelancer.getSelectionModel().selectNext();
     }
 
-    @FXML
     private void tabReportsHandler(Event event) {
         
        btnAllFreelancerContractor.setText("All Freelancer and Contracts");
         
     }
 
-    @FXML
     private void btnAllFreelancerContractorHandler(ActionEvent event) throws IOException {
         
         int userID = getUserID();
@@ -1487,11 +1468,7 @@ error to fix */
          stage.show();
     }
 
-    @FXML
-    private void btnReportTwoHandler(ActionEvent event) {
-        
-        
-    }
+   
 
     
 
