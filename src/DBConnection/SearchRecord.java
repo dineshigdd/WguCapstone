@@ -6,20 +6,13 @@
 package DBConnection;
 
 import Controllers.MainScreenController;
-import Model.Assignment;
 import Model.Freelancer;
 import Model.Job;
 import Model.PrgmLanguage;
-import Reports.FreelancerJob;
+import Model.User;
+import Reports.Report;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -60,6 +53,7 @@ public class SearchRecord {
             break;
             case "all": query = "select * from job where jobPostedBy = " + Integer.parseInt(criteriaValue);
             break;
+            default:query = "select * from job";
         }
        
         
@@ -213,38 +207,58 @@ public class SearchRecord {
         return prgmLanguageList;
      }  
      
-     
+   
      public static ObservableList<?> getReportData(String criteria , String criteriaValue ){
-          ObservableList<FreelancerJob> list =  FXCollections.observableArrayList();
+          ObservableList<Report> list =  FXCollections.observableArrayList();
           DBConnection conn = new DBConnection();
           conn.connectDatabase();
           String query = "";
           
           switch( criteria ){
               
-              case "FreelancerJob":
-                      query = "select freelancer.firstName, freelancer.lastName , job.jobTitle, jobAssignedDate from freelancer, assignment , job " + 
-                    " where freelancer.freelancerID = assignment.freelancerID"
+              case "contractorJobOffer":
+                      query = "select concat(freelancer.firstName,' ', freelancer.lastName) as 'Name', job.jobTitle, jobAssignedDate from freelancer, assignment , job " + 
+                    " where Freelancer.freelancerID = assignment.freelancerID"
                      + " and assignment.jobID = job.jobID and contractStatus = 3"
                      + " and assignment.contractorID = " + Integer.parseInt(criteriaValue);
                       
                     break;
                     
-                 
+              case "AllFreelancerCount":
+                  
+                    query = "select  concat(freelancer.firstName,' ', freelancer.lastName) as 'Name', count(contractStatus) As 'numberOfJobs' from assignment, freelancer" +
+                            " where freelancer.freelancerID = assignment.freelancerID and contractStatus = 3 group by Name";
+                    break;
               
-                      
+              case "freelancerJob":
+                    query = "select concat(contractor.firstName,' ',contractor.lastName) as 'Name' , jobTitle, jobDescription, jobPostDate, contractStatus from job , contractor , assignment" +
+                            " where assignment.jobID = job.jobID and assignment.contractorID = contractor.contractorID and freelancerID =" + criteriaValue;
+                    break;
           }
       
             conn.setStatement( query );
             ResultSet sqlResult = conn.getStatement();
             try {
                     while( sqlResult.next()){
-                            FreelancerJob freelancerJob = new FreelancerJob();
-                            freelancerJob.setName(sqlResult.getString("firstName") + " " + sqlResult.getString("lastName") );
-                            freelancerJob.setJob(sqlResult.getString("jobTitle"));
-                            freelancerJob.setJobAssignedDate(sqlResult.getTimestamp("jobAssignedDate").toLocalDateTime());
-                            list.add(freelancerJob);
-
+                            Report report = new Report();
+                            report.setName(sqlResult.getString("Name") );
+                            
+                            if( criteria.equals( "contractorJobOffer" )){
+                                report.setJob(sqlResult.getString("jobTitle"));
+                                report.setJobAssignedDate(sqlResult.getTimestamp("jobAssignedDate").toLocalDateTime());
+                                
+                            }else if( criteria.equals( "AllFreelancerCount" )){                                
+                                report.setNumberOfJobs(sqlResult.getString("numberOfJobs"));                              
+                            
+                            }else if( criteria.equals( "freelancerJob" ) ){
+                                report.setJob(sqlResult.getString("jobTitle"));
+                                report.setJobDescription(sqlResult.getString("jobDescription"));
+                                report.setJobPostDate(sqlResult.getTimestamp("jobPostDate").toLocalDateTime());
+                                report.setContractStatus(sqlResult.getInt("contractStatus"));
+                            }
+                            
+                            list.add(report);
+                            
                     }
              } catch (SQLException ex) {
             

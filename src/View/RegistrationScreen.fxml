@@ -18,9 +18,9 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegistrationScreenController">
    <content>
-      <BorderPane prefHeight="983.0" prefWidth="869.0" styleClass="mainFxmlClass" stylesheets="@../Syles/userRegistration.css">
+      <BorderPane prefHeight="1042.0" prefWidth="869.0" styleClass="mainFxmlClass" stylesheets="@../Syles/userRegistration.css">
          <center>
-            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="869.0" prefWidth="762.0" styleClass="mainFxmlClass" BorderPane.alignment="CENTER">
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="936.0" prefWidth="762.0" styleClass="mainFxmlClass" BorderPane.alignment="CENTER">
                <children>
                   <HBox layoutX="87.0" layoutY="50.0" prefHeight="35.0" prefWidth="487.0">
                      <children>
@@ -102,19 +102,25 @@
                         <RadioButton fx:id="radBtnFreelancer" mnemonicParsing="false" onMouseClicked="#radBtnFreelancerHandler" prefHeight="31.0" prefWidth="110.0" text="Freelancer" toggleGroup="$userGroup" />
                      </children>
                   </HBox>
-                  <HBox fx:id="hzBoxContracotorType" layoutX="24.0" layoutY="714.0">
+                  <HBox fx:id="hzBoxContracotorType" layoutX="24.0" layoutY="714.0" prefHeight="31.0" prefWidth="406.0">
                      <children>
-                        <Label fx:id="spinnerLabel" alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="136.0" text="Type Of Contractor:" />
-                        <Spinner fx:id="spinner" prefHeight="31.0" prefWidth="283.0" />
+                        <Label fx:id="spinnerLabel" alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="153.0" text="Type Of Contractor: " />
+                        <Spinner fx:id="spinner" prefHeight="31.0" prefWidth="278.0" />
                      </children>
                   </HBox>
-                  <HBox fx:id="textArea" layoutX="42.0" layoutY="772.0" prefHeight="73.0" prefWidth="403.0">
+                  <HBox fx:id="textArea" layoutX="42.0" layoutY="772.0" prefHeight="73.0" prefWidth="391.0">
                      <children>
-                        <Label fx:id="spinnerLabel1" prefHeight="31.0" prefWidth="170.0" text="Self Description:" />
-                        <TextArea fx:id="txtAreaDescription" prefHeight="73.0" prefWidth="339.0" />
+                        <Label fx:id="spinnerLabel1" prefHeight="31.0" prefWidth="120.0" text="Self Description: " />
+                        <TextArea fx:id="txtAreaDescription" prefHeight="73.0" prefWidth="267.0" />
                      </children>
                   </HBox>
-                  <Button fx:id="btnSignup" layoutX="574.0" layoutY="804.0" mnemonicParsing="false" onAction="#btnSignupHandler" onMouseEntered="#chageCursor" onMouseExited="#setDefaultMousePointer" prefHeight="41.0" prefWidth="126.0" styleClass="btnSubmit" text="Submit" />
+                  <HBox fx:id="hzBoxAmountCharge" layoutX="33.0" layoutY="869.0" prefHeight="35.0" prefWidth="395.0">
+                     <children>
+                        <Label prefHeight="35.0" prefWidth="134.0" text="Amount Charge : $" />
+                        <TextField fx:id="txtAmountCharge" prefHeight="35.0" prefWidth="276.0" promptText="Amount you would like per hour" />
+                     </children>
+                  </HBox>
+                  <Button fx:id="btnSignup" layoutX="610.0" layoutY="884.0" mnemonicParsing="false" onAction="#btnSignupHandler" onMouseEntered="#chageCursor" onMouseExited="#setDefaultMousePointer" prefHeight="41.0" prefWidth="126.0" styleClass="btnSubmit" text="Submit" />
                   
                </children>
             </AnchorPane>

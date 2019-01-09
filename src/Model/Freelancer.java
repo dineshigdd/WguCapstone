@@ -19,12 +19,14 @@ public class Freelancer extends User{
     private String selfDescription;
     private String otherTechSkills;
     private String nonTechSkills;
+    private int amountCharge;
  
 public Freelancer() {
        
 }
 
-public Freelancer(String firstName, String lastName, LocalDate DOB,Contact contact,String yearsOfExperience,String selfDescription) {
+public Freelancer(String firstName, String lastName, LocalDate DOB,
+        Contact contact,String yearsOfExperience,String selfDescription, int amountCharge) {
        
         this.firstName= firstName;
         this.lastName = lastName;
@@ -32,6 +34,7 @@ public Freelancer(String firstName, String lastName, LocalDate DOB,Contact conta
         this.contact = contact;
         this.yearsOfExperince = yearsOfExperience;  
         this.selfDescription = selfDescription;
+        this.amountCharge = amountCharge;
     }   
 
     public int getFreelancerID() {
@@ -74,6 +77,14 @@ public Freelancer(String firstName, String lastName, LocalDate DOB,Contact conta
     public void setNonTechSkills(String nonTechSkills) {
         this.nonTechSkills = nonTechSkills;
     }
+
+    public void setAmountCharge(int amountCharge) {
+        this.amountCharge = amountCharge;
         
+    }
+        
+    public int getAmountCharge(){
+        return amountCharge;
+    }
       
 }

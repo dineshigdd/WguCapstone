@@ -42,6 +42,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -111,6 +112,13 @@ public class RegistrationScreenController implements Initializable {
     private Contractor contractor;
     @FXML
     private ToggleGroup userGroup;
+    private HBox hzBoxPayrate;
+    @FXML
+    private TextField txtAmountCharge;
+    private HBox hzBoxUserType;
+    @FXML
+    private HBox hzBoxAmountCharge;
+     
     
     
     @Override
@@ -133,6 +141,7 @@ public class RegistrationScreenController implements Initializable {
         hzBoxContracotorType.setVisible(false);
         conn = new DBConnection();
         textArea.setVisible(false);
+        hzBoxAmountCharge.setVisible(false);
         isNewUser = false;
     }    
     
@@ -172,7 +181,7 @@ public class RegistrationScreenController implements Initializable {
 
                 AccountCreationScreenController controller =  loader.getController();
                 
-                 System.out.println( user.getFirstName());
+             
                 controller.setNewUser(isNewUser,userType, user, contact);
                 
            }else if( isUpdate ){
@@ -275,7 +284,7 @@ public class RegistrationScreenController implements Initializable {
           
            String selfDescription = txtAreaDescription.getText();
            String yearsOfExperience =   spinner.getValue();
-           
+           String amountCharge = txtAmountCharge.getText();
             
            
                user = new Freelancer( 
@@ -284,7 +293,8 @@ public class RegistrationScreenController implements Initializable {
                  DOB, 
                  contact, 
                  yearsOfExperience,  
-                 selfDescription
+                 selfDescription,
+                 Integer.parseInt(amountCharge)
              );  
          
            // obj = freelancer;
@@ -315,6 +325,7 @@ public class RegistrationScreenController implements Initializable {
 //                this.freelancer.setDOB(DOB);
                 this.freelancer.setYearsOfExperince(spinner.getValue());
                 this.freelancer.setSelfDescription(txtAreaDescription.getText());
+                this.freelancer.setAmountCharge(Integer.parseInt(txtAmountCharge.getText()));
                 userType = this.freelancer.getUserAccount().getUserType();
                // UpdateRecord.setUpdateRecord( freelancer, userType );
            }
@@ -437,6 +448,7 @@ public class RegistrationScreenController implements Initializable {
     private void radBtnContractorHandler(MouseEvent event) {
         
          hzBoxContracotorType.setVisible(true);
+         hzBoxPayrate.setVisible(false);
          textArea.setVisible(false);
          spinnerLabel.setText("Type Of Contractor:");
                 
@@ -457,6 +469,7 @@ public class RegistrationScreenController implements Initializable {
     private void radBtnFreelancerHandler(MouseEvent event) {
         
          hzBoxContracotorType.setVisible(true);
+         hzBoxPayrate.setVisible(true);
          textArea.setVisible(true);
          spinnerLabel.setText("Experience:");    
          
@@ -592,6 +605,7 @@ public class RegistrationScreenController implements Initializable {
              radBtnFreelancer.setVisible(false);
              hzBoxContracotorType.setVisible(true);
              
+             
       // try{            
              
              if( user.getUserAccount().getUserType() == FREELANCER ) {
@@ -627,6 +641,9 @@ public class RegistrationScreenController implements Initializable {
              freelancer = (Freelancer)user;
              txtAreaDescription.setText(freelancer.getSelfDescription());
              
+             txtAmountCharge.setVisible(true);
+             txtAmountCharge.setText(Integer.toString(freelancer.getAmountCharge()));
+             hzBoxAmountCharge.setVisible(true);
              this.user = user;
          
       }else{

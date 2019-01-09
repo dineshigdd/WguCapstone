@@ -17,7 +17,8 @@ import Model.Job;
 import Model.PrgmLanguage;
 import Model.SavedFreelancer;
 import Model.UserAccount;
-import Reports.FreelancerJob;
+import Reports.Report;
+import Reports.invitedJobs;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -59,6 +60,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SortEvent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -75,6 +77,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -297,6 +300,8 @@ public class MainScreenController implements Initializable {
     private ToggleGroup jobPostCategory;
     @FXML
     private Tab tabReport;
+    @FXML
+    private Button btnAllFreelancerJobCount;
   
   
   
@@ -397,6 +402,8 @@ public class MainScreenController implements Initializable {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        
+        this.userAccount.setUserType(userType);
         
         if( userType == FREELANCER ){
             mainTabPane.getTabs().remove(tabContractor);
@@ -691,6 +698,29 @@ public class MainScreenController implements Initializable {
         return userID;
     }
     
+    
+//     private int getUserType( int userID ){
+//         String query = "select userType from User where userName ="+ userID;       
+//       
+//         
+//         //get userID
+//         int userType = 0;
+//         try{
+//               DBConnection conn = new DBConnection();
+//               conn.connectDatabase();
+//               conn.setStatement(query);
+//               ResultSet sqlResult = conn.getStatement();
+//            while( sqlResult.next()){
+//                userType = sqlResult.getInt("userType");
+//            }
+//            
+//              conn.closeDBConnection();
+//         }catch(SQLException e){}
+//         
+//        
+//        return userType;
+//    }
+     
   private int getUserTypeID(String userCategoryID, String userCategory , int userID ){
        String query;
        int userCategoryId = 0;
@@ -1166,6 +1196,9 @@ public class MainScreenController implements Initializable {
         
         //saved Freelancer
         freelancerList = SearchRecord.searchFreelancer("savedFreelancer", String.valueOf(contractorID));
+        for( int i = 0 ; i < freelancerList.size(); i++ ){
+            System.out.println( freelancerList.get(i).getFullName());
+        }
         savedFreelancerMap = new HashMap();  
         
         chkBox = new CheckBox();
@@ -1182,19 +1215,31 @@ public class MainScreenController implements Initializable {
                  }
                  else{
                      anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
-                 };
+                 }
             });
       
                 
         for( int i = 0; i < freelancerList.size(); i++ ){
            savedFreelancerMap.put( i , freelancerList.get(i).getFreelancerID());
         }
-        
-        if( listSavedFreelancer.getItems().isEmpty()){
-            for(int i = 0; i < freelancerList.size(); i++ ){
-                listSavedFreelancer.getItems().add(freelancerList.get(i).getFullName());
-            }
+       
+        for(int i = 0; i < freelancerList.size(); i++ ){
+                    boolean isIntheList = false;
+                   int r = 0;
+                   while( r < listSavedFreelancer.getItems().size()){
+                        if ( listSavedFreelancer.getItems().get(r).equals(freelancerList.get(i).getFullName())){
+                            isIntheList = true;
+                        }
+                            r++;
+                            
+                   }
+                   if ( !isIntheList){
+                        listSavedFreelancer.getItems().add(freelancerList.get(i).getFullName());
+                   }
         }
+                        
+        
+        
         
         //AppliedFreelancer
         freelancerList = SearchRecord.searchFreelancer("appliedFreelancer", String.valueOf(contractorID));
@@ -1203,11 +1248,22 @@ public class MainScreenController implements Initializable {
            appliedFreelancerMap.put( i , freelancerList.get(i).getFreelancerID());
         }
         
-        if( listAppliedFreelancer.getItems().isEmpty()){
-            for(int i = 0; i < freelancerList.size(); i++ ){
-                listAppliedFreelancer.getItems().add(freelancerList.get(i).getFullName());
-            }
+        //applied freelancer
+       for(int i = 0; i < freelancerList.size(); i++ ){
+                    boolean isIntheList = false;
+                   int r = 0;
+                   while( r < listAppliedFreelancer.getItems().size()){
+                        if ( listAppliedFreelancer.getItems().get(r).equals(freelancerList.get(i).getFullName())){
+                            isIntheList = true;
+                        }
+                            r++;
+                            
+                   }
+                   if ( !isIntheList){
+                        listAppliedFreelancer.getItems().add(freelancerList.get(i).getFullName());
+                   }
         }
+        
         
         //Invited Freelancer
         freelancerList = SearchRecord.searchFreelancer("invitedFreelancer", String.valueOf(contractorID));
@@ -1216,10 +1272,20 @@ public class MainScreenController implements Initializable {
            invitedFreelancerMap.put( i , freelancerList.get(i).getFreelancerID());
         }
         
-        if( listInvitedFreelancer.getItems().isEmpty()){
-            for(int i = 0; i < freelancerList.size(); i++ ){
-                listInvitedFreelancer.getItems().add(freelancerList.get(i).getFullName());
-            }
+        //invited list
+         for(int i = 0; i < freelancerList.size(); i++ ){
+                    boolean isIntheList = false;
+                   int r = 0;
+                   while( r < listInvitedFreelancer.getItems().size()){
+                        if ( listInvitedFreelancer.getItems().get(r).equals(freelancerList.get(i).getFullName())){
+                            isIntheList = true;
+                        }
+                            r++;
+                            
+                   }
+                   if ( !isIntheList){
+                        listInvitedFreelancer.getItems().add(freelancerList.get(i).getFullName());
+                   }
         }
 //        
          
@@ -1431,60 +1497,233 @@ error to fix */
     @FXML
     private void tabReportsHandler(Event event) {
         
-       btnAllFreelancerContractor.setText("All Freelancer and Contracts");
+       if( userAccount.getUserType() == CONTRACTOR ){
+                btnAllFreelancerContractor.setText("All Freelancer and Contracts");
+       }else if( userAccount.getUserType() == FREELANCER ){
+                btnAllFreelancerContractor.setText("Your Job Report");
+       }
         
     }
 
     @FXML
     private void btnAllFreelancerContractorHandler(ActionEvent event) throws IOException {
         
-        int userID = getUserID();
-        int contractorID = getUserTypeID("contractorID","Contractor",userID); 
-        
-        ObservableList<FreelancerJob> list =  (ObservableList<FreelancerJob>) SearchRecord.getReportData("FreelancerJob" , Integer.toString(contractorID));
-        TableView<FreelancerJob> tableview = new TableView();
-        tableview.setPrefSize(881, 447);
-    
-        
-        TableColumn name = new TableColumn("Name");
-        name.setMinWidth(20);
-        name.setPrefWidth(150);
-        name.setMaxWidth(5000);
-        name.setResizable(true);
-        
-        TableColumn job = new TableColumn("Job Assigned");
-        job.setMinWidth(20);
-        job.setPrefWidth(150);
-        job.setMaxWidth(5000);
-        job.setResizable(true);
-        
-        TableColumn jobAssignedDate = new TableColumn("Job Aissgend Date");
-        job.setMinWidth(20);
-        job.setPrefWidth(150);
-        job.setMaxWidth(5000);
-        job.setResizable(true);
-        
-        tableview.getColumns().addAll(name,job,jobAssignedDate);
-        tableview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-       
-        name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        job.setCellValueFactory(new PropertyValueFactory<>("job"));
-        jobAssignedDate.setCellValueFactory( new PropertyValueFactory<>("jobAssignedDate"));
-        
-      
-        tableview.setItems(list);
-        
-         Stage stage = new Stage();
-         Scene scene = new Scene(tableview);
-        
-         stage.setScene(scene);        
-         stage.centerOnScreen();
-         stage.show();
+         if( userAccount.getUserType() == CONTRACTOR ){            
+                  setReport("contractorJobOffer");
+         }else if(  userAccount.getUserType() == FREELANCER ){
+                 setReport("freelancerJob");
+                }
+    }
+
+    @FXML
+    private void btnAllFreelancerJobCountHandler(ActionEvent event) {
+        setReport("AllFreelancerCount");
     }
 
   
 
-   
+   private void setReport(String criteria){
+       
+        int userID = getUserID();
+        int contractorID = getUserTypeID("contractorID","Contractor",userID); 
+       
+        Scene scene = null;
+        ObservableList<Report> list = null;
+       
+     
+    
+        
+     
+        
+        
+        if( userAccount.getUserType() == CONTRACTOR ){
+              TableView<Report> tableview = new TableView();
+              tableview.setPrefSize(881, 447);
+              tableview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            
+              list =  (ObservableList<Report>) SearchRecord.getReportData(criteria , Integer.toString(contractorID));
+    //        System.out.println("Get number of jobs:" + list.get(0).getNumberOfJobs());
+            TableColumn name = new TableColumn("Name");
+            name.setMinWidth(20);
+            name.setPrefWidth(150);
+            name.setMaxWidth(5000);
+            name.setResizable(true);      
+            name.setCellValueFactory(new PropertyValueFactory<>("name"));
+            
+            switch( criteria ){
+
+                case "contractorJobOffer":
+                    TableColumn job = new TableColumn("Job Assigned");
+                    job.setMinWidth(20);
+                    job.setPrefWidth(150);
+                    job.setMaxWidth(5000);
+                    job.setResizable(true);
+
+                    TableColumn jobAssignedDate = new TableColumn("Job Aissgend Date");
+                    jobAssignedDate.setMinWidth(20);
+                    jobAssignedDate.setPrefWidth(150);
+                    jobAssignedDate.setMaxWidth(5000);
+                    jobAssignedDate.setResizable(true);
+                    
+                   
+                    tableview.getColumns().addAll(name,job,jobAssignedDate);
+                    job.setCellValueFactory(new PropertyValueFactory<>("job"));
+                    jobAssignedDate.setCellValueFactory( new PropertyValueFactory<>("jobAssignedDate"));
+
+                    break;
+
+               case "AllFreelancerCount":
+                    TableColumn jobNumber = new TableColumn("Number of Jobs");
+                    jobNumber.setMinWidth(20);
+                    jobNumber.setPrefWidth(150);
+                    jobNumber.setMaxWidth(5000);
+                    jobNumber.setResizable(true);
+
+                    tableview.getColumns().addAll(name,jobNumber);
+                    jobNumber.setCellValueFactory(new PropertyValueFactory<>("numberOfJobs"));
+                    break;
+            
+            }
+              tableview.setItems(list);
+              scene = new Scene(tableview);
+              
+        }else if( userAccount.getUserType() == FREELANCER ){
+            
+          
+          TableView<Report> tableview = new TableView();
+              tableview.setPrefSize(881, 447);
+              tableview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+         
+          
+          
+          int freelancerID = getUserTypeID("freelancerID","Freelancer",userID); 
+            
+             list =  (ObservableList<Report>) SearchRecord.getReportData(criteria , Integer.toString(freelancerID));
+                    
+                
+              switch( criteria ){
+                  case "freelancerJob":
+                   
+                   
+                    VBox vbox = new VBox();
+                    vbox.setSpacing(20);            
+                  
+                  
+                    
+                    TableColumn job = new TableColumn("Job Assigned");
+                    job.setMinWidth(20);
+                    job.setPrefWidth(150);
+                    job.setMaxWidth(5000);
+                    job.setResizable(true);
+                    
+                    TableColumn description = new TableColumn("Description");
+                    description.setMinWidth(20);
+                    description.setPrefWidth(150);
+                    description.setMaxWidth(5000);
+                    description.setResizable(true);
+                    
+                    TableColumn jobPostedDate = new TableColumn("Posted Date");
+                    jobPostedDate.setMinWidth(20);
+                    jobPostedDate.setPrefWidth(150);
+                    jobPostedDate.setMaxWidth(5000);
+                    jobPostedDate.setResizable(true);
+                    
+                    TableColumn name = new TableColumn("Contractor");
+                    name.setMinWidth(20);
+                    name.setPrefWidth(150);
+                    name.setMaxWidth(5000);
+                    name.setResizable(true);   
+                    
+                    
+                    
+                    ObservableList<Report> listAssignedJob =  FXCollections.observableArrayList();
+                    for(int i = 0; i < list.size(); i++ ){
+                       
+                       if( list.get(i).getContractStatus() == JOB_ASSIGNED_FREELANCER ){
+                                listAssignedJob.add(list.get(i));
+                       }
+                       
+                   }
+                   System.out.println("Contract Status :"+ listAssignedJob.get(0).getContractStatus());
+                    TableColumn header = new TableColumn("Assigned jobs");
+                    header.getColumns().addAll(job,description,jobPostedDate,name);
+                    tableview.getColumns().add(header); 
+                   vbox.getChildren().add(tableview);       
+                   
+                    job.setCellValueFactory(new PropertyValueFactory<>("job"));
+                    description.setCellValueFactory(new PropertyValueFactory<>("description"));
+                    jobPostedDate.setCellValueFactory(new PropertyValueFactory<>("postedDate"));
+                    name.setCellValueFactory(new PropertyValueFactory<>("name"));
+                   tableview.setItems(listAssignedJob);   
+                   //-------------------------------------------------------- 
+                     
+                   
+                    TableColumn inviteJob = new TableColumn("Job Assigned");
+                    inviteJob.setMinWidth(20);
+                    inviteJob.setPrefWidth(150);
+                    inviteJob.setMaxWidth(5000);
+                    inviteJob.setResizable(true);
+                    
+                    TableColumn inviteDescription = new TableColumn("Description");
+                    inviteDescription.setMinWidth(20);
+                    inviteDescription.setPrefWidth(150);
+                    inviteDescription.setMaxWidth(5000);
+                    inviteDescription.setResizable(true);
+                    
+                    TableColumn inviteJobPostedDate = new TableColumn("Posted Date");
+                    inviteJobPostedDate.setMinWidth(20);
+                    inviteJobPostedDate.setPrefWidth(150);
+                    inviteJobPostedDate.setMaxWidth(5000);
+                    inviteJobPostedDate.setResizable(true);
+                    
+                    TableColumn inviteName = new TableColumn("Contractor");
+                    inviteName.setMinWidth(20);
+                    inviteName.setPrefWidth(150);
+                    inviteName.setMaxWidth(5000);
+                    inviteName.setResizable(true);        
+                              
+                    
+                   
+                    
+                    ObservableList<Report> listInvitedJob  =  FXCollections.observableArrayList();
+                    for(int i = 0; i < list.size(); i++ ){
+                       
+                       if( list.get(i).getContractStatus() == INVITED_FREELANCER ){
+                           
+                                
+                                listInvitedJob.add(list.get(i));
+                       }
+                                
+                       
+                   }
+                    
+                    TableView<Report> secondTableview = new TableView();
+                    TableColumn inviteHeader = new TableColumn("Invited jobs");
+                    inviteHeader.getColumns().addAll(inviteJob,inviteDescription,inviteJobPostedDate);                    
+                    secondTableview.getColumns().add(inviteHeader);         
+                    
+                                                                     
+                   
+                    
+                    vbox.getChildren().add(secondTableview);               
+                    scene = new Scene(vbox);
+                    break;
+                    
+         
+                    
+              }
+            
+              
+            
+        }
+        
+        
+         
+         Stage stage = new Stage();       
+         stage.setScene(scene);    
+         stage.centerOnScreen();
+         stage.show();
+   }
 
     
 

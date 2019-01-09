@@ -79,7 +79,8 @@ public class UpdateRecord {
                               user.setDOB(sqlResult.getTimestamp("DOB").toLocalDateTime().toLocalDate());
                               freelancer = (Freelancer)user;
                               freelancer.setYearsOfExperince(sqlResult.getString("yearsOfExperience"));
-                              freelancer.setSelfDescription(sqlResult.getString("selfDescription"));                      
+                              freelancer.setSelfDescription(sqlResult.getString("selfDescription"));         
+                              freelancer.setAmountCharge(sqlResult.getInt("amountCharge"));         
                               contactID =  sqlResult.getInt("contactID");                    
                         }
                       
@@ -282,6 +283,7 @@ public class UpdateRecord {
                         + "DOB = ?,"
                         + "YearsOfExperience = ?,"
                         + "SelfDescription = ?,"
+                        + "amountCharge = ?,"
                         + "contactID = ?"  
                         + " where userID = ?";
                 
@@ -292,8 +294,9 @@ public class UpdateRecord {
                                 ps.setTimestamp(3,toTimeStamp( user.getDOB()));
                                 ps.setString(4, freelancer.getYearsOfExperince());
                                 ps.setString(5, freelancer.getSelfDescription());
-                                ps.setInt( 6, user.getContact().getContactId());
-                                ps.setInt( 7, user.getUserAccount().getUserID());
+                                ps.setInt(6, freelancer.getAmountCharge());
+                                ps.setInt( 7, user.getContact().getContactId());
+                                ps.setInt( 8, user.getUserAccount().getUserID());
                                 ps.executeUpdate();
                  conn.closeDBConnection();    
                  isUpdated = true;
@@ -332,10 +335,10 @@ public class UpdateRecord {
                     String query;
                     query = "Update Assignment set "
                         + "contractStatus = ?," 
-                        + "jobAssignedDate = ? "
-                        + "where contractorID = ? and freelancerID = ? and jobID = ?" ;
+                        + "jobAssignedDate = ?"
+                        + " where contractorID = ? and freelancerID = ? and jobID = ?" ;
                 
-                                    
+                    
                     PreparedStatement ps = conn.insertRecord(query);
                                 ps.setInt( 1, assignment.getContractStatus());
                                 ps.setTimestamp(2, toTimeStampWithTime(assignment.getJobAssignedDate()));

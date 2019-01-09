@@ -134,8 +134,8 @@ public  class AddRecord {
                 Freelancer freelancer = ( Freelancer )obj;
                 
                 String query = "";
-                query = "INSERT INTO Freelancer(firstName,lastName,DOB,yearsOfExperience,selfDescription,contactID,userID)" + 
-                                            "VALUES( ? , ? , ? ,? ,? , ? , ? );";
+                query = "INSERT INTO Freelancer(firstName,lastName,DOB,yearsOfExperience,selfDescription,amountCharge,contactID,userID)" + 
+                                            "VALUES( ? , ? , ? ,? ,? , ? , ? , ? );";
                                             
                                                 
                  PreparedStatement ps = conn.insertRecord(query);
@@ -144,8 +144,9 @@ public  class AddRecord {
                                 ps.setTimestamp(3,toTimeStamp( user.getDOB()));
                                 ps.setString(4, freelancer.getYearsOfExperince());
                                 ps.setString(5, freelancer.getSelfDescription());
-                                ps.setInt( 6, user.getContact().getContactId());
-                                ps.setInt( 7, user.getUserAccount().getUserID());
+                                ps.setInt(6, freelancer.getAmountCharge());
+                                ps.setInt( 7, user.getContact().getContactId());
+                                ps.setInt( 8, user.getUserAccount().getUserID());
                                 ps.execute();
                  conn.closeDBConnection();       
                 }catch( SQLException e){

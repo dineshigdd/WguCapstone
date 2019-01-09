@@ -304,7 +304,7 @@
                         <VBox layoutX="294.0" layoutY="127.0" prefHeight="200.0" prefWidth="307.0" spacing="10.0">
                            <children>
                               <Button fx:id="btnAllFreelancerContractor" mnemonicParsing="false" onAction="#btnAllFreelancerContractorHandler" text="Button" />
-                              <Button mnemonicParsing="false" text="Button" />
+                              <Button fx:id="btnAllFreelancerJobCount" mnemonicParsing="false" onAction="#btnAllFreelancerJobCountHandler" text="Button" />
                            </children>
                         </VBox>
                      </children></AnchorPane>
