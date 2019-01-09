@@ -18,7 +18,6 @@ import Model.PrgmLanguage;
 import Model.SavedFreelancer;
 import Model.UserAccount;
 import Reports.Report;
-import Reports.invitedJobs;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -1527,21 +1526,16 @@ error to fix */
         int userID = getUserID();
         int contractorID = getUserTypeID("contractorID","Contractor",userID); 
        
-        Scene scene = null;
-        ObservableList<Report> list = null;
        
-     
-    
+        ObservableList<Report> list = null;   
+        TableView<Report> tableview = new TableView();
+        tableview.setPrefSize(881, 447);
+        tableview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
-     
         
-        
-        if( userAccount.getUserType() == CONTRACTOR ){
-              TableView<Report> tableview = new TableView();
-              tableview.setPrefSize(881, 447);
-              tableview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-            
-              list =  (ObservableList<Report>) SearchRecord.getReportData(criteria , Integer.toString(contractorID));
+        if( userAccount.getUserType() == CONTRACTOR ){         
+             
+            list =  (ObservableList<Report>) SearchRecord.getReportData(criteria , Integer.toString(contractorID));
     //        System.out.println("Get number of jobs:" + list.get(0).getNumberOfJobs());
             TableColumn name = new TableColumn("Name");
             name.setMinWidth(20);
@@ -1584,17 +1578,9 @@ error to fix */
                     break;
             
             }
-              tableview.setItems(list);
-              scene = new Scene(tableview);
               
-        }else if( userAccount.getUserType() == FREELANCER ){
-            
-          
-          TableView<Report> tableview = new TableView();
-              tableview.setPrefSize(881, 447);
-              tableview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-         
-          
+              
+        }else if( userAccount.getUserType() == FREELANCER ){           
           
           int freelancerID = getUserTypeID("freelancerID","Freelancer",userID); 
             
@@ -1602,13 +1588,7 @@ error to fix */
                     
                 
               switch( criteria ){
-                  case "freelancerJob":
-                   
-                   
-                    VBox vbox = new VBox();
-                    vbox.setSpacing(20);            
-                  
-                  
+                  case "freelancerJob":                         
                     
                     TableColumn job = new TableColumn("Job Assigned");
                     job.setMinWidth(20);
@@ -1632,94 +1612,30 @@ error to fix */
                     name.setMinWidth(20);
                     name.setPrefWidth(150);
                     name.setMaxWidth(5000);
-                    name.setResizable(true);   
-                    
-                    
-                    
-                    ObservableList<Report> listAssignedJob =  FXCollections.observableArrayList();
-                    for(int i = 0; i < list.size(); i++ ){
-                       
-                       if( list.get(i).getContractStatus() == JOB_ASSIGNED_FREELANCER ){
-                                listAssignedJob.add(list.get(i));
-                       }
-                       
-                   }
-                   System.out.println("Contract Status :"+ listAssignedJob.get(0).getContractStatus());
-                    TableColumn header = new TableColumn("Assigned jobs");
-                    header.getColumns().addAll(job,description,jobPostedDate,name);
-                    tableview.getColumns().add(header); 
-                   vbox.getChildren().add(tableview);       
-                   
+                    name.setResizable(true);             
+                                           
+                    tableview.getColumns().addAll(job,description,jobPostedDate,name);
                     job.setCellValueFactory(new PropertyValueFactory<>("job"));
                     description.setCellValueFactory(new PropertyValueFactory<>("description"));
                     jobPostedDate.setCellValueFactory(new PropertyValueFactory<>("postedDate"));
                     name.setCellValueFactory(new PropertyValueFactory<>("name"));
-                   tableview.setItems(listAssignedJob);   
+                 
                    //-------------------------------------------------------- 
                      
                    
-                    TableColumn inviteJob = new TableColumn("Job Assigned");
-                    inviteJob.setMinWidth(20);
-                    inviteJob.setPrefWidth(150);
-                    inviteJob.setMaxWidth(5000);
-                    inviteJob.setResizable(true);
                     
-                    TableColumn inviteDescription = new TableColumn("Description");
-                    inviteDescription.setMinWidth(20);
-                    inviteDescription.setPrefWidth(150);
-                    inviteDescription.setMaxWidth(5000);
-                    inviteDescription.setResizable(true);
-                    
-                    TableColumn inviteJobPostedDate = new TableColumn("Posted Date");
-                    inviteJobPostedDate.setMinWidth(20);
-                    inviteJobPostedDate.setPrefWidth(150);
-                    inviteJobPostedDate.setMaxWidth(5000);
-                    inviteJobPostedDate.setResizable(true);
-                    
-                    TableColumn inviteName = new TableColumn("Contractor");
-                    inviteName.setMinWidth(20);
-                    inviteName.setPrefWidth(150);
-                    inviteName.setMaxWidth(5000);
-                    inviteName.setResizable(true);        
-                              
-                    
-                   
-                    
-                    ObservableList<Report> listInvitedJob  =  FXCollections.observableArrayList();
-                    for(int i = 0; i < list.size(); i++ ){
-                       
-                       if( list.get(i).getContractStatus() == INVITED_FREELANCER ){
-                           
-                                
-                                listInvitedJob.add(list.get(i));
-                       }
-                                
-                       
-                   }
-                    
-                    TableView<Report> secondTableview = new TableView();
-                    TableColumn inviteHeader = new TableColumn("Invited jobs");
-                    inviteHeader.getColumns().addAll(inviteJob,inviteDescription,inviteJobPostedDate);                    
-                    secondTableview.getColumns().add(inviteHeader);         
-                    
-                                                                     
-                   
-                    
-                    vbox.getChildren().add(secondTableview);               
-                    scene = new Scene(vbox);
                     break;
                     
          
                     
-              }
-            
+              }            
               
             
         }
-        
-        
-         
-         Stage stage = new Stage();       
+         tableview.setItems(list);
+         Stage stage = new Stage();          
+         Scene scene = new Scene(tableview);
+               
          stage.setScene(scene);    
          stage.centerOnScreen();
          stage.show();
