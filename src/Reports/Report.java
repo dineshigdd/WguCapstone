@@ -5,6 +5,8 @@
  */
 package Reports;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 
@@ -16,12 +18,23 @@ public class Report {
     private String name;
     private String job;
     private LocalDateTime jobAssignedDate;
+    private int amountCharge;
+    private String experience;
     private String numberOfJobs;
+    private String numberOfassignment;
     private String description;
     private LocalDateTime postedDate;
-    private int contractStatus;
-    
+    private String contractStatus;
+    private BigDecimal rate;
 
+    public void setRate(){
+             
+         
+    }
+
+   
+    
+       
     public Report(String name, String job) {
         this.name = name;
         this.job = job;
@@ -60,11 +73,20 @@ public class Report {
         return numberOfJobs;
     }
 
-    public void setNumberOfJobs(String numberOfJobs) {
-         System.out.println("Get number of jobs:" + numberOfJobs);
+    public void setNumberOfJobs(String numberOfJobs) {         
         this.numberOfJobs = numberOfJobs;
     }
 
+    public String getNumberOfassignment() {
+        return numberOfassignment;
+    }
+
+    public void setNumberOfassignment(String numberOfassignment) {
+        this.numberOfassignment = numberOfassignment;
+    }
+
+    
+    
     public void setJobDescription(String description) {
         this.description = description;
     }
@@ -73,11 +95,11 @@ public class Report {
         this.postedDate = jobPostDate;
     }
 
-    public void setContractStatus(int contractStatus ) {
+    public void setContractStatus(String contractStatus ) {
         this.contractStatus = contractStatus;
     }
 
-    public int getContractStatus() {
+    public String getContractStatus() {
         return contractStatus;
     }
     
@@ -97,7 +119,34 @@ public class Report {
     public void setPostedDate(LocalDateTime postedDate) {
         this.postedDate = postedDate;
     }
-        
+
+     public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+                 
+         this.rate = new BigDecimal(Double.toString(rate)).setScale(2, RoundingMode.DOWN); 
+    }
+
+    public int getAmountCharge() {
+        return amountCharge;
+    }
+
+    public void setAmountCharge(int amountCharge) {
+        this.amountCharge = amountCharge;
+    }
+
+    public String getExperience() {
+        return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+    
+    
+   
    
         
 }

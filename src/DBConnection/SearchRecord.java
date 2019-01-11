@@ -223,16 +223,28 @@ public class SearchRecord {
                      + " and assignment.contractorID = " + Integer.parseInt(criteriaValue);
                       
                     break;
-                    
+              case "allContractorJobOffers":
+                    query = "select concat(firstName,' ', lastName) as 'name' , count(contractStatus) as 'number of job offers' from assignment, contractor" +
+                             " where assignment.contractorID = contractor.contractorID group by `name`";                  
+                  
+                    break;
               case "AllFreelancerCount":
                   
-                    query = "select  concat(freelancer.firstName,' ', freelancer.lastName) as 'Name', count(contractStatus) As 'numberOfJobs' from assignment, freelancer" +
-                            " where freelancer.freelancerID = assignment.freelancerID and contractStatus = 3 group by Name";
+                    query = "select  concat(freelancer.firstName,' ', freelancer.lastName) as 'Name',amountCharge,yearsOfExperience, count(contractStatus) As 'numberOfJobs'" +
+                             " from assignment, freelancer where freelancer.freelancerID = assignment.freelancerID and contractStatus = 3 group by Name order by amountCharge desc";
                     break;
               
               case "freelancerJob":
-                    query = "select concat(contractor.firstName,' ',contractor.lastName) as 'Name' , jobTitle, jobDescription, jobPostDate, contractStatus from job , contractor , assignment" +
-                            " where assignment.jobID = job.jobID and assignment.contractorID = contractor.contractorID and freelancerID =" + criteriaValue;
+                    query = "select concat(contractor.firstName,' ',contractor.lastName) as 'Name' , jobTitle, jobDescription, jobPostDate, contractStatus"
+                            + " from job , contractor , assignment where assignment.jobID = job.jobID and assignment.contractorID = contractor.contractorID and freelancerID =" + criteriaValue
+                   
+                            + " order by contractStatus asc";
+                    break;
+              case "contractorJoboffers&Assignment":
+                    query = "SELECT  concat(firstName,' ',lastName) as 'Name', count(*) as 'NumberOfjoboffered'," +
+                                "sum(case when contractStatus = 3 then 1 else 0 end) as 'NumberOfjobassignment' from assignment, contractor" +
+                                " where assignment.contractorID = contractor.contractorID group by Name";
+                  
                     break;
           }
       
@@ -243,24 +255,58 @@ public class SearchRecord {
                             Report report = new Report();
                             report.setName(sqlResult.getString("Name") );
                             
-                            if( criteria.equals( "contractorJobOffer" )){
-                                report.setJob(sqlResult.getString("jobTitle"));
-                                report.setJobAssignedDate(sqlResult.getTimestamp("jobAssignedDate").toLocalDateTime());
-                                
-                            }else if( criteria.equals( "AllFreelancerCount" )){                                
-                                report.setNumberOfJobs(sqlResult.getString("numberOfJobs"));                              
+                            switch( criteria ){
                             
-                            }else if( criteria.equals( "freelancerJob" ) ){
-                                report.setJob(sqlResult.getString("jobTitle"));
-                                report.setJobDescription(sqlResult.getString("jobDescription"));
-                                report.setJobPostDate(sqlResult.getTimestamp("jobPostDate").toLocalDateTime());
-                                report.setContractStatus(sqlResult.getInt("contractStatus"));
+                                case  "contractorJobOffer":
+                                    report.setJob(sqlResult.getString("jobTitle"));
+                                    report.setJobAssignedDate(sqlResult.getTimestamp("jobAssignedDate").toLocalDateTime());
+                                    break;
+                                    
+                                case  "AllFreelancerCount":                                
+                                    report.setAmountCharge(sqlResult.getInt("amountCharge"));        
+                                    report.setExperience(sqlResult.getString("yearsOfExperience"));
+                                    report.setNumberOfJobs(sqlResult.getString("numberOfJobs"));        
+                                    
+                                    break;
+                                    
+                                case "freelancerJob":
+                                    report.setJob(sqlResult.getString("jobTitle"));
+                                    report.setJobDescription(sqlResult.getString("jobDescription"));
+                                    report.setJobPostDate(sqlResult.getTimestamp("jobPostDate").toLocalDateTime());
+                                
+                                        switch(sqlResult.getInt("contractStatus")){
+                                            case 1: report.setContractStatus("applied");
+                                            break;
+                                            case 2: report.setContractStatus("invited");
+                                            break;
+                                            case 3: report.setContractStatus("assigned");
+                                            break;
+                                       
+                                        }
+                                        
+                                    break;
+                                
+                                case "contractorJoboffers&Assignment":
+                                      report.setNumberOfJobs(sqlResult.getString("NumberOfjoboffered"));  
+                                      report.setNumberOfassignment(sqlResult.getString("NumberOfjobassignment"));
+                                      
+                                      System.out.println("num of ass:" + Integer.parseInt(report.getNumberOfassignment()));
+                                      System.out.println("num of jobs:" + Integer.parseInt(report.getNumberOfJobs()));
+                                      
+                                      double rate = Double.parseDouble(report.getNumberOfassignment())/ Double.parseDouble(report.getNumberOfJobs()) * 100;
+                                      System.out.println("rate :" +rate);
+                                      report.setRate(rate);
+                                      
+                                     
+                                      
+                                    break;
+                                    
                             }
                             
                             list.add(report);
                             
                     }
-             } catch (SQLException ex) {
+                } catch (SQLException ex) {
             
                }
             

@@ -18,6 +18,7 @@ import Model.PrgmLanguage;
 import Model.SavedFreelancer;
 import Model.UserAccount;
 import Reports.Report;
+import com.sun.javafx.scene.control.skin.TableColumnHeader;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -1497,9 +1498,11 @@ error to fix */
     private void tabReportsHandler(Event event) {
         
        if( userAccount.getUserType() == CONTRACTOR ){
-                btnAllFreelancerContractor.setText("All Freelancer and Contracts");
+                btnAllFreelancerContractor.setText("Your Job Assignments");
+                btnAllFreelancerJobCount.setText("Freelancer experience and charges");
        }else if( userAccount.getUserType() == FREELANCER ){
                 btnAllFreelancerContractor.setText("Your Job Report");
+                btnAllFreelancerJobCount.setText("Contractors Job Assignment Report");
        }
         
     }
@@ -1516,8 +1519,14 @@ error to fix */
 
     @FXML
     private void btnAllFreelancerJobCountHandler(ActionEvent event) {
-        setReport("AllFreelancerCount");
+        
+        if( userAccount.getUserType() == CONTRACTOR ){
+                 setReport("AllFreelancerCount");
+        }else if( userAccount.getUserType() == FREELANCER ){
+                setReport("contractorJoboffers&Assignment");
+        }
     }
+
 
   
 
@@ -1532,21 +1541,25 @@ error to fix */
         tableview.setPrefSize(881, 447);
         tableview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
-        
-        if( userAccount.getUserType() == CONTRACTOR ){         
-             
-            list =  (ObservableList<Report>) SearchRecord.getReportData(criteria , Integer.toString(contractorID));
-    //        System.out.println("Get number of jobs:" + list.get(0).getNumberOfJobs());
-            TableColumn name = new TableColumn("Name");
+        TableColumn name = new TableColumn();
             name.setMinWidth(20);
             name.setPrefWidth(150);
             name.setMaxWidth(5000);
             name.setResizable(true);      
             name.setCellValueFactory(new PropertyValueFactory<>("name"));
             
+        
+        if( userAccount.getUserType() == CONTRACTOR ){         
+             
+            list =  (ObservableList<Report>) SearchRecord.getReportData(criteria , Integer.toString(contractorID));
+    //        System.out.println("Get number of jobs:" + list.get(0).getNumberOfJobs());
+            
+            
             switch( criteria ){
 
                 case "contractorJobOffer":
+                    name.setText("Freelancer");
+                    
                     TableColumn job = new TableColumn("Job Assigned");
                     job.setMinWidth(20);
                     job.setPrefWidth(150);
@@ -1566,14 +1579,22 @@ error to fix */
 
                     break;
 
-               case "AllFreelancerCount":
+               case "AllFreelancerCount":        
+                   
+                    TableColumn amountCharge = new TableColumn("Amount Charge($/hour)");
+                    
+                    TableColumn yearsOfExperience = new TableColumn("Years Of Experience");
+                    
                     TableColumn jobNumber = new TableColumn("Number of Jobs");
                     jobNumber.setMinWidth(20);
                     jobNumber.setPrefWidth(150);
                     jobNumber.setMaxWidth(5000);
                     jobNumber.setResizable(true);
-
-                    tableview.getColumns().addAll(name,jobNumber);
+                    
+                    
+                    tableview.getColumns().addAll(name,amountCharge,yearsOfExperience,jobNumber);
+                    amountCharge.setCellValueFactory(new PropertyValueFactory<>("amountCharge"));
+                    yearsOfExperience.setCellValueFactory(new PropertyValueFactory<>("experience"));
                     jobNumber.setCellValueFactory(new PropertyValueFactory<>("numberOfJobs"));
                     break;
             
@@ -1608,24 +1629,50 @@ error to fix */
                     jobPostedDate.setMaxWidth(5000);
                     jobPostedDate.setResizable(true);
                     
-                    TableColumn name = new TableColumn("Contractor");
-                    name.setMinWidth(20);
-                    name.setPrefWidth(150);
-                    name.setMaxWidth(5000);
-                    name.setResizable(true);             
+                    TableColumn status = new TableColumn("Status");
+                    status.setMinWidth(20);
+                    status.setPrefWidth(150);
+                    status.setMaxWidth(5000);
+                    status.setResizable(true);
+                    
+                    name.setText("Contractor");                                                   
+                                 
                                            
-                    tableview.getColumns().addAll(job,description,jobPostedDate,name);
+                    tableview.getColumns().addAll(job,description,jobPostedDate,status,name);
                     job.setCellValueFactory(new PropertyValueFactory<>("job"));
                     description.setCellValueFactory(new PropertyValueFactory<>("description"));
                     jobPostedDate.setCellValueFactory(new PropertyValueFactory<>("postedDate"));
-                    name.setCellValueFactory(new PropertyValueFactory<>("name"));
-                 
-                   //-------------------------------------------------------- 
-                     
-                   
+                    status.setCellValueFactory(new PropertyValueFactory<>("contractStatus"));
+                    name.setCellValueFactory(new PropertyValueFactory<>("name"));        
                     
                     break;
                     
+                  case "contractorJoboffers&Assignment":
+                         TableColumn joboffered = new TableColumn("Number of jobs offered");
+                         joboffered.setMinWidth(20);
+                         joboffered.setPrefWidth(150);
+                         joboffered.setMaxWidth(5000);
+                         joboffered.setResizable(true);
+                         
+                         TableColumn jobAssigned= new TableColumn("Number of jobs assignment");
+                         jobAssigned.setMinWidth(20);
+                         jobAssigned.setPrefWidth(150);
+                         jobAssigned.setMaxWidth(5000);
+                         jobAssigned.setResizable(true);                        
+                         
+                         
+                         TableColumn percentage = new TableColumn("Percentage(%)");
+                         jobAssigned.setMinWidth(20);
+                         jobAssigned.setPrefWidth(150);
+                         jobAssigned.setMaxWidth(5000);
+                         jobAssigned.setResizable(true);
+                         
+                         tableview.getColumns().addAll(name,joboffered,jobAssigned,percentage);
+                         joboffered.setCellValueFactory(new PropertyValueFactory<>("numberOfJobs"));
+                         jobAssigned.setCellValueFactory(new PropertyValueFactory<>("numberOfassignment"));                         
+                         percentage.setCellValueFactory(new PropertyValueFactory("rate"));
+                         
+                      break;
          
                     
               }            
