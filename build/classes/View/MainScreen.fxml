@@ -62,11 +62,11 @@
                                               <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
                                             </columnConstraints>
                                             <rowConstraints>
-                                                <RowConstraints maxHeight="97.0" minHeight="10.0" prefHeight="59.0" vgrow="SOMETIMES" />
-                                              <RowConstraints maxHeight="102.0" minHeight="37.0" prefHeight="77.0" vgrow="SOMETIMES" />
-                                              <RowConstraints maxHeight="129.0" minHeight="34.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                                              <RowConstraints maxHeight="176.0" minHeight="93.0" prefHeight="116.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="124.0" minHeight="19.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="123.0" minHeight="10.0" prefHeight="123.0" vgrow="SOMETIMES" />
+                                              <RowConstraints maxHeight="106.0" minHeight="37.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                                              <RowConstraints maxHeight="120.0" minHeight="34.0" prefHeight="113.0" vgrow="SOMETIMES" />
+                                              <RowConstraints maxHeight="188.0" minHeight="93.0" prefHeight="161.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="134.0" minHeight="19.0" prefHeight="134.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <children>
                                                 <Label prefHeight="21.0" prefWidth="39.0" text="Title :" GridPane.rowIndex="1" />
@@ -85,7 +85,7 @@
                                                       <Insets bottom="5.0" top="5.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <HBox prefHeight="95.0" prefWidth="375.0" spacing="50.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                <HBox prefHeight="104.0" prefWidth="438.0" spacing="50.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                    <children>
                                                       <RadioButton fx:id="radbtnRemote" mnemonicParsing="false" text="Remote" translateY="20.0">
                                                          <HBox.margin>
@@ -118,7 +118,7 @@
                                                       <Insets />
                                                    </GridPane.margin>
                                                 </TextArea>
-                                                <Button fx:id="btnSubmit" mnemonicParsing="false" onAction="#btnSubmitHandler" text="Submit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+                                                <Button fx:id="btnSubmit" mnemonicParsing="false" onAction="#btnSubmitHandler" prefHeight="32.0" prefWidth="97.0" text="Submit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
                                                 <VBox alignment="CENTER_LEFT" spacing="15.0" GridPane.columnIndex="1">
                                                    <children>
                                                       <RadioButton fx:id="radBtnNewJobPost" mnemonicParsing="false" onMouseClicked="#radBtnNewJobPostHandler" selected="true" text="Create a new Job post to invite">
@@ -163,9 +163,9 @@
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
                                           <HBox fx:id="searchHzBoxContractor" layoutX="250.0" layoutY="135.0" prefHeight="31.0" prefWidth="385.0" spacing="10.0" />
-                                          <VBox layoutX="212.0" layoutY="225.0" spacing="20.0">
+                                          <VBox layoutX="250.0" layoutY="222.0" spacing="20.0">
                                              <children>
-                                                <RadioButton fx:id="radBtnSkill" mnemonicParsing="false" onAction="#radbtnSkillHandler" text="By Skill">
+                                                <RadioButton fx:id="radBtnSkill" mnemonicParsing="false" onAction="#radbtnSkillHandler" selected="true" text="By Skill">
                                                    <toggleGroup>
                                                       <ToggleGroup fx:id="searchCategory1" />
                                                    </toggleGroup>
@@ -265,14 +265,13 @@
                           <AnchorPane fx:id="searchPane" minHeight="0.0" minWidth="0.0" prefHeight="647.0" prefWidth="881.0">
                                  <children>
                                     <HBox fx:id="searchHzBoxFreelancer" layoutX="250.0" layoutY="135.0" prefHeight="31.0" prefWidth="385.0" spacing="10.0" />
-                                    <VBox layoutX="212.0" layoutY="225.0" prefHeight="144.0" prefWidth="128.0" spacing="20.0">
+                                    <VBox layoutX="250.0" layoutY="222.0" prefHeight="144.0" prefWidth="128.0" spacing="20.0">
                                        <children>
-                                          <RadioButton fx:id="radBtnDate" mnemonicParsing="false" onAction="#radbtnDateHandler" text="By Date">
+                                          <RadioButton fx:id="radBtnTitle" mnemonicParsing="false" onAction="#radbtnContractorTitleHandler" selected="true" text="By Title">
                                              <toggleGroup>
                                                 <ToggleGroup fx:id="searchCategory" />
-                                             </toggleGroup>
-                                          </RadioButton>
-                                          <RadioButton fx:id="radBtnTitle" mnemonicParsing="false" onAction="#radbtnContractorTitleHandler" text="By Title" toggleGroup="$searchCategory" />
+                                             </toggleGroup></RadioButton>
+                                          <RadioButton fx:id="radBtnDate" mnemonicParsing="false" onAction="#radbtnDateHandler" text="By Date" toggleGroup="$searchCategory" />
                                           <RadioButton fx:id="radBtnCategory" mnemonicParsing="false" onAction="#radbtnCategoryHandler" text="By Category" toggleGroup="$searchCategory" />
                                           <RadioButton fx:id="radBtnShowAllJobs" mnemonicParsing="false" onAction="#radBtnShowAllJobsHandler" text="Show All Jobs" toggleGroup="$searchCategory" />
                                        </children>

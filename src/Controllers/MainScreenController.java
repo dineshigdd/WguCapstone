@@ -319,7 +319,7 @@ public class MainScreenController implements Initializable {
            
                    
            userAccount = new UserAccount();
-           btnSearch = new Button("Search");    
+          
          
            ObservableList<String> list = FXCollections.observableArrayList(
               "less than 1 year",
@@ -328,11 +328,17 @@ public class MainScreenController implements Initializable {
               "more than 5 years");
            
            comboBox = new ComboBox(list);
+           comboBox.setPrefWidth(300);
            comboBox.setPromptText("Select Years Of Experience");
            
-           datepicker = new DatePicker();
+           datepicker = new DatePicker(); 
+           datepicker.setPrefWidth(300);
+           btnSearch = new Button("Search");    
            txtSearch = new TextField();  
-           criteria = null;
+           txtSearch.setPrefWidth(300);
+           criteria = null;          
+           
+           
            
            updateMenuItem.setStyle("-fx-padding:2 60 2 60");        
            deleteMenuItem.setStyle("-fx-padding:2 60 2 60");
@@ -409,10 +415,14 @@ public class MainScreenController implements Initializable {
         
         if( userType == FREELANCER ){
             mainTabPane.getTabs().remove(tabContractor);
+            searchHzBoxFreelancer.getChildren().add(txtSearch);
+            searchHzBoxFreelancer.getChildren().add(btnSearch);
             searchJob();           
             setSkills();
         }else{
             mainTabPane.getTabs().remove(tabFreelancer);
+            searchHzBoxContractor.getChildren().add(txtSearch);
+            searchHzBoxContractor.getChildren().add(btnSearch);
            
         }
     }
