@@ -1581,6 +1581,7 @@ error to fix */
 
                case "AllFreelancerCount":        
                    
+                    name.setText("Freelancer");
                     TableColumn amountCharge = new TableColumn("Amount Charge($/hour)");
                     
                     TableColumn yearsOfExperience = new TableColumn("Years Of Experience");
@@ -1648,6 +1649,8 @@ error to fix */
                     break;
                     
                   case "contractorJoboffers&Assignment":
+                         name.setText("Contractor");
+                         
                          TableColumn joboffered = new TableColumn("Number of jobs offered");
                          joboffered.setMinWidth(20);
                          joboffered.setPrefWidth(150);
