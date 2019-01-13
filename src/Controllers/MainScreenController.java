@@ -333,11 +333,13 @@ public class MainScreenController implements Initializable {
            datepicker = new DatePicker();
            txtSearch = new TextField();  
            criteria = null;
-          
-          
+           
+           updateMenuItem.setStyle("-fx-padding:2 60 2 60");        
+           deleteMenuItem.setStyle("-fx-padding:2 60 2 60");
+           
      }    
 
-    
+   
     
     @FXML
     private void updateMenuItemHandler(ActionEvent event) throws IOException {
