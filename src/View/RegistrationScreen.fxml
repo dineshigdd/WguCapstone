@@ -14,113 +14,115 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegistrationScreenController">
    <content>
-      <BorderPane prefHeight="1042.0" prefWidth="869.0" styleClass="mainFxmlClass" stylesheets="@../Syles/userRegistration.css">
+      <BorderPane prefHeight="1042.0" prefWidth="886.0" styleClass="mainFxmlClass" stylesheets="@../Syles/userRegistration.css">
          <center>
-            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="936.0" prefWidth="762.0" styleClass="mainFxmlClass" BorderPane.alignment="CENTER">
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="936.0" prefWidth="823.0" styleClass="mainFxmlClass" BorderPane.alignment="CENTER">
                <children>
                   <HBox layoutX="87.0" layoutY="50.0" prefHeight="35.0" prefWidth="487.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="120.0" text="First Name:" />
-                        <TextField fx:id="txtFirstName" prefHeight="35.0" prefWidth="450.0" />
+                        <TextField fx:id="txtFirstName" prefHeight="35.0" prefWidth="450.0" promptText="*" />
                      </children>
                   </HBox>
                   <HBox layoutX="87.0" layoutY="111.0" prefHeight="35.0" prefWidth="487.0">
                      <children>
                         <Label prefHeight="64.0" prefWidth="120.0" text="Last Name:" />
-                        <TextField fx:id="txtLastName" prefHeight="35.0" prefWidth="450.0" />
+                        <TextField fx:id="txtLastName" prefHeight="35.0" prefWidth="450.0" promptText="*" />
                      </children>
                   </HBox>
                   <HBox layoutX="58.0" layoutY="170.0" prefHeight="35.0" prefWidth="515.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="106.0" text="Street Address:" />
-                        <TextField fx:id="txtStaddress" prefHeight="35.0" prefWidth="409.0">
+                        <TextField fx:id="txtStaddress" prefHeight="35.0" prefWidth="409.0" promptText="*">
                            <rotationAxis>
                               <Point3D y="1.0" z="1.0" />
                            </rotationAxis>
                         </TextField>
                      </children>
                   </HBox>
-                  <HBox layoutX="129.0" layoutY="227.0" prefHeight="35.0" prefWidth="123.0">
+                  <HBox layoutX="629.0" layoutY="170.0" prefHeight="35.0" prefWidth="123.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="46.0" text="Apt:" />
                         <TextField fx:id="txtApt" prefHeight="35.0" prefWidth="98.0" />
                      </children>
                   </HBox>
-                  <HBox layoutX="129.0" layoutY="281.0" prefHeight="35.0" prefWidth="291.0">
+                  <HBox layoutX="126.0" layoutY="227.0" prefHeight="35.0" prefWidth="291.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="36.0" text="City:" />
-                        <TextField fx:id="txtCity" prefHeight="35.0" prefWidth="257.0" />
+                        <TextField fx:id="txtCity" prefHeight="35.0" prefWidth="257.0" promptText="*" />
                      </children>
                   </HBox>
-                  <HBox layoutX="51.0" layoutY="334.0" prefHeight="35.0" prefWidth="311.0">
+                  <HBox layoutX="445.0" layoutY="227.0" prefHeight="35.0" prefWidth="372.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="115.0" text="ZIP/Postal Code:" />
-                        <TextField fx:id="txtZip" prefHeight="35.0" prefWidth="195.0" />
+                        <TextField fx:id="txtZip" prefHeight="35.0" prefWidth="257.0" promptText="*" />
                      </children>
                   </HBox>
-                  <HBox layoutX="7.0" layoutY="387.0" prefHeight="35.0" prefWidth="418.0">
+                  <HBox layoutY="288.0" prefHeight="35.0" prefWidth="418.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="160.0" text="State/Province/Region:" />
-                        <TextField fx:id="txtState" prefHeight="35.0" prefWidth="261.0" />
+                        <TextField fx:id="txtState" prefHeight="35.0" prefWidth="261.0" promptText="*" />
                      </children>
                   </HBox>
-                  <HBox layoutX="100.0" layoutY="439.0" prefHeight="35.0" prefWidth="326.0">
+                  <HBox layoutX="492.0" layoutY="278.0" prefHeight="35.0" prefWidth="326.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="67.0" text="Country:" />
-                        <TextField fx:id="txtCountry" prefHeight="35.0" prefWidth="260.0" />
+                        <TextField fx:id="txtCountry" prefHeight="35.0" prefWidth="260.0" promptText="*" />
                      </children>
                   </HBox>
-                  <HBox layoutX="57.0" layoutY="497.0" prefHeight="35.0" prefWidth="373.0">
+                  <HBox layoutX="51.0" layoutY="346.0" prefHeight="35.0" prefWidth="373.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="113.0" text="Phone Number:" />
-                        <TextField fx:id="txtPhoneNumber" prefHeight="35.0" prefWidth="266.0" />
+                        <TextField fx:id="txtPhoneNumber" prefHeight="35.0" prefWidth="266.0" promptText="*" />
                      </children>
                   </HBox>
-                  <HBox layoutX="115.0" layoutY="545.0" prefHeight="35.0" prefWidth="313.0">
+                  <HBox layoutX="506.0" layoutY="329.0" prefHeight="35.0" prefWidth="313.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="56.0" text="E-mail:" />
-                        <TextField fx:id="txtEmail" prefHeight="35.0" prefWidth="266.0" />
+                        <TextField fx:id="txtEmail" prefHeight="35.0" prefWidth="266.0" promptText="*" />
                      </children>
                   </HBox>
-                  <HBox layoutX="70.0" layoutY="600.0" prefHeight="35.0" prefWidth="358.0">
+                  <HBox layoutX="65.0" layoutY="404.0" prefHeight="35.0" prefWidth="358.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="96.0" text="Date Of Birth:" />
-                        <DatePicker fx:id="datePickerDOB" prefHeight="35.0" prefWidth="266.0" />
+                        <DatePicker fx:id="datePickerDOB" prefHeight="35.0" prefWidth="266.0" promptText="*" />
                      </children>
                   </HBox>
-                  <HBox layoutX="171.0" layoutY="662.0" prefHeight="31.0" prefWidth="260.0" spacing="50.0">
+                  <VBox layoutX="159.0" layoutY="475.0" prefHeight="90.0" prefWidth="100.0" spacing="15.0">
                      <children>
-                        <RadioButton fx:id="radBtnContractor" mnemonicParsing="false" onMouseClicked="#radBtnContractorHandler" prefHeight="31.0" prefWidth="117.0" text="Contractor">
+                        <RadioButton fx:id="radBtnContractor" mnemonicParsing="false" onMouseClicked="#radBtnContractorHandler" prefHeight="31.0" prefWidth="117.0" selected="true" text="Contractor">
                            <toggleGroup>
                               <ToggleGroup fx:id="userGroup" />
                            </toggleGroup>
                         </RadioButton>
                         <RadioButton fx:id="radBtnFreelancer" mnemonicParsing="false" onMouseClicked="#radBtnFreelancerHandler" prefHeight="31.0" prefWidth="110.0" text="Freelancer" toggleGroup="$userGroup" />
                      </children>
-                  </HBox>
-                  <HBox fx:id="hzBoxContracotorType" layoutX="24.0" layoutY="714.0" prefHeight="31.0" prefWidth="406.0">
+                  </VBox>
+                  <HBox fx:id="hzBoxContracotorType" layoutX="281.0" layoutY="475.0" prefHeight="31.0" prefWidth="537.0">
                      <children>
-                        <Label fx:id="spinnerLabel" alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="153.0" text="Type Of Contractor: " />
-                        <Spinner fx:id="spinner" prefHeight="31.0" prefWidth="278.0" />
+                        <Label fx:id="spinnerLabel" alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="143.0" text="Type Of Contractor: " />
+                        <Spinner fx:id="spinner" prefHeight="31.0" prefWidth="398.0" />
                      </children>
                   </HBox>
-                  <HBox fx:id="textArea" layoutX="42.0" layoutY="772.0" prefHeight="73.0" prefWidth="391.0">
+                  <HBox fx:id="textArea" layoutX="304.0" layoutY="520.0" prefHeight="73.0" prefWidth="513.0">
                      <children>
                         <Label fx:id="spinnerLabel1" prefHeight="31.0" prefWidth="120.0" text="Self Description: " />
-                        <TextArea fx:id="txtAreaDescription" prefHeight="73.0" prefWidth="267.0" />
+                        <TextArea fx:id="txtAreaDescription" prefHeight="73.0" prefWidth="396.0" promptText="*" />
                      </children>
                   </HBox>
-                  <HBox fx:id="hzBoxAmountCharge" layoutX="33.0" layoutY="869.0" prefHeight="35.0" prefWidth="395.0">
+                  <HBox fx:id="hzBoxAmountCharge" layoutX="295.0" layoutY="606.0" prefHeight="35.0" prefWidth="395.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="134.0" text="Amount Charge : $" />
                         <TextField fx:id="txtAmountCharge" prefHeight="35.0" prefWidth="276.0" promptText="Amount you would like per hour" />
                      </children>
                   </HBox>
-                  <Button fx:id="btnSignup" layoutX="610.0" layoutY="884.0" mnemonicParsing="false" onAction="#btnSignupHandler" onMouseEntered="#chageCursor" onMouseExited="#setDefaultMousePointer" prefHeight="41.0" prefWidth="126.0" styleClass="btnSubmit" text="Submit" />
+                  <Button fx:id="btnSignup" layoutX="686.0" layoutY="783.0" mnemonicParsing="false" onAction="#btnSignupHandler" onMouseEntered="#chageCursor" onMouseExited="#setDefaultMousePointer" prefHeight="41.0" prefWidth="126.0" styleClass="btnSubmit" text="Submit" />
+                  <Label layoutX="159.0" layoutY="682.0" prefHeight="21.0" prefWidth="85.0" text="*  required" textFill="RED" />
                   
                </children>
             </AnchorPane>

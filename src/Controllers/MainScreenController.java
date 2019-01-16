@@ -73,6 +73,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -302,10 +303,15 @@ public class MainScreenController implements Initializable {
     private Tab tabReport;
     @FXML
     private Button btnAllFreelancerJobCount;
-  
-  
-  
+    @FXML
+    private GridPane gridPaneJob;
+    @FXML
+    private HBox hzBoxFreelancerInviteApply;
    
+  
+  
+  
+   static Label test = new Label("Test");
              
             
     @Override
@@ -342,6 +348,14 @@ public class MainScreenController implements Initializable {
            
            updateMenuItem.setStyle("-fx-padding:2 60 2 60");        
            deleteMenuItem.setStyle("-fx-padding:2 60 2 60");
+         
+           
+        
+           
+//           FXMLLoader loader = new FXMLLoader(getClass().getResource("MyGui.fxml"));
+//           Parent root = (Parent)loader.load();
+//           MainScreenController controller = (MainScreenController)loader.getController();
+//            controller.setStageAndSetupListeners(stage); // 
            
      }    
 
@@ -422,12 +436,19 @@ public class MainScreenController implements Initializable {
         }else{
             mainTabPane.getTabs().remove(tabFreelancer);
             searchHzBoxContractor.getChildren().add(txtSearch);
-            searchHzBoxContractor.getChildren().add(btnSearch);
+            searchHzBoxContractor.getChildren().add(btnSearch);       
+            
+           
            
         }
-    }
+        
+           
+                   
+        
+          
+          }
      
-     
+    
     private boolean isPasswordConfirmed(String message, String title,String header){
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle(title);
@@ -1703,12 +1724,33 @@ error to fix */
          stage.show();
    }
 
+ 
+   
+   public  static void shiftControls(){
+   
+      // btnOk.setText("moving");
+       
+       
+//        Stage stage = (Stage)mainPane.getScene().getWindow();
+//        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+//     // Do whatever you want
+//            btnOk.setStyle("-fx-background-color:yellow");
+//            
+//        });
+       
+       
+   
+       // hzBoxFreelancerInviteApply.setStyle("-fx-padding:0 0 0 50");
+   }
     
 
         
     
     
 }
+
+
+
 //private void tableViewJobHandler(MouseEvent event) throws IOException {
 //        
 //       int userID;

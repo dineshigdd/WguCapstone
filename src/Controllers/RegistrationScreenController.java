@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
  */
 import DBConnection.DBConnection;
 import DBConnection.UpdateRecord;
+import Exceptions.EmptyFieldException;
 import Model.Contact;
 import Model.Contractor;
 import Model.Freelancer;
@@ -66,7 +67,7 @@ public class RegistrationScreenController implements Initializable {
     private TextField txtCountry;
     @FXML
     private Button btnSignup;
-    private CheckBox chkBoxContractor;
+   // private CheckBox chkBoxContractor;
     @FXML
     private TextField txtPhoneNumber;
     @FXML
@@ -163,8 +164,9 @@ public class RegistrationScreenController implements Initializable {
     
     @FXML
     private void btnSignupHandler(ActionEvent event) throws IOException {
-         getInput();
+         boolean  isInputValid = getInput();
          
+         if( isInputValid ){
            if( !isUpdate ){
                 isNewUser  = true;         
                 Stage stage;
@@ -197,7 +199,9 @@ public class RegistrationScreenController implements Initializable {
                 stage.centerOnScreen();
                 stage.show();
            }
-         
+         }else{
+             
+         }
             
         
     }
@@ -210,38 +214,98 @@ public class RegistrationScreenController implements Initializable {
    
     
     
-    public void getInput(){        
+    public boolean getInput()  {        
         
         //get textField inuput
-        SimpleDateFormat dobFormat = new SimpleDateFormat("MM/dd/YYYY");
-        
-        String firstName = txtFirstName.getText();
-        String lastName = txtLastName.getText();
-        
-        LocalDate DOB = null;     
-        
-        
-        try{
-         DOB = datePickerDOB.getValue();
-         System.out.println( "Date of Birth:" + DOB );
-//         DOB = dobFormat.parse(dateInput.getDayOfMonth() + "/" + dateInput.getDayOfWeek() + "/" + dateInput.getYear());
+        boolean isValid = true;
       
-        }catch(Exception e){
-           e.printStackTrace();
-        }
+         ObservableList<TextField> list = FXCollections.observableArrayList();
+    //    SimpleDateFormat dobFormat = new SimpleDateFormat("MM/dd/YYYY");
+        String firstName = "";
+        String lastName = "";
+        String stAddress = "";
+        String apt = "";
+        String city = "";
+        String zip = "";
+        String state = "";
+        String country = "";
+        String phone = "";
+        String email = "";
         
-        String stAddress = txtStaddress.getText();
-        String apt = txtApt.getText();
-        String city = txtCity.getText();
-        String zip = txtZip.getText();
-        String state = txtState.getText();
-        String country = txtCountry.getText();
-        String phone = txtPhoneNumber.getText();
-        String email = txtEmail.getText();
         
-        //get DoB     
-       
-        contact = new Contact(
+            
+            firstName = txtFirstName.getText();
+            if( txtFirstName.getText().isEmpty() ){
+                list.add(txtFirstName);
+                //txtFirstName.setStyle("-fx-border-color:red");          
+            }
+            
+            lastName = txtLastName.getText();
+            if( txtLastName.getText().isEmpty() ){
+                list.add(txtLastName);
+               // txtLastName.setStyle("-fx-border-color:red");          
+            }
+            
+            stAddress = txtStaddress.getText();
+            if( txtStaddress.getText().isEmpty()){
+                list.add(txtStaddress);
+               // txtStaddress.setStyle("-fx-border-color:red");   
+            }
+            
+            apt = txtApt.getText();
+            
+            
+            city = txtCity.getText();
+            if( txtCity.getText().isEmpty()){
+                list.add(txtCity);
+               // txtCity.setStyle("-fx-border-color:red");   
+            }
+            
+            zip = txtZip.getText();
+            if( txtZip.getText().isEmpty()){
+                list.add(txtZip);
+                //txtZip.setStyle("-fx-border-color:red");   
+            }
+            
+            state = txtState.getText();
+            if(  txtState.getText().isEmpty()){
+                list.add(txtState);
+                //txtState.setStyle("-fx-border-color:red");   
+            }
+            
+            country = txtCountry.getText();
+            if(  txtCountry.getText().isEmpty()){
+                list.add(txtCountry);
+               // txtCountry.setStyle("-fx-border-color:red");   
+            }
+            
+            phone = txtPhoneNumber.getText();
+            if( txtPhoneNumber.getText().isEmpty()){
+                 list.add(txtPhoneNumber);
+               // txtPhoneNumber.setStyle("-fx-border-color:red");   
+            }
+            
+            email = txtEmail.getText();  
+            if(  txtEmail.getText().isEmpty()){
+                list.add(txtEmail);
+               // txtEmail.setStyle("-fx-border-color:red");   
+            }
+            
+            
+            if( txtFirstName.getText().isEmpty() ||   txtLastName.getText().isEmpty() || txtStaddress.getText().isEmpty()||
+                txtCity.getText().isEmpty() || txtZip.getText().isEmpty() || txtState.getText().isEmpty() || txtCountry.getText().isEmpty() ||
+                txtPhoneNumber.getText().isEmpty() || txtEmail.getText().isEmpty() ){
+                
+                isValid = false;
+              }
+            
+            
+           for(int i = 0; i < list.size(); i++ ){
+               list.get(i).setStyle("-fx-border-color:red");
+           }
+            
+           if(  isValid ){
+            contact = new Contact(
                 stAddress,
                 apt,
                 city,
@@ -251,8 +315,28 @@ public class RegistrationScreenController implements Initializable {
                 phone,
                 email
             );
+            
+           }  
+       
         
-         
+           //get DoB     
+        
+         LocalDate DOB = null;     
+        
+        try{
+            
+             DOB = datePickerDOB.getValue();  
+            
+                if( DOB == null){
+                   datePickerDOB.setStyle("-fx-border-color:red");
+                }
+          
+//         DOB = dobFormat.parse(dateInput.getDayOfMonth() + "/" + dateInput.getDayOfWeek() + "/" + dateInput.getYear());
+      
+        }catch(Exception e){
+                e.printStackTrace();
+                
+        }
           
         if( radBtnContractor.isSelected() ){           
       
@@ -333,7 +417,7 @@ public class RegistrationScreenController implements Initializable {
             UpdateRecord.setUpdateContactRecord(contact); //update Database record for the contact
        }
        
-       
+       return isValid;
     }
     
 //    private int setAddress(Contact contact){   //Inserting address
@@ -448,7 +532,7 @@ public class RegistrationScreenController implements Initializable {
     private void radBtnContractorHandler(MouseEvent event) {
         
          hzBoxContracotorType.setVisible(true);
-         hzBoxPayrate.setVisible(false);
+         hzBoxAmountCharge.setVisible(false);
          textArea.setVisible(false);
          spinnerLabel.setText("Type Of Contractor:");
                 
@@ -469,7 +553,7 @@ public class RegistrationScreenController implements Initializable {
     private void radBtnFreelancerHandler(MouseEvent event) {
         
          hzBoxContracotorType.setVisible(true);
-         hzBoxPayrate.setVisible(true);
+         hzBoxAmountCharge.setVisible(true);
          textArea.setVisible(true);
          spinnerLabel.setText("Experience:");    
          
