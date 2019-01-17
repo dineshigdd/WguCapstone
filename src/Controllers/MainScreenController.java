@@ -460,7 +460,7 @@ public class MainScreenController implements Initializable {
      }
      
      
-      private boolean alert(String message, String title,String header, Alert.AlertType alertType,boolean ... isNobtn ){
+      private boolean alert(String message, String title,String header, Alert.AlertType alertType){
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);

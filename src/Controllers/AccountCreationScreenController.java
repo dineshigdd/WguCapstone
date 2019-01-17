@@ -119,6 +119,8 @@ public class AccountCreationScreenController implements Initializable {
                     user.setUserAccount(userAccount);       
                     AddRecord.setDbRecord(user, user.getUserAccount().getUserType());
                     
+                    
+                      showMainScreen( username, password );
 //                    if( userAccount.getUserType() == FREELANCER ){
 //                       // user  = new Freelancer();
 //                      //  freelancer = (Freelancer)obj;
@@ -155,8 +157,19 @@ public class AccountCreationScreenController implements Initializable {
             }
         }else{ //if an existing user login to the system
                if( isUsername(username) && isPassword(password)){
-                
-                        Stage stage;
+                    
+                    showMainScreen( username, password );
+                     
+               }else{
+                   alert("Your username or password is invalid","Invalid username or password","Invalid Username or Password!",AlertType.ERROR);
+               }        
+            
+        }
+        
+    }
+    
+    private void showMainScreen(String username, String password) throws IOException{
+           Stage stage;
                         Parent root;
 
                         stage = (Stage) btnSubmit.getScene().getWindow();
@@ -173,12 +186,6 @@ public class AccountCreationScreenController implements Initializable {
                         
                         MainScreenController controller = loader.getController();
                         controller.setLoginInfo(userAccount);
-               }else{
-                   alert("Your username or password is invalid","Invalid username or password","Invalid Username or Password!",AlertType.ERROR);
-               }        
-            
-        }
-        
     }
     
     private boolean isPassword( String password ){
@@ -231,7 +238,7 @@ public class AccountCreationScreenController implements Initializable {
             
     }
 
-    public void setNewUser(boolean isNewUser, int userType , User user, Contact contact) {
+    public void setNewUser(boolean isNewUser, int userType , User user, Contact contact) throws IOException {
         System.out.println("Account isNewUser:" + isNewUser);
         this.isNewUser = isNewUser;
        if( isNewUser ){
@@ -239,7 +246,8 @@ public class AccountCreationScreenController implements Initializable {
             userAccount.setUserType(userType);
             btnSubmit.setText("Submit");
             this.user= user;            
-            this.contact = contact;
+            this.contact = contact;    
+         
           
         }else{
              btnSign.setVisible( true );

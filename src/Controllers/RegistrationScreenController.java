@@ -24,6 +24,7 @@ import Model.User;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,7 +33,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -45,6 +49,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class RegistrationScreenController implements Initializable {
@@ -119,6 +124,10 @@ public class RegistrationScreenController implements Initializable {
     private HBox hzBoxUserType;
     @FXML
     private HBox hzBoxAmountCharge;
+    @FXML
+    private VBox vBoxUser;
+    @FXML
+    private Label lblUserRequired;
      
     
     
@@ -220,6 +229,7 @@ public class RegistrationScreenController implements Initializable {
         boolean isValid = true;
       
          ObservableList<TextField> list = FXCollections.observableArrayList();
+      
     //    SimpleDateFormat dobFormat = new SimpleDateFormat("MM/dd/YYYY");
         String firstName = "";
         String lastName = "";
@@ -235,19 +245,19 @@ public class RegistrationScreenController implements Initializable {
         
             
             firstName = txtFirstName.getText();
-            if( txtFirstName.getText().isEmpty() ){
+            if( firstName.isEmpty() ){
                 list.add(txtFirstName);
                 //txtFirstName.setStyle("-fx-border-color:red");          
             }
             
             lastName = txtLastName.getText();
-            if( txtLastName.getText().isEmpty() ){
+            if( lastName.isEmpty() ){
                 list.add(txtLastName);
                // txtLastName.setStyle("-fx-border-color:red");          
             }
             
             stAddress = txtStaddress.getText();
-            if( txtStaddress.getText().isEmpty()){
+            if( lastName.isEmpty()){
                 list.add(txtStaddress);
                // txtStaddress.setStyle("-fx-border-color:red");   
             }
@@ -256,53 +266,66 @@ public class RegistrationScreenController implements Initializable {
             
             
             city = txtCity.getText();
-            if( txtCity.getText().isEmpty()){
+            if( city.isEmpty()){
                 list.add(txtCity);
                // txtCity.setStyle("-fx-border-color:red");   
             }
             
             zip = txtZip.getText();
-            if( txtZip.getText().isEmpty()){
+            if( zip.isEmpty()){
                 list.add(txtZip);
                 //txtZip.setStyle("-fx-border-color:red");   
             }
             
             state = txtState.getText();
-            if(  txtState.getText().isEmpty()){
+            if(  state.isEmpty()){
                 list.add(txtState);
                 //txtState.setStyle("-fx-border-color:red");   
             }
             
             country = txtCountry.getText();
-            if(  txtCountry.getText().isEmpty()){
+            if(  country.isEmpty()){
                 list.add(txtCountry);
                // txtCountry.setStyle("-fx-border-color:red");   
             }
             
             phone = txtPhoneNumber.getText();
-            if( txtPhoneNumber.getText().isEmpty()){
+            if( phone.isEmpty()){
                  list.add(txtPhoneNumber);
                // txtPhoneNumber.setStyle("-fx-border-color:red");   
             }
             
             email = txtEmail.getText();  
-            if(  txtEmail.getText().isEmpty()){
+            if(  email.isEmpty()){
                 list.add(txtEmail);
                // txtEmail.setStyle("-fx-border-color:red");   
             }
             
             
-            if( txtFirstName.getText().isEmpty() ||   txtLastName.getText().isEmpty() || txtStaddress.getText().isEmpty()||
-                txtCity.getText().isEmpty() || txtZip.getText().isEmpty() || txtState.getText().isEmpty() || txtCountry.getText().isEmpty() ||
-                txtPhoneNumber.getText().isEmpty() || txtEmail.getText().isEmpty() ){
+//            if( txtFirstName.getText().isEmpty() ||   txtLastName.getText().isEmpty() || txtStaddress.getText().isEmpty()||
+//                txtCity.getText().isEmpty() || txtZip.getText().isEmpty() || txtState.getText().isEmpty() || txtCountry.getText().isEmpty() ||
+//                txtPhoneNumber.getText().isEmpty() || txtEmail.getText().isEmpty() ){
+//                
+//                isValid = false;
+//              }
+           LocalDate DOB = null;     
+            try{
+            
+             DOB = datePickerDOB.getValue();  
+            
+                if( DOB == null){
+                   datePickerDOB.setStyle("-fx-border-color:red");
+                   isValid = false;
+                }
+          
+//         DOB = dobFormat.parse(dateInput.getDayOfMonth() + "/" + dateInput.getDayOfWeek() + "/" + dateInput.getYear());
+      
+             }catch(Exception e){
+                  e.printStackTrace();
                 
-                isValid = false;
               }
+          
             
-            
-           for(int i = 0; i < list.size(); i++ ){
-               list.get(i).setStyle("-fx-border-color:red");
-           }
             
            if(  isValid ){
             contact = new Contact(
@@ -319,33 +342,20 @@ public class RegistrationScreenController implements Initializable {
            }  
        
         
-           //get DoB     
-        
-         LocalDate DOB = null;     
-        
-        try{
-            
-             DOB = datePickerDOB.getValue();  
-            
-                if( DOB == null){
-                   datePickerDOB.setStyle("-fx-border-color:red");
-                }
-          
-//         DOB = dobFormat.parse(dateInput.getDayOfMonth() + "/" + dateInput.getDayOfWeek() + "/" + dateInput.getYear());
-      
-        }catch(Exception e){
-                e.printStackTrace();
-                
-        }
-          
-        if( radBtnContractor.isSelected() ){           
-      
+    
+        if( radBtnContractor.isSelected() ){    
+                       
+           lblUserRequired.setVisible(false);
+           vBoxUser.setStyle("-fx-border-color:Transparent");
+           
        //  System.out.println("Testing setUser()" + Boolean.toString(setUserTest(address)));//for testing
           //ObservableList jobList = FXCollections.observableArrayList();
           
           //create contractor object
+          
           String typeOfContractor = spinner.getValue();
-           
+          
+          if( isValid ){
                   user = new Contractor( 
                     firstName,
                     lastName, 
@@ -353,7 +363,7 @@ public class RegistrationScreenController implements Initializable {
                     contact,                   
                     typeOfContractor
                );  
-
+          }         
                               
                 //user = contractor;
                 userType = CONTRACTOR;
@@ -361,29 +371,80 @@ public class RegistrationScreenController implements Initializable {
             
         // setDbRecord( contact , contractor , "contractor"); 
 //          System.out.println("Testing Contractor:" + Boolean.toString(ContractorTest(contractor)));
+        }else if( !(radBtnContractor.isSelected() && radBtnFreelancer.isSelected())){
+                isValid = false;
+                vBoxUser.setStyle("-fx-border-color:red");
+                lblUserRequired.setVisible(true);
+
         }
       
-         
-       if( radBtnFreelancer.isSelected() ){
-          
-           String selfDescription = txtAreaDescription.getText();
-           String yearsOfExperience =   spinner.getValue();
-           String amountCharge = txtAmountCharge.getText();
+      
+     
+       if( radBtnFreelancer.isSelected() ){              
+
+                lblUserRequired.setVisible(false);
+                vBoxUser.setStyle("-fx-border-color:Transparent");
+                String selfDescription = txtAreaDescription.getText();
+                String yearsOfExperience =   spinner.getValue();
+                String amountCharge = txtAmountCharge.getText();
+                int amount = 0;
+               
+              if( selfDescription.isEmpty() ){
+                    
+                    isValid = false;
+                    txtAreaDescription.setStyle("-fx-border-color:red");
+                }
+             
+              if( amountCharge.isEmpty()){
+                  isValid = false;
+                  list.add(txtAmountCharge);
+              }else{
+              
+                    try{
+
+                        amount = Integer.parseInt(amountCharge);
+                          }catch( NumberFormatException e){
+                              list.add(txtAmountCharge);
+                              isValid = false;
+                              alert("Input Error","Amount must be a number","",AlertType.ERROR);
+                      }
+              }
+
+               
+
+
+                if( isValid ){
+                    user = new Freelancer( 
+                      firstName,
+                      lastName, 
+                      DOB, 
+                      contact, 
+                      yearsOfExperience,  
+                      selfDescription,
+                      amount
+                  );  
+                }
+               
             
-           
-               user = new Freelancer( 
-                 firstName,
-                 lastName, 
-                 DOB, 
-                 contact, 
-                 yearsOfExperience,  
-                 selfDescription,
-                 Integer.parseInt(amountCharge)
-             );  
-         
            // obj = freelancer;
             userType = FREELANCER;
            //setDbRecord( contact , freelancer , "freelancer");    
+        }else if( !(radBtnContractor.isSelected() && radBtnFreelancer.isSelected())){
+                isValid = false;
+                vBoxUser.setStyle("-fx-border-color:red");
+                lblUserRequired.setVisible(true);
+
+        }
+     
+            
+           
+       
+        if( !list.isEmpty()){
+               isValid = false;
+           }
+           
+        for(int i = 0; i < list.size(); i++ ){
+               list.get(i).setStyle("-fx-border-color:red");
         }
        
        if( isUpdate ){        
@@ -419,7 +480,7 @@ public class RegistrationScreenController implements Initializable {
        
        return isValid;
     }
-    
+
 //    private int setAddress(Contact contact){   //Inserting address
 //        
 //        
@@ -531,6 +592,7 @@ public class RegistrationScreenController implements Initializable {
     @FXML
     private void radBtnContractorHandler(MouseEvent event) {
         
+         lblUserRequired.setVisible(false);
          hzBoxContracotorType.setVisible(true);
          hzBoxAmountCharge.setVisible(false);
          textArea.setVisible(false);
@@ -552,7 +614,7 @@ public class RegistrationScreenController implements Initializable {
     @FXML
     private void radBtnFreelancerHandler(MouseEvent event) {
         
-         hzBoxContracotorType.setVisible(true);
+         lblUserRequired.setVisible(false);
          hzBoxAmountCharge.setVisible(true);
          textArea.setVisible(true);
          spinnerLabel.setText("Experience:");    
@@ -766,6 +828,24 @@ public class RegistrationScreenController implements Initializable {
          }  
        
    }
+
+  
+      private boolean alert(String message, String title,String header, Alert.AlertType alertType){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        
+        
+        
+        boolean isConfirmed = false;
+        Optional<ButtonType> result = alert.showAndWait();
+        if( result.get() == ButtonType.OK ){
+            isConfirmed = true;
+        }
+            
+        return isConfirmed;   
+    }
    
    
 }

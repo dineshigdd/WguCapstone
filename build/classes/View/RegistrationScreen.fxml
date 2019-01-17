@@ -93,14 +93,14 @@
                         <DatePicker fx:id="datePickerDOB" prefHeight="35.0" prefWidth="266.0" promptText="*" />
                      </children>
                   </HBox>
-                  <VBox layoutX="159.0" layoutY="475.0" prefHeight="90.0" prefWidth="100.0" spacing="15.0">
+                  <VBox fx:id="vBoxUser" layoutX="159.0" layoutY="465.0" prefHeight="78.0" prefWidth="112.0" spacing="15.0">
                      <children>
-                        <RadioButton fx:id="radBtnContractor" mnemonicParsing="false" onMouseClicked="#radBtnContractorHandler" prefHeight="31.0" prefWidth="117.0" selected="true" text="Contractor">
+                        <RadioButton fx:id="radBtnContractor" mnemonicParsing="false" onMouseClicked="#radBtnContractorHandler" prefHeight="31.0" prefWidth="117.0" text="Contractor">
                            <toggleGroup>
                               <ToggleGroup fx:id="userGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="radBtnFreelancer" mnemonicParsing="false" onMouseClicked="#radBtnFreelancerHandler" prefHeight="31.0" prefWidth="110.0" text="Freelancer" toggleGroup="$userGroup" />
+                        <RadioButton fx:id="radBtnFreelancer" mnemonicParsing="false" onMouseClicked="#radBtnFreelancerHandler" prefHeight="21.0" prefWidth="129.0" text="Freelancer" toggleGroup="$userGroup" />
                      </children>
                   </VBox>
                   <HBox fx:id="hzBoxContracotorType" layoutX="281.0" layoutY="475.0" prefHeight="31.0" prefWidth="537.0">
@@ -118,11 +118,15 @@
                   <HBox fx:id="hzBoxAmountCharge" layoutX="295.0" layoutY="606.0" prefHeight="35.0" prefWidth="395.0">
                      <children>
                         <Label prefHeight="35.0" prefWidth="134.0" text="Amount Charge : $" />
-                        <TextField fx:id="txtAmountCharge" prefHeight="35.0" prefWidth="276.0" promptText="Amount you would like per hour" />
+                        <TextField fx:id="txtAmountCharge" prefHeight="35.0" prefWidth="276.0" promptText="* amount you would like per hour" />
                      </children>
                   </HBox>
                   <Button fx:id="btnSignup" layoutX="686.0" layoutY="783.0" mnemonicParsing="false" onAction="#btnSignupHandler" onMouseEntered="#chageCursor" onMouseExited="#setDefaultMousePointer" prefHeight="41.0" prefWidth="126.0" styleClass="btnSubmit" text="Submit" />
-                  <Label layoutX="159.0" layoutY="682.0" prefHeight="21.0" prefWidth="85.0" text="*  required" textFill="RED" />
+                  <Label layoutX="159.0" layoutY="682.0" prefHeight="28.0" prefWidth="108.0" text="*  required" textFill="RED">
+                     <font>
+                        <Font size="19.0" />
+                     </font></Label>
+                  <Label fx:id="lblUserRequired" layoutX="65.0" layoutY="491.0" prefHeight="27.0" prefWidth="91.0" text="* required" textFill="RED" visible="false" />
                   
                </children>
             </AnchorPane>
