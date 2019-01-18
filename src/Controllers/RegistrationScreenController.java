@@ -21,6 +21,7 @@ import Model.Contact;
 import Model.Contractor;
 import Model.Freelancer;
 import Model.User;
+import Validation.Validation;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -245,42 +246,52 @@ public class RegistrationScreenController implements Initializable {
         
         
             
-            firstName = txtFirstName.getText();
-            if( firstName.isEmpty() ){
+            firstName = txtFirstName.getText().trim();
+            if( firstName.isEmpty() ||  Validation.isStringHasAnumber( firstName ) || Validation.isStringLetters( firstName ) ){
                 list.add(txtFirstName);
-                //txtFirstName.setStyle("-fx-border-color:red");          
+                
+                if(  Validation.isStringHasAnumber( firstName ) || Validation.isStringLetters( firstName ) ){
+                    alert("First Name should not have special characters or numbers","Input Error","",AlertType.ERROR);
+                }
+                     
             }else{
+                
                 listClear.add(txtFirstName);
             }
             
-            lastName = txtLastName.getText();
-            if( lastName.isEmpty() ){
+            
+            lastName = txtLastName.getText().trim();
+            if( lastName.isEmpty() ||  Validation.isStringHasAnumber( lastName ) || Validation.isStringLetters( lastName ) ){
                 list.add(txtLastName);
-               // txtLastName.setStyle("-fx-border-color:red");          
+                
+               if(  Validation.isStringHasAnumber( lastName ) || Validation.isStringLetters( lastName ) ){
+                    alert("Last Name should not have special characters or numbers","Input Error","",AlertType.ERROR);
+                }
+               
             }else{
                 listClear.add(txtLastName);
             }
             
-            stAddress = txtStaddress.getText();
+            stAddress = txtStaddress.getText().trim();
             if( stAddress.isEmpty()){
                 list.add(txtStaddress);
-               // txtStaddress.setStyle("-fx-border-color:red");   
+               
             }else{
                 listClear.add(txtStaddress);
             }
             
-            apt = txtApt.getText();
+            apt = txtApt.getText().trim();
             
             
-            city = txtCity.getText();
+            city = txtCity.getText().trim();
             if( city.isEmpty()){
                 list.add(txtCity);
-               // txtCity.setStyle("-fx-border-color:red");   
+                  
             }else{
                 listClear.add(txtCity);
             }
             
-            zip = txtZip.getText();
+            zip = txtZip.getText().trim();
             if( zip.isEmpty()){
                 list.add(txtZip);
                 //txtZip.setStyle("-fx-border-color:red");   
@@ -288,7 +299,7 @@ public class RegistrationScreenController implements Initializable {
                 listClear.add(txtZip);
             }
             
-            state = txtState.getText();
+            state = txtState.getText().trim();
             if(  state.isEmpty()){
                 list.add(txtState);
                 //txtState.setStyle("-fx-border-color:red");   
@@ -296,7 +307,7 @@ public class RegistrationScreenController implements Initializable {
                 listClear.add(txtState);
             }
             
-            country = txtCountry.getText();
+            country = txtCountry.getText().trim();
             if(  country.isEmpty()){
                 list.add(txtCountry);
                // txtCountry.setStyle("-fx-border-color:red");   
@@ -304,7 +315,7 @@ public class RegistrationScreenController implements Initializable {
                 listClear.add(txtCountry);
             }
             
-            phone = txtPhoneNumber.getText();
+            phone = txtPhoneNumber.getText().trim();
             if( phone.isEmpty()){
                  list.add(txtPhoneNumber);
                // txtPhoneNumber.setStyle("-fx-border-color:red");   
@@ -312,9 +323,13 @@ public class RegistrationScreenController implements Initializable {
                 listClear.add(txtPhoneNumber);
             }
             
-            email = txtEmail.getText();  
-            if(  email.isEmpty()){
+            email = txtEmail.getText().trim();
+            if(  email.isEmpty() || !Validation.isValidEmail(email) ){
                 list.add(txtEmail);
+                
+                if( !Validation.isValidEmail(email)){
+                    alert("The Email address you entered is not valid","Invalid Email address","", AlertType.ERROR);
+                }
                // txtEmail.setStyle("-fx-border-color:red");   
             }else{
                 listClear.add(txtEmail);
@@ -400,9 +415,9 @@ public class RegistrationScreenController implements Initializable {
 
                 lblUserRequired.setVisible(false);
                 vBoxUser.setStyle("-fx-border-color:transparent");
-                String selfDescription = txtAreaDescription.getText();
+                String selfDescription = txtAreaDescription.getText().trim();;
                 String yearsOfExperience =   spinner.getValue();
-                String amountCharge = txtAmountCharge.getText();
+                String amountCharge = txtAmountCharge.getText().trim();;
                 int amount = 0;
                
               if( selfDescription.isEmpty() ){
