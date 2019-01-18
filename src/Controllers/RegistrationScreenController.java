@@ -229,6 +229,7 @@ public class RegistrationScreenController implements Initializable {
         boolean isValid = true;
       
          ObservableList<TextField> list = FXCollections.observableArrayList();
+         ObservableList<TextField> listClear = FXCollections.observableArrayList();
       
     //    SimpleDateFormat dobFormat = new SimpleDateFormat("MM/dd/YYYY");
         String firstName = "";
@@ -248,18 +249,24 @@ public class RegistrationScreenController implements Initializable {
             if( firstName.isEmpty() ){
                 list.add(txtFirstName);
                 //txtFirstName.setStyle("-fx-border-color:red");          
+            }else{
+                listClear.add(txtFirstName);
             }
             
             lastName = txtLastName.getText();
             if( lastName.isEmpty() ){
                 list.add(txtLastName);
                // txtLastName.setStyle("-fx-border-color:red");          
+            }else{
+                listClear.add(txtLastName);
             }
             
             stAddress = txtStaddress.getText();
-            if( lastName.isEmpty()){
+            if( stAddress.isEmpty()){
                 list.add(txtStaddress);
                // txtStaddress.setStyle("-fx-border-color:red");   
+            }else{
+                listClear.add(txtStaddress);
             }
             
             apt = txtApt.getText();
@@ -269,36 +276,48 @@ public class RegistrationScreenController implements Initializable {
             if( city.isEmpty()){
                 list.add(txtCity);
                // txtCity.setStyle("-fx-border-color:red");   
+            }else{
+                listClear.add(txtCity);
             }
             
             zip = txtZip.getText();
             if( zip.isEmpty()){
                 list.add(txtZip);
                 //txtZip.setStyle("-fx-border-color:red");   
+            }else{
+                listClear.add(txtZip);
             }
             
             state = txtState.getText();
             if(  state.isEmpty()){
                 list.add(txtState);
                 //txtState.setStyle("-fx-border-color:red");   
+            }else{
+                listClear.add(txtState);
             }
             
             country = txtCountry.getText();
             if(  country.isEmpty()){
                 list.add(txtCountry);
                // txtCountry.setStyle("-fx-border-color:red");   
+            }else{
+                listClear.add(txtCountry);
             }
             
             phone = txtPhoneNumber.getText();
             if( phone.isEmpty()){
                  list.add(txtPhoneNumber);
                // txtPhoneNumber.setStyle("-fx-border-color:red");   
+            }else{
+                listClear.add(txtPhoneNumber);
             }
             
             email = txtEmail.getText();  
             if(  email.isEmpty()){
                 list.add(txtEmail);
                // txtEmail.setStyle("-fx-border-color:red");   
+            }else{
+                listClear.add(txtEmail);
             }
             
             
@@ -316,6 +335,8 @@ public class RegistrationScreenController implements Initializable {
                 if( DOB == null){
                    datePickerDOB.setStyle("-fx-border-color:red");
                    isValid = false;
+                }else{
+                   datePickerDOB.setStyle("-fx-border-color:transparent");
                 }
           
 //         DOB = dobFormat.parse(dateInput.getDayOfMonth() + "/" + dateInput.getDayOfWeek() + "/" + dateInput.getYear());
@@ -346,7 +367,7 @@ public class RegistrationScreenController implements Initializable {
         if( radBtnContractor.isSelected() ){    
                        
            lblUserRequired.setVisible(false);
-           vBoxUser.setStyle("-fx-border-color:Transparent");
+           vBoxUser.setStyle("-fx-border-color:transparent");
            
        //  System.out.println("Testing setUser()" + Boolean.toString(setUserTest(address)));//for testing
           //ObservableList jobList = FXCollections.observableArrayList();
@@ -371,19 +392,14 @@ public class RegistrationScreenController implements Initializable {
             
         // setDbRecord( contact , contractor , "contractor"); 
 //          System.out.println("Testing Contractor:" + Boolean.toString(ContractorTest(contractor)));
-        }else if( !(radBtnContractor.isSelected() && radBtnFreelancer.isSelected())){
-                isValid = false;
-                vBoxUser.setStyle("-fx-border-color:red");
-                lblUserRequired.setVisible(true);
-
-        }
+        } 
       
       
      
        if( radBtnFreelancer.isSelected() ){              
 
                 lblUserRequired.setVisible(false);
-                vBoxUser.setStyle("-fx-border-color:Transparent");
+                vBoxUser.setStyle("-fx-border-color:transparent");
                 String selfDescription = txtAreaDescription.getText();
                 String yearsOfExperience =   spinner.getValue();
                 String amountCharge = txtAmountCharge.getText();
@@ -429,24 +445,37 @@ public class RegistrationScreenController implements Initializable {
            // obj = freelancer;
             userType = FREELANCER;
            //setDbRecord( contact , freelancer , "freelancer");    
-        }else if( !(radBtnContractor.isSelected() && radBtnFreelancer.isSelected())){
+        }
+     
+            
+       if( (!radBtnContractor.isSelected() && !radBtnFreelancer.isSelected())){
                 isValid = false;
                 vBoxUser.setStyle("-fx-border-color:red");
                 lblUserRequired.setVisible(true);
 
         }
-     
-            
-           
        
         if( !list.isEmpty()){
                isValid = false;
-           }
+         }else{
+            if( radBtnFreelancer.isSelected() ){
+                 if( !(txtAreaDescription.getText().isEmpty() && txtAmountCharge.getText().isEmpty())){
+                     isValid = true;
+                 }
+            }else if( radBtnContractor.isSelected() ){
+                isValid = true;
+            }
+            
+         }
            
         for(int i = 0; i < list.size(); i++ ){
                list.get(i).setStyle("-fx-border-color:red");
         }
        
+        for(int i = 0; i < listClear.size(); i++ ){
+            listClear.get(i).setStyle( "-fx-border-color:transparent");
+        }
+        list.clear();
        if( isUpdate ){        
                 contact.setContactId(this.user.getContact().getContactId());
                 this.user.setFirstName(firstName);
