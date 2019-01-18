@@ -39,6 +39,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -67,7 +68,6 @@ public class RegistrationScreenController implements Initializable {
     private TextField txtCity;
     @FXML
     private TextField txtZip;
-    @FXML
     private TextField txtState;
     @FXML
     private TextField txtCountry;
@@ -129,6 +129,11 @@ public class RegistrationScreenController implements Initializable {
     private VBox vBoxUser;
     @FXML
     private Label lblUserRequired;
+    @FXML
+    private ComboBox<String> cmbBoxState;
+    private ObservableList<String> stateList;
+    @FXML
+    private TextField txtAreaCode;
      
     
     
@@ -137,6 +142,14 @@ public class RegistrationScreenController implements Initializable {
                
         // TODO
        
+       stateList =  FXCollections.observableArrayList(
+        "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana",
+        "Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska",
+        "Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island",
+        "South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming");
+       
+       cmbBoxState.setItems(stateList);
+            
        freelancerExperienceList = FXCollections.observableArrayList();
        freelancerExperienceList.add("less than 1 year");
        freelancerExperienceList.add("1 year");
@@ -303,22 +316,25 @@ public class RegistrationScreenController implements Initializable {
                 listClear.add(txtZip);
             }
             
-            state = txtState.getText().trim();
-            if(  state.isEmpty()){
-                list.add(txtState);
-                //txtState.setStyle("-fx-border-color:red");   
-            }else{
-                listClear.add(txtState);
-            }
+            state = cmbBoxState.getValue();
             
             country = txtCountry.getText().trim();
-            if(  country.isEmpty()){
+            if(  country.isEmpty() || Validation.isStringHasAnumber(country)){
                 list.add(txtCountry);
-               // txtCountry.setStyle("-fx-border-color:red");   
+                if( Validation.isStringHasAnumber(country) ){
+                      alert("Country Name should not have special characters or numbers","Input Error","",AlertType.ERROR);
+                }
             }else{
                 listClear.add(txtCountry);
             }
             
+            String areacode =  txtAreaCode.getText().trim();
+            
+             if(!( areacode.length() == 3 && Validation.isStringAnumber(areacode))){
+                    alert("Area code should have three numbers and no letters or special characters","Input Error","", AlertType.ERROR);
+                }
+            
+        
             phone = txtPhoneNumber.getText().trim();
             if( phone.isEmpty()){
                  list.add(txtPhoneNumber);
@@ -898,20 +914,5 @@ public class RegistrationScreenController implements Initializable {
         return isConfirmed;   
     }
    
-    private boolean alert(String message, String title,String header, Alert.AlertType alertType, ButtonType noBtn ){
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.getButtonTypes().add(noBtn);
-        
-        
-        boolean isConfirmed = false;
-        Optional<ButtonType> result = alert.showAndWait();
-        if( result.get() == ButtonType.OK ){
-            isConfirmed = true;
-        }
-            
-        return isConfirmed;   
-    }
+    
 }
