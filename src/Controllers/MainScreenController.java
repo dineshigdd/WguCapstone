@@ -311,7 +311,7 @@ public class MainScreenController implements Initializable {
   
   
   
-   static Label test = new Label("Test");
+ 
              
             
     @Override
@@ -401,7 +401,9 @@ public class MainScreenController implements Initializable {
                      alert("Your account has been removed from our system","Account Deletion","",AlertType.INFORMATION);
              }
             
-         }
+         }else{
+           alert("Your password does not match with our records","Password mismatch","",AlertType.ERROR);
+       }
     }
     
      public void setLoginInfo(UserAccount userAccount) {
@@ -437,16 +439,11 @@ public class MainScreenController implements Initializable {
             mainTabPane.getTabs().remove(tabFreelancer);
             searchHzBoxContractor.getChildren().add(txtSearch);
             searchHzBoxContractor.getChildren().add(btnSearch);       
-            
-           
-           
-        }
-        
-           
-                   
+                      
+        }         
         
           
-          }
+    }
      
     
     private boolean isPasswordConfirmed(String message, String title,String header){
@@ -466,6 +463,10 @@ public class MainScreenController implements Initializable {
         alert.setHeaderText(header);
         alert.setContentText(message);
         
+       if( alertType.equals(AlertType.CONFIRMATION )){
+             alert.getButtonTypes().add(ButtonType.NO);
+             alert.getButtonTypes().remove(ButtonType.CANCEL);
+        }
         
         
         boolean isConfirmed = false;
@@ -477,22 +478,22 @@ public class MainScreenController implements Initializable {
         return isConfirmed;   
     }
 
-      private boolean alert(String message, String title,String header, Alert.AlertType alertType, ButtonType noBtn ){
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.getButtonTypes().add(noBtn);
-        
-        
-        boolean isConfirmed = false;
-        Optional<ButtonType> result = alert.showAndWait();
-        if( result.get() == ButtonType.OK ){
-            isConfirmed = true;
-        }
-            
-        return isConfirmed;   
-    }
+//      private boolean alert(String message, String title,String header, Alert.AlertType alertType, ButtonType noBtn ){
+//        Alert alert = new Alert(alertType);
+//        alert.setTitle(title);
+//        alert.setHeaderText(header);
+//        alert.setContentText(message);
+//        alert.getButtonTypes().add(noBtn);
+//        
+//        
+//        boolean isConfirmed = false;
+//        Optional<ButtonType> result = alert.showAndWait();
+//        if( result.get() == ButtonType.OK ){
+//            isConfirmed = true;
+//        }
+//            
+//        return isConfirmed;   
+//    }
       
     @FXML
     private void radbtnDateHandler(ActionEvent event) throws IOException {

@@ -284,9 +284,13 @@ public class RegistrationScreenController implements Initializable {
             
             
             city = txtCity.getText().trim();
-            if( city.isEmpty()){
+            if( city.isEmpty() || Validation.isStringHasAnumber(city)){
                 list.add(txtCity);
-                  
+                  if( Validation.isStringHasAnumber(city)){
+                      if( alert("Does your city name include a number in it?","City name confirmation","", AlertType.CONFIRMATION) ){
+                         list.remove(txtCity);
+                      }
+                  }
             }else{
                 listClear.add(txtCity);
             }
@@ -874,13 +878,16 @@ public class RegistrationScreenController implements Initializable {
    }
 
   
-      private boolean alert(String message, String title,String header, Alert.AlertType alertType){
+      private boolean alert(String message, String title,String header, AlertType alertType){
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(message);
         
-        
+        if( alertType.equals(AlertType.CONFIRMATION )){
+             alert.getButtonTypes().add(ButtonType.NO);
+             alert.getButtonTypes().remove(ButtonType.CANCEL);
+        }
         
         boolean isConfirmed = false;
         Optional<ButtonType> result = alert.showAndWait();
@@ -891,5 +898,20 @@ public class RegistrationScreenController implements Initializable {
         return isConfirmed;   
     }
    
-   
+    private boolean alert(String message, String title,String header, Alert.AlertType alertType, ButtonType noBtn ){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.getButtonTypes().add(noBtn);
+        
+        
+        boolean isConfirmed = false;
+        Optional<ButtonType> result = alert.showAndWait();
+        if( result.get() == ButtonType.OK ){
+            isConfirmed = true;
+        }
+            
+        return isConfirmed;   
+    }
 }
