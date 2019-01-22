@@ -68,7 +68,7 @@ public class Capstone extends Application {
                                   // MainScreenController controller = loader.getController();
                                    
                                 
-                                  MainScreenController.shiftControls();   
+                                //  MainScreenController.shiftControls();   
                                    
 //                                   if( stage.isMaximized() ){
 //                                       
