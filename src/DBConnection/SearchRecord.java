@@ -37,21 +37,22 @@ public class SearchRecord {
         String query = null;
         
         switch( criteria ){
-            case "jobPostDate": 
-            case "jobCategory":
+            case "jobPostDate":         
                 query = "select * from job where DATE("+ criteria + ") = "+ "'" + criteriaValue + "'";
-                
-            break;
+                break;
+            case "jobCategory":
+                 query = "select * from job where " + criteria + " = "+ "'" + criteriaValue + "'";
+                break;
             case "jobTitle": query = "select * from job where "+ criteria + " like "+ "'%" + criteriaValue + "%'";
-            break;
+                break;
             case "jobAppliedOrInvited": 
                     query = "select * from job, assignment "
                     + "where job.jobID = assignment.jobID and " 
                     + "job.jobPostedBy = assignment.contractorID and "
                     + "assignment.freelancerID ="+ Integer.parseInt(criteriaValue);
-            break;
+                break;
             case "all": query = "select * from job where jobPostedBy = " + Integer.parseInt(criteriaValue);
-            break;
+                break;
             default:query = "select * from job";
         }
        

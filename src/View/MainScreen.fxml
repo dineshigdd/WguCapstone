@@ -265,9 +265,9 @@
                           <AnchorPane fx:id="searchPane" minHeight="0.0" minWidth="0.0" prefHeight="647.0" prefWidth="881.0">
                                  <children>
                                     <HBox fx:id="searchHzBoxFreelancer" layoutX="250.0" layoutY="135.0" prefHeight="31.0" prefWidth="385.0" spacing="10.0" />
-                                    <VBox layoutX="250.0" layoutY="222.0" prefHeight="144.0" prefWidth="128.0" spacing="20.0">
+                                    <VBox layoutX="250.0" layoutY="222.0" prefHeight="144.0" prefWidth="266.0" spacing="20.0">
                                        <children>
-                                          <RadioButton fx:id="radBtnTitle" mnemonicParsing="false" onAction="#radbtnContractorTitleHandler" selected="true" text="By Title">
+                                          <RadioButton fx:id="radBtnTitle" mnemonicParsing="false" onAction="#radbtnContractorTitleHandler" text="By Title ( ex: web, Web Developer )">
                                              <toggleGroup>
                                                 <ToggleGroup fx:id="searchCategory" />
                                              </toggleGroup></RadioButton>

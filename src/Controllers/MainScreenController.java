@@ -292,6 +292,7 @@ public class MainScreenController implements Initializable {
     @FXML
     private Button btnAllFreelancerJobCount;
     private boolean isSelectJobFirst;
+    private ComboBox comboBoxCategory;
    
   
   
@@ -332,6 +333,15 @@ public class MainScreenController implements Initializable {
            comboBoxLanguage = new ComboBox(listLanguage);
            comboBoxLanguage.setPrefWidth(300);
            comboBoxLanguage.setPromptText("Select Programming Language");
+           
+            ObservableList<String> categoryList = FXCollections.observableArrayList(
+              "onsite",
+              "remote",
+              "hybrid");
+           
+           comboBoxCategory = new ComboBox(categoryList);
+           comboBoxCategory.setPrefWidth(300);
+           comboBoxCategory.setPromptText("Select category");
            
            datepicker = new DatePicker(); 
            datepicker.setPrefWidth(300);
@@ -499,7 +509,8 @@ public class MainScreenController implements Initializable {
          if( searchHzBoxFreelancer.getChildren().isEmpty()){
              searchHzBoxFreelancer.getChildren().add(datepicker);
              searchHzBoxFreelancer.getChildren().add(btnSearch);
-         }else if( searchHzBoxFreelancer.getChildren().get(0).equals(txtSearch)){
+         }else if( searchHzBoxFreelancer.getChildren().get(0).equals(txtSearch) ||
+                  searchHzBoxFreelancer.getChildren().get(0).equals(comboBoxCategory) ){
              searchHzBoxFreelancer.getChildren().remove(0);
              searchHzBoxFreelancer.getChildren().add(0,datepicker);            
          }
@@ -510,11 +521,12 @@ public class MainScreenController implements Initializable {
     @FXML
     private void radbtnContractorTitleHandler(ActionEvent event) {
         
-        
+       
         if( searchHzBoxFreelancer.getChildren().isEmpty()){
              searchHzBoxFreelancer.getChildren().add(btnSearch);
              searchHzBoxFreelancer.getChildren().add(0,txtSearch );
-        }else if( searchHzBoxFreelancer.getChildren().get(0).equals(datepicker) ){
+        }else if( searchHzBoxFreelancer.getChildren().get(0).equals(datepicker) || 
+                 searchHzBoxFreelancer.getChildren().get(0).equals(comboBoxCategory) ){
              searchHzBoxFreelancer.getChildren().remove(0);
              searchHzBoxFreelancer.getChildren().add(0,txtSearch );
         }   
@@ -527,10 +539,11 @@ public class MainScreenController implements Initializable {
     private void radbtnCategoryHandler(ActionEvent event) throws IOException {
         if( searchHzBoxFreelancer.getChildren().isEmpty()){          
              searchHzBoxFreelancer.getChildren().add(btnSearch);
-             searchHzBoxFreelancer.getChildren().add(0,txtSearch );
-        }else if( searchHzBoxFreelancer.getChildren().get(0).equals(datepicker) ){
+             searchHzBoxFreelancer.getChildren().add(0,comboBoxCategory );
+        }else if( searchHzBoxFreelancer.getChildren().get(0).equals(datepicker) || 
+                 searchHzBoxFreelancer.getChildren().get(0).equals(txtSearch) ){
              searchHzBoxFreelancer.getChildren().remove(0);
-             searchHzBoxFreelancer.getChildren().add(0,txtSearch );
+             searchHzBoxFreelancer.getChildren().add(0,comboBoxCategory );
         } 
         
          criteria = "jobCategory";
@@ -566,24 +579,30 @@ public class MainScreenController implements Initializable {
             public void handle(ActionEvent e) {
                 //get input
                 ObservableList<Job> jobList = null;
-                
-                if( criteria.equals("jobPostDate")){                   
-                     
-                    jobList = SearchRecord.searchJob( criteria , datepicker.getValue().toString());               
-                }else{                  
-              
-                   
-                    jobList = SearchRecord.searchJob( criteria , txtSearch.getText() );
+                try{
+                        if( criteria.equals("jobPostDate")){            
+                            jobList = SearchRecord.searchJob( criteria , datepicker.getValue().toString());               
+                        }else if( criteria.equals("jobCategory")){
+                            jobList =  SearchRecord.searchJob( criteria , comboBoxCategory.getValue().toString());
+                        }else{              
+                            if( !txtSearch.getText().isEmpty()){
+                                jobList = SearchRecord.searchJob( criteria , txtSearch.getText() );
+                            }else{
+                                throw new Exception();
+                            }
+                        }
+
+                         colJobTitle.setCellValueFactory(new PropertyValueFactory<>("jobTitle"));
+                         colJobDescription.setCellValueFactory(new PropertyValueFactory<>("jobDescription"));
+                         colJobType.setCellValueFactory(new PropertyValueFactory<>("jobCategory"));
+                         colJobPostdate.setCellValueFactory(new PropertyValueFactory<>("postDate"));
+                         tableViewJob.setItems(jobList);
+
+
+                         tabPaneFreelancer.getSelectionModel().selectNext();
+                }catch(Exception ex){
+                    alert("Please provide a search criteria","Search Criteria","Search Criteria",AlertType.INFORMATION);
                 }
-                
-                 colJobTitle.setCellValueFactory(new PropertyValueFactory<>("jobTitle"));
-                 colJobDescription.setCellValueFactory(new PropertyValueFactory<>("jobDescription"));
-                 colJobType.setCellValueFactory(new PropertyValueFactory<>("jobCategory"));
-                 colJobPostdate.setCellValueFactory(new PropertyValueFactory<>("postDate"));
-                 tableViewJob.setItems(jobList);
-                 
-                 
-                 tabPaneFreelancer.getSelectionModel().selectNext();
                 
             }
         });
@@ -611,12 +630,11 @@ public class MainScreenController implements Initializable {
                     } else if( criteria.equals("progLanguage")){
                           freelancerList  = SearchRecord.searchFreelancer( criteria , comboBoxLanguage.getValue().toString());
                     } else {                
-                          String input  = txtSearch.getText().trim();
-                          
-                          if( input.isEmpty()){
+                          if(!txtSearch.getText().isEmpty()){                 
+                              freelancerList  = SearchRecord.searchFreelancer( criteria ,txtSearch.getText() );
+                          }else{
                               throw new Exception();
                           }
-                          freelancerList  = SearchRecord.searchFreelancer( criteria ,input );
                     }
             
                     setTableViewFreelancer();
