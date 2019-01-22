@@ -233,6 +233,7 @@ public class MainScreenController implements Initializable {
     private String criteria;
     private LocalDate postDate;
     private ComboBox comboBox;
+    private ComboBox comboBoxLanguage;
     
     private boolean isInviteFreelancer;
     private Assignment assignment;
@@ -290,10 +291,6 @@ public class MainScreenController implements Initializable {
     private Tab tabReport;
     @FXML
     private Button btnAllFreelancerJobCount;
-    @FXML
-    private GridPane gridPaneJob;
-    @FXML
-    private HBox hzBoxFreelancerInviteApply;
     private boolean isSelectJobFirst;
    
   
@@ -324,6 +321,17 @@ public class MainScreenController implements Initializable {
            comboBox = new ComboBox(list);
            comboBox.setPrefWidth(300);
            comboBox.setPromptText("Select Years Of Experience");
+           
+           int size =  SearchRecord.searchLanguage("all", "*").size();
+           ObservableList<String> listLanguage = FXCollections.observableArrayList();      
+            
+           for( int i = 0 ; i < size ; i++ ){
+                 listLanguage.add( SearchRecord.searchLanguage("all", "*").get(i).getProgLanguage());
+                 
+           }      
+           comboBoxLanguage = new ComboBox(listLanguage);
+           comboBoxLanguage.setPrefWidth(300);
+           comboBoxLanguage.setPromptText("Select Programming Language");
            
            datepicker = new DatePicker(); 
            datepicker.setPrefWidth(300);
@@ -426,7 +434,8 @@ public class MainScreenController implements Initializable {
             setSkills();
         }else{
             mainTabPane.getTabs().remove(tabFreelancer);
-            searchHzBoxContractor.getChildren().add(txtSearch);
+          //  searchHzBoxContractor.getChildren().add(txtSearch);
+            searchHzBoxContractor.getChildren().add(comboBoxLanguage);
             searchHzBoxContractor.getChildren().add(btnSearch);       
                       
         }         
@@ -596,14 +605,25 @@ public class MainScreenController implements Initializable {
                 @Override
                 public void handle(ActionEvent e) {
                 //get input
+                try{
                     if( criteria.equals("yearsOfExperience")){
                           freelancerList  = SearchRecord.searchFreelancer( criteria , comboBox.getValue().toString() );
-
-                    } else{                    
-                          freelancerList  = SearchRecord.searchFreelancer( criteria , txtSearch.getText());
-                    }         
+                    } else if( criteria.equals("progLanguage")){
+                          freelancerList  = SearchRecord.searchFreelancer( criteria , comboBoxLanguage.getValue().toString());
+                    } else {                
+                          String input  = txtSearch.getText().trim();
+                          
+                          if( input.isEmpty()){
+                              throw new Exception();
+                          }
+                          freelancerList  = SearchRecord.searchFreelancer( criteria ,input );
+                    }
+            
                     setTableViewFreelancer();
                     tabPaneContractor.getSelectionModel().selectNext();
+                }catch(Exception x){
+                    alert("Please provide a search criteria","Search Criteria","Search Criteria",AlertType.INFORMATION);
+                }
                 } 
                
             });
@@ -770,14 +790,18 @@ public class MainScreenController implements Initializable {
   }
 
     @FXML
-    private void radbtnSkillHandler(ActionEvent event) {
+    private void radbtnSkillHandler(ActionEvent event) {        
+        
         
         if( searchHzBoxContractor.getChildren().isEmpty()){
-             searchHzBoxContractor.getChildren().add(txtSearch);
+             searchHzBoxContractor.getChildren().add(comboBoxLanguage);
+             //searchHzBoxContractor.getChildren().add(txtSearch);
              searchHzBoxContractor.getChildren().add(btnSearch);
-         }else if( searchHzBoxContractor.getChildren().get(0).equals(comboBox)){
+         }else if( searchHzBoxContractor.getChildren().get(0).equals(txtSearch) || 
+                 searchHzBoxContractor.getChildren().get(0).equals(comboBox)){             
              searchHzBoxContractor.getChildren().remove(0);
-             searchHzBoxContractor.getChildren().add(0,txtSearch);            
+             searchHzBoxContractor.getChildren().add(0,comboBoxLanguage);
+           //  searchHzBoxContractor.getChildren().add(0,txtSearch);            
          }        
         
         
@@ -790,7 +814,8 @@ public class MainScreenController implements Initializable {
         if( searchHzBoxContractor.getChildren().isEmpty()){
              searchHzBoxContractor.getChildren().add(comboBox);
              searchHzBoxContractor.getChildren().add(btnSearch);
-         }else if( searchHzBoxContractor.getChildren().get(0).equals(txtSearch)){
+         }else if( searchHzBoxContractor.getChildren().get(0).equals(txtSearch) ||
+                 searchHzBoxContractor.getChildren().get(0).equals(comboBoxLanguage)){
              searchHzBoxContractor.getChildren().remove(0);
              searchHzBoxContractor.getChildren().add(0,comboBox);            
          }
@@ -803,7 +828,8 @@ public class MainScreenController implements Initializable {
         if( searchHzBoxContractor.getChildren().isEmpty()){
              searchHzBoxContractor.getChildren().add(txtSearch);
              searchHzBoxContractor.getChildren().add(btnSearch);
-         }else if( searchHzBoxContractor.getChildren().get(0).equals(comboBox)){
+         }else if( searchHzBoxContractor.getChildren().get(0).equals(comboBox) || 
+                 searchHzBoxContractor.getChildren().get(0).equals(comboBoxLanguage)){
              searchHzBoxContractor.getChildren().remove(0);
              searchHzBoxContractor.getChildren().add(0,txtSearch); 
          }
@@ -1248,6 +1274,7 @@ public class MainScreenController implements Initializable {
     
     @FXML
     private void tabSearchHandler(Event event) {
+         
          searchFreelancer();
     }
 

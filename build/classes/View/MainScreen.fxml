@@ -132,7 +132,6 @@
                                                       <RadioButton fx:id="radBtnInvite" mnemonicParsing="false" onMouseClicked="#radBtnInviteHandler" text="Select an existing job post to invite" toggleGroup="$jobPostCategory" />
                                                    </children>
                                                 </VBox>
-                                                <Label text="* All fields are required" textFill="#ff0404" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                              </children>
                                           </GridPane>
                                        </children>
@@ -166,7 +165,7 @@
                                           <HBox fx:id="searchHzBoxContractor" layoutX="250.0" layoutY="135.0" prefHeight="31.0" prefWidth="385.0" spacing="10.0" />
                                           <VBox layoutX="250.0" layoutY="222.0" spacing="20.0">
                                              <children>
-                                                <RadioButton fx:id="radBtnSkill" mnemonicParsing="false" onAction="#radbtnSkillHandler" selected="true" text="By Skill">
+                                                <RadioButton fx:id="radBtnSkill" mnemonicParsing="false" onAction="#radbtnSkillHandler" text="By Skill">
                                                    <toggleGroup>
                                                       <ToggleGroup fx:id="searchCategory1" />
                                                    </toggleGroup>
@@ -225,95 +224,27 @@
                                 <content>
                                   <AnchorPane fx:id="anchorPaneJobAssigned" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <GridPane alignment="TOP_CENTER" hgap="10.0" layoutX="55.0" layoutY="50.0" prefHeight="257.0" prefWidth="881.0" AnchorPane.bottomAnchor="357.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
+                                          <ListView fx:id="listSavedFreelancer" layoutX="28.0" layoutY="76.0" onMouseClicked="#listSavedFreelancerHandler" prefHeight="200.0" prefWidth="200.0" />
+                                          <Label layoutX="69.0" layoutY="38.0" text="Saved Freelancers" />
+                                          <ListView fx:id="listAppliedFreelancer" layoutX="321.0" layoutY="76.0" onMouseClicked="#listAppliedFreelancerHandler" prefHeight="200.0" prefWidth="200.0" />
+                                          <Label layoutX="308.0" layoutY="38.0" text="Freelancers applied for job posted" />
+                                          <ListView fx:id="listInvitedFreelancer" layoutX="597.0" layoutY="76.0" onMouseClicked="#listInvitedFreelancerHandler" prefHeight="200.0" prefWidth="200.0" />
+                                          <Label layoutX="635.0" layoutY="38.0" text="Invited Freelancers" />
+                                          <HBox fx:id="hzBoxJob" layoutX="40.0" layoutY="362.0" prefHeight="38.0" prefWidth="773.0" spacing="10.0">
                                              <children>
-                                                <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
-                                                   <children>
-                                                      <Label text="Saved Freelancers" />
-                                                      <ListView fx:id="listSavedFreelancer" onMouseClicked="#listSavedFreelancerHandler" prefHeight="200.0" prefWidth="200.0" />
-                                                   </children>
-                                                   <padding>
-                                                      <Insets top="25.0" />
-                                                   </padding>
-                                                </VBox>
-                                                <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="1">
-                                                   <children>
-                                                      <Label text="Freelancers applied for job posted" />
-                                                      <ListView fx:id="listAppliedFreelancer" onMouseClicked="#listAppliedFreelancerHandler" prefHeight="200.0" prefWidth="200.0" />
-                                                   </children>
-                                                   <padding>
-                                                      <Insets top="25.0" />
-                                                   </padding>
-                                                </VBox>
-                                                <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="2">
-                                                   <children>
-                                                      <Label text="Invited Freelancers" />
-                                                      <ListView fx:id="listInvitedFreelancer" onMouseClicked="#listInvitedFreelancerHandler" prefHeight="200.0" prefWidth="200.0" />
-                                                   </children>
-                                                   <padding>
-                                                      <Insets top="25.0" />
-                                                   </padding>
-                                                </VBox>
+                                                <Label text="Assigned the Job" />
+                                                <ComboBox fx:id="cmbBoxJob" onAction="#cmbBoxJobHandler" prefHeight="31.0" prefWidth="296.0" promptText="Select the Job to assign" />
+                                                <Label fx:id="lblFreelancer" text="label" />
                                              </children>
-                                          </GridPane>
-                                          <GridPane fx:id="gridPaneJob" layoutX="42.0" layoutY="324.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="324.0">
-                                            <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="683.0" minWidth="10.0" percentWidth="100.0" prefWidth="581.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                              <RowConstraints maxHeight="87.0" minHeight="10.0" percentHeight="25.0" prefHeight="87.0" />
-                                              <RowConstraints maxHeight="72.0" minHeight="9.0" percentHeight="13.0" prefHeight="59.0" vgrow="SOMETIMES" />
-                                              <RowConstraints maxHeight="169.0" minHeight="10.0" percentHeight="60.0" prefHeight="153.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                             <children>
-                                                <AnchorPane prefHeight="58.0" prefWidth="881.0">
-                                                   <children>
-                                                      <HBox fx:id="hzBoxFreelancerInviteApply" prefHeight="52.0" prefWidth="873.0" spacing="10.0">
-                                                         <children>
-                                                            <Label prefHeight="44.0" prefWidth="231.0" text="The Job Freelancer applied/Invited:" />
-                                                            <Label fx:id="lblJobInfo" prefHeight="44.0" text="Label" />
-                                                         </children>
-                                                         <padding>
-                                                            <Insets left="45.0" />
-                                                         </padding>
-                                                      </HBox>
-                                                   </children>
-                                                </AnchorPane>
-                                                <HBox fx:id="hzBoxJob" prefHeight="38.0" prefWidth="773.0" spacing="10.0" GridPane.rowIndex="1">
-                                                   <children>
-                                                      <Label prefHeight="44.0" prefWidth="113.0" text="Assigned the Job" />
-                                                      <ComboBox fx:id="cmbBoxJob" onAction="#cmbBoxJobHandler" prefHeight="53.0" prefWidth="365.0" promptText="Select the Job to assign" />
-                                                      <Label fx:id="lblFreelancer" prefHeight="38.0" prefWidth="229.0" text="label" />
-                                                   </children>
-                                                   <padding>
-                                                      <Insets left="45.0" />
-                                                   </padding>
-                                                </HBox>
-                                                <ButtonBar buttonMinWidth="80.0" GridPane.hgrow="NEVER" GridPane.rowIndex="2">
-                                                  <buttons>
-                                                    <Button fx:id="btnOk" alignment="CENTER" mnemonicParsing="false" onAction="#btnOkHandler" prefHeight="35.0" prefWidth="140.0" text="Ok" />
-                                                      <Button alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="140.0" text="Cancel" />
-                                                  </buttons>
-                                                   <padding>
-                                                      <Insets right="15.0" />
-                                                   </padding>
-                                                   <GridPane.margin>
-                                                      <Insets />
-                                                   </GridPane.margin>
-                                                </ButtonBar>
-                                             </children>
-                                             <opaqueInsets>
-                                                <Insets />
-                                             </opaqueInsets>
-                                          </GridPane>
+                                          </HBox>
+                                          <Label layoutX="40.0" layoutY="315.0" text="The Job Freelancer applied/Invited:" />
+                                          <Label fx:id="lblJobInfo" layoutX="286.0" layoutY="315.0" text="Label" />
+                                          <ButtonBar layoutX="617.0" layoutY="452.0" prefHeight="40.0" prefWidth="200.0">
+                                            <buttons>
+                                              <Button fx:id="btnOk" mnemonicParsing="false" onAction="#btnOkHandler" text="Ok" />
+                                                <Button mnemonicParsing="false" text="Cancel" />
+                                            </buttons>
+                                          </ButtonBar>
                                        </children>
                                     </AnchorPane>
                                 </content>

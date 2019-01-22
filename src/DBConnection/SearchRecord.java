@@ -9,7 +9,6 @@ import Controllers.MainScreenController;
 import Model.Freelancer;
 import Model.Job;
 import Model.PrgmLanguage;
-import Model.User;
 import Reports.Report;
 import java.sql.ResultSet;
 import java.sql.SQLException;
