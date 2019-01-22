@@ -78,7 +78,12 @@ public class AccountCreationScreenController implements Initializable {
         //get input
         String username = txtUserName.getText();
         String password = txtPassword.getText();
-        
+        if(  username.isEmpty() && password.isEmpty() ){
+            
+            alert("Username and Password required","User Name","Username Error", AlertType.ERROR);
+            txtUserName.setStyle("-fx-border-color:red");
+            txtPassword.setStyle("-fx-border-color:red");
+        }else        
         if( isNewUser ){
             if ( isUsername(username)){
                 alert("The username has already been taken","User Name","Username Error", AlertType.ERROR);

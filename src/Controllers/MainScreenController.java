@@ -18,7 +18,7 @@ import Model.PrgmLanguage;
 import Model.SavedFreelancer;
 import Model.UserAccount;
 import Reports.Report;
-import com.sun.javafx.scene.control.skin.TableColumnHeader;
+import Validation.Validation;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -27,21 +27,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -60,25 +53,19 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SortEvent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TableView.ResizeFeatures;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -307,6 +294,7 @@ public class MainScreenController implements Initializable {
     private GridPane gridPaneJob;
     @FXML
     private HBox hzBoxFreelancerInviteApply;
+    private boolean isSelectJobFirst;
    
   
   
@@ -349,6 +337,7 @@ public class MainScreenController implements Initializable {
            updateMenuItem.setStyle("-fx-padding:2 60 2 60");        
            deleteMenuItem.setStyle("-fx-padding:2 60 2 60");
          
+           isSelectJobFirst = false;
            
         
            
@@ -596,8 +585,7 @@ public class MainScreenController implements Initializable {
    } 
 
    private void searchFreelancer(){
-       
-       
+              
         
 //        if( criteria.equals("all")){
 ////            freelancerList  = SearchRecord.searchFreelancer( criteria , "");
@@ -910,7 +898,7 @@ public class MainScreenController implements Initializable {
             
         if( !ListallPrgmLanguages.getSelectionModel().isEmpty() ){
             
-             int  userID = getUserID();
+          int  userID = getUserID();
           int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
           FreelancerLanguage freelancerLanguage = new FreelancerLanguage();
                   
@@ -1056,10 +1044,27 @@ public class MainScreenController implements Initializable {
    
     @FXML
     private void tableViewFreelancerHandler(MouseEvent event) {
+       
         //String fullName =  tableViewFreelancer.getSelectionModel().getSelectedItem().getFullName();
         int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
-        assignment = new Assignment();        
-        assignment.setFreelancerID(freelancerID);
+        
+        if( isSelectJobFirst ){
+            assignment.setFreelancerID(freelancerID);
+            int addStatus = AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+                if( addStatus == AddRecord.ERROR ){
+                    alert("Error adding record","","",AlertType.ERROR);
+                }else{
+                    alert("The freelancer has been invited for the job posted","","",AlertType.INFORMATION);
+                }
+           
+            assignment = null;
+            tableViewFreelancer.getSelectionModel().clearSelection();
+            isSelectJobFirst = false;
+            
+        }else{        
+            assignment = new Assignment();        
+            assignment.setFreelancerID(freelancerID);
+        }
 //       Stage invite = new Stage();
 //       Parent root;
 //       FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/InviteFreelancer.fxml"));
@@ -1078,42 +1083,71 @@ public class MainScreenController implements Initializable {
     
      @FXML
     private void btnSubmitHandler(ActionEvent event) {       
+        boolean isValidPost = true;
+        String jobCategory ="";
         
-        String jobCategory;
+        
+        
+        
+        int userID = getUserID();
+        
+         //get contractorID          
+        int contractorID = getUserTypeID("contractorID","Contractor",userID);     
+        
+        String jobTitle =  txtJobTitle.getText().trim();
+        if( jobTitle.isEmpty() ){
+            alert( "Job Title is requird","Input Error","",AlertType.ERROR );
+            isValidPost = false;
+        }else if( Validation.isStringAnumber( jobTitle )){
+            if( ! alert("Are you sure your job title is a number","Job Title Confirmation","",AlertType.CONFIRMATION)){                
+                    txtJobTitle.setText("");
+                    isValidPost = false;
+             }else{
+                isValidPost = true;
+            }
+        }
+        
         
         
         if( radbtnRemote.isSelected() ){
             jobCategory = radbtnRemote.getText().toLowerCase();
         }else if( radbtnOnsite.isSelected()){
-            jobCategory = radbtnOnsite.getText().toLowerCase();
-        }else{
+            jobCategory = radbtnOnsite.getText().toLowerCase(); 
+        }else if( radbtnHybrid.isSelected()){
             jobCategory = radbtnHybrid.getText().toLowerCase();
+        }else{
+            alert("Please select the job category","Input Error","",AlertType.ERROR);
+            isValidPost = false;
         }
         
-        int userID = getUserID();
-
-         //get contractorID          
-        int contractorID = getUserTypeID("contractorID","Contractor",userID);     
-
-        Job job = new Job(
-                txtJobTitle.getText(),
-                txtAreaDescription.getText(),
-                jobCategory,       
-                LocalDateTime.now()
-        );
-        
-        job.setJobPostedBy(contractorID);
-        int jobID ;
-        jobID = AddRecord.setDbRecord(job, JOB);
-        
+       String description  = txtAreaDescription.getText();
        
-        if ( isInviteFreelancer ){
-            
-            assignment.setContractorID(contractorID);       
-            assignment.setJobID(jobID);
-            assignment.setContractStatus(INVITED_FREELANCER);
-            assignment.setJobAssignedDate(null);
-            AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+       if( description.isEmpty()){
+           alert("Job description is required","Input Error","",AlertType.ERROR );
+           isValidPost = false;
+       }
+        
+        if( isValidPost ){
+            Job job = new Job(
+                    jobTitle,
+                    description,
+                    jobCategory,       
+                    LocalDateTime.now()
+            );
+
+            job.setJobPostedBy(contractorID);
+            int jobID ;
+            jobID = AddRecord.setDbRecord(job, JOB);
+
+
+            if ( isInviteFreelancer ){
+
+                assignment.setContractorID(contractorID);       
+                assignment.setJobID(jobID);
+                assignment.setContractStatus(INVITED_FREELANCER);
+                assignment.setJobAssignedDate(null);
+                AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+            }
         }
     }
     
@@ -1121,8 +1155,8 @@ public class MainScreenController implements Initializable {
     @FXML
     private void btnInviteFreelancerHandler(ActionEvent event) {     
              tabPaneContractor.getSelectionModel().select(tabPostJob); 
-             isInviteFreelancer = true;
-             
+             isInviteFreelancer = true;             
+           
     }
     
     @FXML
@@ -1130,6 +1164,7 @@ public class MainScreenController implements Initializable {
          int userID = getUserID();
          int contractorID = getUserTypeID("contractorID","Contractor",userID);  
         
+         
              vbox= new VBox();
              vbox.setLayoutX(350);
              vbox.setLayoutY(135);
@@ -1158,29 +1193,46 @@ public class MainScreenController implements Initializable {
             
                 btnSubmit.setOnAction((e) -> {
                        try{
+                            assignment = new Assignment();
                             int jobID = jobMap.get(comboBoxJobPost.getSelectionModel().getSelectedIndex() ); 
-                            int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
-                            assignment = new Assignment(contractorID, freelancerID, jobID);        
+                            assignment.setJobID(jobID);
+                            assignment.setContractorID(contractorID);
                             assignment.setContractStatus(INVITED_FREELANCER);
-                            assignment.setJobAssignedDate(null);
-                            AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+                            assignment.setJobAssignedDate(null);                            
+                            int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
+                            assignment.setFreelancerID(freelancerID);
+//                            assignment = new Assignment(contractorID, freelancerID, jobID);                                  
+                            int addStatus = AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+                            if( addStatus == AddRecord.ERROR ){
+                                alert("Error adding record","","",AlertType.ERROR);
+                            }else{
+                                alert("The freelancer has been invited for the job posted","","",AlertType.INFORMATION);
+                                
+                            }
+                            tableViewFreelancer.getSelectionModel().clearSelection();
+                            assignment = null;
                        }catch(Exception x){
-                            System.out.println("Please choose a job to invite");
+                            x.printStackTrace(); 
+                            isSelectJobFirst = true; 
+                            freelancerList  = SearchRecord.searchFreelancer( "all" , "");
+                            setTableViewFreelancer();
+                            tabPaneContractor.getSelectionModel().select(tabFreelancerSearchResult);
+                            alert("Please select the freelancer to invite the job","","",AlertType.INFORMATION);       
+//                            int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
+                            
+                            /* get freelancer ID*/
+                         
                        }
                        
-                       
-                      
-
-               });
-            
-            
-             
-//                 
-//           
-            
+                    anchorPanePostJob.getChildren().remove(vbox);      
+                    anchorPanePostJob.getChildren().add(gridpaneJobPost);  
+                    radBtnNewJobPost.setSelected(true);
+                        
+               });            
         
     }
-
+    
+    
     @FXML
     private void radBtnNewJobPostHandler(MouseEvent event) {
         
@@ -1238,17 +1290,21 @@ public class MainScreenController implements Initializable {
         chkBox = new CheckBox();
         chkBox.setText("Check if you need to assign a new job");
         chkBox.setLayoutX(40);
-        chkBox.setLayoutY(356);
+        chkBox.setLayoutY(360);
         isCheckBoxAdded = false;
         isCheckBoxRemoved = true;
         
                 
         chkBox.setOnAction((chkevent) -> {
-                   if( chkBox.isSelected() ){
-                      anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+                      hzBoxJob.setLayoutX(0);
+                      hzBoxJob.setLayoutY(407);
+                   if( chkBox.isSelected() ){        
+                       hzBoxJob.setVisible(true);
+                      //anchorPaneJobAssigned.getChildren().add(hzBoxJob);
                  }
                  else{
-                     anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+                      hzBoxJob.setVisible(false);
+                     //anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
                  }
             });
       
@@ -1341,20 +1397,16 @@ public class MainScreenController implements Initializable {
        
         
         if( ! listSavedFreelancer.getItems().isEmpty()){
-              isSavedFreelancer = true;              
-              anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
-              hzBoxJob.setLayoutY(362);
-               anchorPaneJobAssigned.getChildren().add(hzBoxJob); 
+              isSavedFreelancer = true;   
+              hzBoxJob.setVisible(true);
+//              anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+//              hzBoxJob.setLayoutY(382);
+//              hzBoxJob.setLayoutX(0);
+//              anchorPaneJobAssigned.getChildren().add(hzBoxJob); 
             if( isCheckBoxAdded ){
                isCheckBoxRemoved = anchorPaneJobAssigned.getChildren().remove(chkBox);
-               isCheckBoxAdded = false;
-              
-                       /*aused by: java.lang.IllegalArgumentException: Children: duplicate children added: parent = AnchorPane[id=anchorPaneJobAssigned]
-	at javafx.scene.Parent$2.onProposedChange(Parent.java:454)
-	at com.sun.javafx.collections.VetoableListDecorator.add(VetoableListDecorator.java:206)
-	at Controllers.MainScreenController.listSavedFreelancerHandler(MainScreenController.java:1026)
-	... 45 more
-error to fix */
+               isCheckBoxAdded = false;              
+      
             }
                 
             
@@ -1369,24 +1421,31 @@ error to fix */
     
     @FXML
     private void listAppliedFreelancerHandler(MouseEvent event) {
+        //gridPaneJob.getChildren().remove(hzBoxJob);
+        chkBox.setSelected(false);
+        hzBoxJob.setVisible(false);
         
+//         anchorPaneJobAssigned.getChildren().remhzBoxJobove();
         if( ! listAppliedFreelancer.getItems().isEmpty()){
-            isSavedFreelancer = false;
+                isSavedFreelancer = false;
              
-              anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+               
+    //          
             if( isCheckBoxRemoved ){
                 isCheckBoxAdded = anchorPaneJobAssigned.getChildren().add(chkBox);
                 isCheckBoxRemoved = false;
                
-                hzBoxJob.setLayoutX(40);
-                hzBoxJob.setLayoutY(407);
+//                hzBoxJob.setLayoutX(0);
+//                hzBoxJob.setLayoutY(407);
               //  anchorPaneJobAssigned.getChildren().add(hzBoxJob)
             }
             
              if ( chkBox.isSelected()){
-                 anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+                 hzBoxJob.setVisible(true);
+                 //anchorPaneJobAssigned.getChildren().add(hzBoxJob);
                }else{
-                      anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+               //  hzBoxJob.setVisible(true);                     
+                 //anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
                }
             
 //             chkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -1437,23 +1496,29 @@ error to fix */
 
     @FXML
     private void listInvitedFreelancerHandler(MouseEvent event) {
+         chkBox.setSelected(false);
+          hzBoxJob.setVisible(false);
+         
         if( ! listInvitedFreelancer.getItems().isEmpty()){
             isSavedFreelancer = false;
             
-                anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+            //anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
            if( isCheckBoxRemoved ){
+               
                 isCheckBoxAdded = anchorPaneJobAssigned.getChildren().add(chkBox);
                 isCheckBoxRemoved = false;
                 
-                hzBoxJob.setLayoutX(40);
-                hzBoxJob.setLayoutY(407);
+//                hzBoxJob.setLayoutX(0);
+//                hzBoxJob.setLayoutY(407);
             }
             
            
-               if ( chkBox.isSelected()){
-                 anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+           if ( chkBox.isSelected()){
+                  hzBoxJob.setVisible(true);
+                 //anchorPaneJobAssigned.getChildren().add(hzBoxJob);
                }else{
-                      anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+                hzBoxJob.setVisible(false);
+                 //anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
                }
             System.out.println(" isCheckBoxAdded save:"+ isCheckBoxAdded + " and " + "isCheckBoxRemoved:" + isCheckBoxRemoved);
             freelancerID = invitedFreelancerMap.get( listInvitedFreelancer.getSelectionModel().getSelectedIndex());
@@ -1727,22 +1792,22 @@ error to fix */
 
  
    
-   public  static void shiftControls(){
-   
-      // btnOk.setText("moving");
-       
-       
-//        Stage stage = (Stage)mainPane.getScene().getWindow();
-//        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
-//     // Do whatever you want
-//            btnOk.setStyle("-fx-background-color:yellow");
-//            
-//        });
-       
-       
-   
-       // hzBoxFreelancerInviteApply.setStyle("-fx-padding:0 0 0 50");
-   }
+//   public  static void shiftControls(){
+//   
+//      // btnOk.setText("moving");
+//       
+//       
+////        Stage stage = (Stage)mainPane.getScene().getWindow();
+////        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+////     // Do whatever you want
+////            btnOk.setStyle("-fx-background-color:yellow");
+////            
+////        });
+//       
+//       
+//   
+//       // hzBoxFreelancerInviteApply.setStyle("-fx-padding:0 0 0 50");
+//   }
     
 
         

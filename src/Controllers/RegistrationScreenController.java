@@ -331,14 +331,15 @@ public class RegistrationScreenController implements Initializable {
             String areacode =  txtAreaCode.getText().trim();
             
              if(!( areacode.length() == 3 && Validation.isStringAnumber(areacode))){
+                    list.add(txtAreaCode);
                     alert("Area code should have three numbers and no letters or special characters","Input Error","", AlertType.ERROR);
                 }
             
-        
+             
             phone = txtPhoneNumber.getText().trim();
-            if( phone.isEmpty()){
+            if( ! (phone.length() == 7 && Validation.isStringAnumber(phone))){
                  list.add(txtPhoneNumber);
-               // txtPhoneNumber.setStyle("-fx-border-color:red");   
+                 alert("Phone should have seven numbers and no letters or special characters","Input Error","", AlertType.ERROR);
             }else{
                 listClear.add(txtPhoneNumber);
             }
