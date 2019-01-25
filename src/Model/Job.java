@@ -5,7 +5,6 @@
  */
 package Model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -20,7 +19,7 @@ public class Job {
     private int jobPostedBy;
     private LocalDateTime postDate;
     private LocalDateTime updateDate;
-
+    
    
 
     public Job() {
@@ -101,6 +100,8 @@ public class Job {
     public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
+
+  
     
     
 }

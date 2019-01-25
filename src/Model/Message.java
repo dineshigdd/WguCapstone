@@ -14,20 +14,23 @@ import java.time.LocalDateTime;
 public class Message {
     private int messageID;
     private String message;
+    private int sender;
     private LocalDateTime msgCreateDate;
-    private LocalDateTime msgUpdateDate;
-    private int JobID;
-    private int freelancerID;
-  
-
+    private LocalDateTime msgUpdateDate; 
+    private User user;
+    private Job job;
+    private String name;
+    private String jobTitle;
+    
     public Message() {
     }
 
-    public Message(String message, LocalDateTime msgCreateDate,int freelancerID,int jobID ) {
+    public Message(String message,int sender, LocalDateTime msgCreateDate,User user,Job job ) {
         this.message = message;
+        this.sender = sender;
         this.msgCreateDate = msgCreateDate;        
-        this.freelancerID = freelancerID;
-        this.JobID = jobID;      
+        this.user = user;
+        this.job = job;
     }
   
 
@@ -63,21 +66,73 @@ public class Message {
         this.msgUpdateDate = msgUpdateDate;
     }
 
-    public int getJobID() {
-        return JobID;
-    }
-
-    public void setJobID(int JobID) {
-        this.JobID = JobID;
+    public void setFullName(String fullName) {
+       name = fullName;
     }
     
-    public int getFreelancerID() {
-        return freelancerID;
+//    public int getJobID() {
+//        return JobID;
+//    }
+//
+//    public void setJobID(int JobID) {
+//        this.JobID = JobID;
+//    }
+//    
+//    public int getFreelancerID() {
+//        return freelancerID;
+//    }
+//
+//    public void setFreelancerID(int freelancerID) {
+//        this.freelancerID = freelancerID;
+//    }
+//
+//    public int getSender() {
+//        return sender;
+//    }
+//
+//    public void setSender(int sender) {
+//        this.sender = sender;
+//    }
+//
+//    public String getFreelancerName() {
+//        return freelancerName;
+//    }
+//
+//    public void setFreelancerName(String freelancerName) {
+//        this.freelancerName = freelancerName;
+//    }
+
+    public int getSender() {
+        return sender;
     }
 
-    public void setFreelancerID(int freelancerID) {
-        this.freelancerID = freelancerID;
+    public void setSender(int sender) {
+        this.sender = sender;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+    
+    public Job getJob() {
+        return job;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
+    }
+
+    public void setJobTitle(String jobTitle){
+        this.jobTitle = jobTitle;
+    }
+
+   
+    
 
     
     

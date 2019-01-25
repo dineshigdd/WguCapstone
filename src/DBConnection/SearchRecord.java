@@ -8,10 +8,13 @@ package DBConnection;
 import Controllers.MainScreenController;
 import Model.Freelancer;
 import Model.Job;
+import Model.Message;
 import Model.PrgmLanguage;
 import Reports.Report;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -43,7 +46,8 @@ public class SearchRecord {
             case "jobCategory":
                  query = "select * from job where " + criteria + " = "+ "'" + criteriaValue + "'";
                 break;
-            case "jobTitle": query = "select * from job where "+ criteria + " like "+ "'%" + criteriaValue + "%'";
+            case "jobTitle":
+                query = "select * from job where "+ criteria + " like "+ "'%" + criteriaValue + "%'";
                 break;
             case "jobAppliedOrInvited": 
                     query = "select * from job, assignment "
@@ -51,7 +55,8 @@ public class SearchRecord {
                     + "job.jobPostedBy = assignment.contractorID and "
                     + "assignment.freelancerID ="+ Integer.parseInt(criteriaValue);
                 break;
-            case "all": query = "select * from job where jobPostedBy = " + Integer.parseInt(criteriaValue);
+            case "all": 
+                query = "select * from job where jobPostedBy = " + Integer.parseInt(criteriaValue);
                 break;
             default:query = "select * from job";
         }
@@ -130,6 +135,7 @@ public class SearchRecord {
                          +  "contractStatus = " + MainScreenController.INVITED_FREELANCER;
             break;   
             case "otherSkills":
+            case "freelancerNeed":
                 query = "select" + projection + "from Freelancer "
                         + "where freelancerID ="+ Integer.parseInt(criteriaValue);
             break;
@@ -315,4 +321,34 @@ public class SearchRecord {
             return list;
             
      }
+     
+ 
+
+//    public static ObservableList<Message> searchLanguage(String criteria , String criteriaValue ){
+//            
+//            
+//            ObservableList<Message> list =  FXCollections.observableArrayList();           
+//            DBConnection conn = new DBConnection();
+//            conn.connectDatabase();
+//             String query = "SELECT messageID,jobTitle, concat(freelancer.firstName,' ',freelancer.lastName) as 'name' , message " +
+//                            "FROM job, message, freelancer WHERE job.jobID = message.jobID and freelancer.freelancerID = message.freelancerID and "
+//                             + "jobPostedBy =" +criteriaValue;
+//
+//
+//             conn.setStatement(query);
+//             ResultSet sqlResult = conn.getStatement();
+//
+//            try {
+//                while( sqlResult.next()){
+//                    Message message = new Message();
+//                    inbox.setJobTitle(sqlResult.getString("jobTitle"));
+//                    inbox.setName(sqlResult.getString("name"));
+//                    inbox.setMessage(sqlResult.getString("message"));
+//                    list.add(inbox);
+//                   
+//                }
+//            } catch (SQLException ex) {
+//                ex.printStackTrace();
+//            }
+//    }
 }

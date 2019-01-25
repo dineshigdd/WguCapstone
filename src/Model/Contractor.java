@@ -13,6 +13,7 @@ import java.time.LocalDate;
  * @author Dinesh
  */
 public class Contractor extends User{
+      private int contractorID;
     private String typeOfContractor;
   // private ObservableList<Job> jobList;    
 
@@ -29,8 +30,18 @@ public class Contractor extends User{
         this.contact = contact;
         this.typeOfContractor = typeOfContractor;
     }          
-    
 
+    public int getContractorID() {
+        return contractorID;
+    }
+
+    public void setContractorID(int contractorID) {
+        this.contractorID = contractorID;
+    }
+    
+    
+    
+    
     public String getTypeOfContractor() {
         return typeOfContractor;
     }

@@ -28,10 +28,10 @@ import java.time.LocalDateTime;
  */
 public  class AddRecord {
   //  private DBConnection conn;
-    private static final int  FREELANCER = 1;
-    private  static final int  CONTRACTOR = 0;
+    public static final int  FREELANCER = 1;
+    public  static final int  CONTRACTOR = 0;
     private static final int JOB = 3;
-    private static final int MESSAGE = 4;
+    public static final int MESSAGE = 4;
     public static final int FREELANCER_PRGM_LANGUAGE = 5;    
     public static final int SAVED_FREELANCER = 6;
     public static final int ASSIGNMENT = 7;
@@ -187,15 +187,16 @@ public  class AddRecord {
                 try{
                 Message message = ( Message )obj;
                 String query = "";
-                query = "INSERT INTO Message( message,msgCreateDate,freelancerID,jobID )" + 
-                                            "VALUES( ? , ? , ?, ? );";
+                query = "INSERT INTO Message( message,msgCreateDate,sender,freelancerID,jobID )" + 
+                                            "VALUES( ? , ? , ?, ?,? );";
                                             
                                                 
                  PreparedStatement ps = conn.insertRecord(query);
                                 ps.setString( 1, message.getMessage());
                                 ps.setTimestamp(2, toTimeStampWithTime(message.getMsgCreateDate()));
-                                ps.setInt( 3, message.getFreelancerID());
-                                ps.setInt( 4, message.getJobID());                               
+                                ps.setInt( 3,message.getSender());
+                                ps.setInt( 4,((Freelancer) message.getUser()).getFreelancerID());
+                                ps.setInt( 5, message.getJob().getJobID());                               
                                 
                                 ps.execute();
                  conn.closeDBConnection();       
@@ -273,6 +274,7 @@ public  class AddRecord {
         }  
        return ID; 
     }
+    
     
     private static Timestamp toTimeStamp(LocalDate localDate){                
        return Timestamp.valueOf(localDate.atStartOfDay());

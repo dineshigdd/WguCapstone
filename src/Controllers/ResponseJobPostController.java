@@ -6,28 +6,22 @@
 package Controllers;
 
 import DBConnection.AddRecord;
-import DBConnection.DBConnection;
 import Model.Assignment;
+import Model.Freelancer;
 import Model.Job;
 import Model.Message;
+import Model.User;
 import java.io.IOException;
-import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.ResourceBundle;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import javax.swing.event.ChangeListener;
 
 /**
  * FXML Controller class
@@ -50,17 +44,17 @@ public class ResponseJobPostController {
     /**
      * Initializes the controller class.
      */
-    private int jobID;
-    private int freelancerID;
+    private Job job;
+    private User user;
     private final static int MESSAGE = 4;
     @FXML
     private RadioButton radbtnApplyJob;
     private boolean isApplyForJob;
     private int contractorID;
-    public void initialize( Job job,  int freelancerID ){
+    public void initialize( Job job,  User user ){
         // TODO
-        this.jobID = job.getJobID();
-        this.freelancerID = freelancerID;
+        this.job = job;
+        this.user = user;
         this.contractorID = job.getJobPostedBy();
     }    
 
@@ -75,22 +69,32 @@ public class ResponseJobPostController {
 
     @FXML
     private void btnSubmitHandler(ActionEvent event) {
+        
         //get message
-        Message message = new Message(        
-                textareaMsg.getText(),
-                LocalDateTime.now(),
-                freelancerID,
-                jobID              
-        );
-      AddRecord.setDbRecord(message, MESSAGE );
+        
+        String inputMessage = textareaMsg.getText().trim();
+        if( !inputMessage.isEmpty()){
+            
+            Message message = new Message(        
+                    textareaMsg.getText(),
+                    AddRecord.FREELANCER,
+                    LocalDateTime.now(),
+                    user,
+                    job             
+            );
+            
+            AddRecord.setDbRecord(message, MESSAGE );
+    }else{
+        alert("Please enter your message","Input Error","",AlertType.ERROR);
+    }
       
       
       if( isApplyForJob ){
-          
+         
           Assignment assignment = new Assignment(                  
                contractorID,
-               freelancerID,
-               jobID 
+               ((Freelancer) user).getFreelancerID(),
+               job.getJobID() 
           );
           
           //set contract status
@@ -111,5 +115,14 @@ public class ResponseJobPostController {
     }
     
     
+    private void alert(String message, String title,String header, AlertType alertType ){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+
+        alert.showAndWait();     
+            
+    }
     
 }
