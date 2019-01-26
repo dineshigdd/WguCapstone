@@ -978,8 +978,7 @@ public class MainScreenController implements Initializable {
     }
 
     @FXML
-    private void btnRightArrowHandler(ActionEvent event) {      
-       
+    private void btnRightArrowHandler(ActionEvent event) {             
             
             
         if( !ListallPrgmLanguages.getSelectionModel().isEmpty() ){
@@ -1132,20 +1131,44 @@ public class MainScreenController implements Initializable {
     private void tableViewFreelancerHandler(MouseEvent event) {
        
         //String fullName =  tableViewFreelancer.getSelectionModel().getSelectedItem().getFullName();
-        int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
+            int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
+        
         
         if( isSelectJobFirst ){
             assignment.setFreelancerID(freelancerID);
-            int addStatus = AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
-                if( addStatus == AddRecord.ERROR ){
-                    alert("Error adding record","","",AlertType.ERROR);
-                }else{
-                    alert("The freelancer has been invited for the job posted","","",AlertType.INFORMATION);
-                }
+            tabPaneContractor.getSelectionModel().select(tabPostJob); 
+            isInviteFreelancer = true;
+            textAreaJobPostMessage.setDisable(false);
+            btnSubmit.setText("Submit");
            
-            assignment = null;
-            tableViewFreelancer.getSelectionModel().clearSelection();
-            isSelectJobFirst = false;
+          
+            
+            
+//            if( isValidPost ){
+//                        
+//                User freelancer = tableViewFreelancer.getSelectionModel().getSelectedItem();
+//
+//                Message message  = new Message(
+//                    textAreaJobPostMessage.getText(),
+//                    AddRecord.CONTRACTOR,
+//                    LocalDateTime.now(),
+//                    freelancer,
+//                    job      
+//                 );
+//                
+//                int addStatus = AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+//                addStatus = addStatus + AddRecord.setDbRecord(message, AddRecord.MESSAGE);     
+//                
+//                 if( addStatus == AddRecord.ERROR * 2 ){ //addStatus == 2( for possible two Errors
+//                    alert("Error adding record","","",AlertType.ERROR);
+//                }else{
+//                    alert("The freelancer has been invited for the job posted","","",AlertType.INFORMATION);
+//                }
+//           
+//                }
+//                assignment = null;
+//                tableViewFreelancer.getSelectionModel().clearSelection();
+//                isSelectJobFirst = false;
             
         }else{        
             assignment = new Assignment();        
@@ -1287,12 +1310,11 @@ public class MainScreenController implements Initializable {
     
     @FXML
     private void radBtnInviteHandler(MouseEvent event) {
+        
         gridpaneJobPost.setVisible(false);
         gridpaneJobPost2.setVisible(true);
          int userID = getUserID();
-         int contractorID = getUserTypeID("contractorID","Contractor",userID);  
-                  
-         
+         int contractorID = getUserTypeID("contractorID","Contractor",userID);          
              
              Label label = new Label("Choose the job to invite: ");
          //    GridPane.setHalignment(label, HPos.RIGHT);
@@ -1300,28 +1322,38 @@ public class MainScreenController implements Initializable {
              comboBoxJobPost = new ComboBox();
              comboBoxJobPost.setPromptText("Please select the Job post: ");
              
+              btnSubmit = null;
              if( gridpaneJobPost2.getChildren().isEmpty() ){        
                     gridpaneJobPost2.add(label, 0, 0);
                     gridpaneJobPost2.add(comboBoxJobPost, 1, 0);
 
                     gridpaneJobPost2.add(lblMessage, 0, 1);
                  //   GridPane.setHalignment(lblMessage, HPos.RIGHT);
-                    gridpaneJobPost2.add(textAreaJobPostMessage, 1, 1);
+                   
+                   
+                   gridpaneJobPost2.add(textAreaJobPostMessage, 1, 1);
 
-                   Button btnSubmit = new Button("Submit");
+                   btnSubmit = new Button("Submit");
                    btnSubmit.setPrefWidth(97);
                    btnSubmit.setPrefHeight(32);
                    GridPane.setHalignment(btnSubmit, HPos.RIGHT);
 
        //    vbox.setMargin(btnSubmit,new Insets(5,0,0,152)) 
-                   gridpaneJobPost2.add(btnSubmit, 1, 2);       
+                   gridpaneJobPost2.add(btnSubmit, 1, 2);     
+                   
+                   
              }
-             
-//             vbox.getChildren().addAll(label,comboBoxJobPost,lblMessage,textAreaJobPostMessage,btnSubmit);   
-             
-             //anchorPanePostJob.getChildren().remove(gridpaneJobPost);   
-           //  anchorPanePostJob.getChildren().add(vbox);
-      
+             if( !isInviteFreelancer ){
+                      isSelectJobFirst = true;
+                      textAreaJobPostMessage.setDisable(true);
+                      btnSubmit.setText("Choose a freelancer");
+                      btnSubmit.setPrefWidth(USE_COMPUTED_SIZE);
+             }else{
+                      textAreaJobPostMessage.setDisable(false);
+                      btnSubmit.setText("Submit");
+                     
+             }
+
             
              ObservableList<Job> jobList = SearchRecord.searchJob("all", Integer.toString(contractorID ));
              jobMap = new HashMap();    
@@ -1334,33 +1366,75 @@ public class MainScreenController implements Initializable {
             }
         
             
-                btnSubmit.setOnAction((e) -> {
+            btnSubmit.setOnAction((e) -> {
                        try{
-                            assignment = new Assignment();
-                            int jobID = jobMap.get(comboBoxJobPost.getSelectionModel().getSelectedIndex() ); 
-                            assignment.setJobID(jobID);
-                            assignment.setContractorID(contractorID);
-                            assignment.setContractStatus(INVITED_FREELANCER);
-                            assignment.setJobAssignedDate(null);                            
-                            int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
-                            assignment.setFreelancerID(freelancerID);
-//                            assignment = new Assignment(contractorID, freelancerID, jobID);                                  
-                            int addStatus = AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
-                            if( addStatus == AddRecord.ERROR ){
-                                alert("Error adding record","","",AlertType.ERROR);
-                            }else{
-                                alert("The freelancer has been invited for the job posted","","",AlertType.INFORMATION);
+                            boolean isValidPost = true;
+                            String messageTofreelancer ="";
+                            int jobID = 0;
+                            
+                             try{
+                                    jobID = jobMap.get(comboBoxJobPost.getSelectionModel().getSelectedIndex()); 
+                                 
+                                }catch(NullPointerException ex){   
+                                        alert("Please select the job to invite","Input Error","",AlertType.ERROR );
+                                        isValidPost = false;
+                                }
+                              
+                            
+                            if( isInviteFreelancer ){                        
                                 
+                                messageTofreelancer = textAreaJobPostMessage.getText().trim();                                
+                                
+                                if( messageTofreelancer.isEmpty()){
+                                     alert("Message is required when you direct your job post to a specific freelancer","Input Error","",AlertType.ERROR );
+                                     isValidPost = false;
+                                }
                             }
-                            tableViewFreelancer.getSelectionModel().clearSelection();
-                            assignment = null;
-                       }catch(Exception x){
-                            x.printStackTrace(); 
-                            isSelectJobFirst = true; 
-                            freelancerList  = SearchRecord.searchFreelancer( "all" , "");
-                            setTableViewFreelancer();
-                            tabPaneContractor.getSelectionModel().select(tabFreelancerSearchResult);
-                            alert("Please select the freelancer to invite the job","","",AlertType.INFORMATION);       
+                            
+                            if( isValidPost ){
+                                    if( isSelectJobFirst ){
+                                        assignment = new Assignment();   
+                                    }
+                                    
+                                    assignment.setJobID(jobID);
+                                    assignment.setContractorID(contractorID);
+                                    assignment.setContractStatus(INVITED_FREELANCER);
+                                    assignment.setJobAssignedDate(null);                            
+                                    int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
+                                    assignment.setFreelancerID(freelancerID);
+        //                            assignment = new Assignment(contractorID, freelancerID, jobID);                                  
+                                    int addStatus = AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
+                                    
+                                    if( addStatus == AddRecord.ERROR ){
+                                        alert("Error adding record","","",AlertType.ERROR);
+                                    }else{
+                                        alert("The freelancer has been invited for the job posted","","",AlertType.INFORMATION);
+
+                                    }
+                                    job = new Job();
+                                    job.setJobID(jobID);
+                                    User user = tableViewFreelancer.getSelectionModel().getSelectedItem();
+                                    
+                                    Message message  = new Message(
+                                        messageTofreelancer,
+                                        AddRecord.CONTRACTOR,
+                                        LocalDateTime.now(),
+                                        user,
+                                        job      
+                                     );
+                                    
+                                    AddRecord.setDbRecord(message, AddRecord.MESSAGE); 
+                                    tableViewFreelancer.getSelectionModel().clearSelection();
+                                    assignment = null;
+                                    isInviteFreelancer = false;
+                            }
+                       }catch(NullPointerException x){
+                             
+                                isSelectJobFirst = true; 
+                                freelancerList  = SearchRecord.searchFreelancer( "all" , "");
+                                setTableViewFreelancer();
+                                tabPaneContractor.getSelectionModel().select(tabFreelancerSearchResult);
+                                alert("Please select the freelancer to invite the job","","",AlertType.INFORMATION);       
 //                            int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
                             
                             /* get freelancer ID*/
