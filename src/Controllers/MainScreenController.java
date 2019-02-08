@@ -28,7 +28,6 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import static java.sql.Types.NULL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -44,8 +43,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -72,10 +69,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
@@ -1369,7 +1364,7 @@ public class MainScreenController implements Initializable {
             btnSubmit.setOnAction((e) -> {
                        try{
                             boolean isValidPost = true;
-                            String messageTofreelancer ="";
+                            String message ="";
                             int jobID = 0;
                             
                              try{
@@ -1383,9 +1378,9 @@ public class MainScreenController implements Initializable {
                             
                             if( isInviteFreelancer ){                        
                                 
-                                messageTofreelancer = textAreaJobPostMessage.getText().trim();                                
+                                message =  textAreaJobPostMessage.getText().trim();                                
                                 
-                                if( messageTofreelancer.isEmpty()){
+                                if( message.isEmpty()){
                                      alert("Message is required when you direct your job post to a specific freelancer","Input Error","",AlertType.ERROR );
                                      isValidPost = false;
                                 }
@@ -1413,17 +1408,17 @@ public class MainScreenController implements Initializable {
                                     }
                                     job = new Job();
                                     job.setJobID(jobID);
-                                    User user = tableViewFreelancer.getSelectionModel().getSelectedItem();
+                                    User freelancer = tableViewFreelancer.getSelectionModel().getSelectedItem();
                                     
-                                    Message message  = new Message(
-                                        messageTofreelancer,
+                                    Message messageForFreelancer  = new Message(
+                                        message,
                                         AddRecord.CONTRACTOR,
                                         LocalDateTime.now(),
-                                        user,
+                                        freelancer,
                                         job      
                                      );
                                     
-                                    AddRecord.setDbRecord(message, AddRecord.MESSAGE); 
+                                    AddRecord.setDbRecord(messageForFreelancer, AddRecord.MESSAGE); 
                                     tableViewFreelancer.getSelectionModel().clearSelection();
                                     assignment = null;
                                     isInviteFreelancer = false;

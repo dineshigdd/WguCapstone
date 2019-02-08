@@ -8,13 +8,10 @@ package DBConnection;
 import Controllers.MainScreenController;
 import Model.Freelancer;
 import Model.Job;
-import Model.Message;
 import Model.PrgmLanguage;
 import Reports.Report;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

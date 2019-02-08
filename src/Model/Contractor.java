@@ -13,7 +13,7 @@ import java.time.LocalDate;
  * @author Dinesh
  */
 public class Contractor extends User{
-      private int contractorID;
+    private int contractorID;
     private String typeOfContractor;
   // private ObservableList<Job> jobList;    
 

@@ -8,8 +8,6 @@ package Controllers;
 import DBConnection.AddRecord;
 import DBConnection.DBConnection;
 import Model.Contact;
-import Model.Contractor;
-import Model.Freelancer;
 import Model.User;
 import Model.UserAccount;
 import java.io.IOException;
@@ -29,7 +27,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  *
