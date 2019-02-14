@@ -707,7 +707,7 @@ public class MainScreenController implements Initializable {
     @FXML
     private void tabAllJobsHandler(Event event) {
         int userID = getUserID();
-        int contractorID = getUserTypeID("contractorID","Contractor",userID);  
+        int contractorID = getUserTypeID("contractorID","contractor",userID);  
         ObservableList<Job> jobList = SearchRecord.searchJob("all", Integer.toString(contractorID));
                  colAllJobTitle.setCellValueFactory(new PropertyValueFactory<>("jobTitle"));
               //   colAllJobTitle.setCellFactory(TextFieldTableCell.forTableColumn());               
@@ -774,7 +774,7 @@ public class MainScreenController implements Initializable {
 
    
     private int getUserID(){
-         String query = "select userID, username from User where userName ="+ "'" + userAccount.getUsername() + "'";       
+         String query = "select userID, username from user where userName ="+ "'" + userAccount.getUsername() + "'";       
        
          
          //get userID
@@ -822,8 +822,8 @@ public class MainScreenController implements Initializable {
        String query;
        int userCategoryId = 0;
        
-       query = "select " + userCategoryID  + "," +  userCategory + ".userID from " + userCategory + ", User where " +
-               userCategory + ".userID = User.userID and User.userID = " + userID;
+       query = "select " + userCategoryID  + "," +  userCategory + ".userID from " + userCategory + ", user where " +
+               userCategory + ".userID = user.userID and user.userID = " + userID;
        
        System.out.println(query);
        
@@ -905,7 +905,7 @@ public class MainScreenController implements Initializable {
     private void setSkills(){
        
         int  userID = getUserID();
-        int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);     
+        int freelancerID = getUserTypeID("freelancerID","freelancer",userID);     
         selectedLanguageList = SearchRecord.searchLanguage("freelancerLanguages", Integer.toString(freelancerID));           
             
          prgmLanguageList = SearchRecord.searchLanguage("all", "*");    
@@ -959,10 +959,11 @@ public class MainScreenController implements Initializable {
        
        
        //set other skills and non techical
-       ObservableList<Freelancer> freelancerOtherSkills  = SearchRecord.searchFreelancer("otherSkills", Integer.toString(freelancerID));
-       textAreaOtherTech.setText(freelancerOtherSkills.get(0).getOtherTechSkills());
-       textAreaNonTech.setText(freelancerOtherSkills.get(0).getNonTechSkills());
-       
+       try{
+            ObservableList<Freelancer> freelancerOtherSkills  = SearchRecord.searchFreelancer("otherSkills", Integer.toString(freelancerID));
+            textAreaOtherTech.setText(freelancerOtherSkills.get(0).getOtherTechSkills());
+            textAreaNonTech.setText(freelancerOtherSkills.get(0).getNonTechSkills());
+       }catch(Exception e){}   
     }
     
     
@@ -1195,7 +1196,7 @@ public class MainScreenController implements Initializable {
         int userID = getUserID();
         
          //get contractorID          
-        int contractorID = getUserTypeID("contractorID","Contractor",userID);     
+        int contractorID = getUserTypeID("contractorID","contractor",userID);     
         
         String jobTitle =  txtJobTitle.getText().trim();
         if( jobTitle.isEmpty() ){
@@ -1309,7 +1310,7 @@ public class MainScreenController implements Initializable {
         gridpaneJobPost.setVisible(false);
         gridpaneJobPost2.setVisible(true);
          int userID = getUserID();
-         int contractorID = getUserTypeID("contractorID","Contractor",userID);          
+         int contractorID = getUserTypeID("contractorID","contractor",userID);          
              
              Label label = new Label("Choose the job to invite: ");
          //    GridPane.setHalignment(label, HPos.RIGHT);
@@ -1475,7 +1476,7 @@ public class MainScreenController implements Initializable {
     private void btnSaveHandler(ActionEvent event) {
         int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
         int userID = getUserID();
-        int contractorID = getUserTypeID("contractorID","Contractor",userID);      
+        int contractorID = getUserTypeID("contractorID","contractor",userID);      
         SavedFreelancer savedFreelancer = new SavedFreelancer();
         savedFreelancer.setContractorID(contractorID);
         savedFreelancer.setFreelancerID(freelancerID);
@@ -1494,7 +1495,7 @@ public class MainScreenController implements Initializable {
         
         
         int userID = getUserID();
-        int contractorID = getUserTypeID("contractorID","Contractor",userID); 
+        int contractorID = getUserTypeID("contractorID","contractor",userID); 
         
         //saved Freelancer
         freelancerList = SearchRecord.searchFreelancer("savedFreelancer", String.valueOf(contractorID));
@@ -1756,7 +1757,7 @@ public class MainScreenController implements Initializable {
     private void btnOkHandler(ActionEvent event) {
         
         int userID = getUserID();
-        int contractorID = getUserTypeID("contractorID","Contractor",userID); 
+        int contractorID = getUserTypeID("contractorID","contractor",userID); 
         
         System.out.println("ContractorID:" + contractorID + "\n" + 
                             "Job ID:" + jobID + "\n" +
@@ -1843,7 +1844,7 @@ public class MainScreenController implements Initializable {
    private void setReport(String criteria){
        
         int userID = getUserID();
-        int contractorID = getUserTypeID("contractorID","Contractor",userID); 
+        int contractorID = getUserTypeID("contractorID","contractor",userID); 
        
        
         ObservableList<Report> list = null;   
@@ -1914,7 +1915,7 @@ public class MainScreenController implements Initializable {
               
         }else if( userAccount.getUserType() == FREELANCER ){           
           
-          int freelancerID = getUserTypeID("freelancerID","Freelancer",userID); 
+          int freelancerID = getUserTypeID("freelancerID","freelancer",userID); 
             
              list =  (ObservableList<Report>) SearchRecord.getReportData(criteria , Integer.toString(freelancerID));
                     
@@ -2025,7 +2026,7 @@ private void setInbox(int userType){
        
         ObservableList<Inbox> list =  FXCollections.observableArrayList();
         int userID = getUserID();
-        int contractorID = getUserTypeID("contractorID","Contractor",userID); 
+        int contractorID = getUserTypeID("contractorID","contractor",userID); 
         DBConnection conn = new DBConnection();
         conn.connectDatabase();
         

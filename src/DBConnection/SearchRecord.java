@@ -94,7 +94,7 @@ public class SearchRecord {
         
 
         String query = null;
-        String projection = " Freelancer.freelancerID,Freelancer.firstName,Freelancer.lastName,yearsOfExperience,selfDescription,otherTechSkills,nonTechSkills ";
+        String projection = " freelancer.freelancerID,freelancer.firstName,freelancer.lastName,yearsOfExperience,selfDescription,otherTechSkills,nonTechSkills ";
         switch( criteria ){
            
             case "progLanguage": 
@@ -114,26 +114,26 @@ public class SearchRecord {
                           + " where freelancer.contactID = contact.contactID and " + criteria + "= '" + criteriaValue + "'";
             break;
             case "savedFreelancer":                
-                 query = "select" + projection + "from savedFreelancer, Freelancer"
-                         + " where Freelancer.freelancerID = savedFreelancer.freelancerID"
+                 query = "select" + projection + "from savedfreelancer, freelancer"
+                         + " where freelancer.freelancerID = savedfreelancer.freelancerID"
                          + " and contractorID =" + Integer.parseInt(criteriaValue);
             break;
             case "appliedFreelancer":
-                  query = "select" + projection + "from Freelancer , Assignment "
-                         + " where Freelancer.freelancerID = Assignment.freelancerID and"
+                  query = "select" + projection + "from freelancer , assignment "
+                         + " where freelancer.freelancerID = assignment.freelancerID and"
                          + " contractorID =" + Integer.parseInt(criteriaValue)+ " and "
                          +  "contractStatus = " + MainScreenController.APPLIED_FREELANCER;
                 
             break;    
             case "invitedFreelancer":
-                 query = "select" + projection + "from Freelancer , Assignment "
-                         + " where Freelancer.freelancerID = Assignment.freelancerID and"
+                 query = "select" + projection + "from freelancer , assignment "
+                         + " where freelancer.freelancerID = assignment.freelancerID and"
                          + " contractorID =" + Integer.parseInt(criteriaValue)+ " and "
                          +  "contractStatus = " + MainScreenController.INVITED_FREELANCER;
             break;   
             case "otherSkills":
             case "freelancerNeed":
-                query = "select" + projection + "from Freelancer "
+                query = "select" + projection + "from freelancer "
                         + "where freelancerID ="+ Integer.parseInt(criteriaValue);
             break;
             case "all":
@@ -221,7 +221,7 @@ public class SearchRecord {
               
               case "contractorJobOffer":
                       query = "select concat(freelancer.firstName,' ', freelancer.lastName) as 'Name', job.jobTitle, jobAssignedDate from freelancer, assignment , job " + 
-                    " where Freelancer.freelancerID = assignment.freelancerID"
+                    " where freelancer.freelancerID = assignment.freelancerID"
                      + " and assignment.jobID = job.jobID and contractStatus = 3"
                      + " and assignment.contractorID = " + Integer.parseInt(criteriaValue);
                       

@@ -39,7 +39,7 @@ public class UpdateRecord {
        UserAccount userAccount = new UserAccount();
        DBConnection conn = new DBConnection();
        conn.connectDatabase();     
-       String query = "select userID,userType, User.userName from User where User.userName ="+ "'" + username + "'";       
+       String query = "select userID,userType, user.userName from user where user.userName ="+ "'" + username + "'";       
        conn.setStatement( query );
        ResultSet sqlResult = conn.getStatement();
         
@@ -196,7 +196,7 @@ public class UpdateRecord {
          try{
              String query = "";
              
-                  query = "Update Contact set streetAddress = ?," 
+                  query = "Update contact set streetAddress = ?," 
                           + "apt = ?," 
                           + "city = ?," 
                           + "state = ?," 
@@ -245,7 +245,7 @@ public class UpdateRecord {
 //                    System.out.println( "Fk key ID:" + contractor.getContact().getContactId() );
                 String query;
                
-                query = "Update Contractor set "
+                query = "Update contractor set "
                         + "firstName = ?," 
                         + "lastName = ?,"
                         + "DOB = ?,"
@@ -277,7 +277,7 @@ public class UpdateRecord {
                 Freelancer freelancer = ( Freelancer )obj;
                 
                 String query;
-                query = "Update Freelancer set "
+                query = "Update freelancer set "
                         + "firstName = ?," 
                         + "lastName = ?,"
                         + "DOB = ?,"
@@ -308,7 +308,7 @@ public class UpdateRecord {
                 try{
                     Job job = (Job)obj;
                     String query;
-                    query = "Update Job set "
+                    query = "Update job set "
                         + "jobTitle = ?," 
                         + "jobDescription = ?,"
                         + "jobCategory = ?,"
@@ -333,7 +333,7 @@ public class UpdateRecord {
                 try{
                     Assignment assignment = (Assignment)obj;
                     String query;
-                    query = "Update Assignment set "
+                    query = "Update assignment set "
                         + "contractStatus = ?," 
                         + "jobAssignedDate = ?"
                         + " where contractorID = ? and freelancerID = ? and jobID = ?" ;

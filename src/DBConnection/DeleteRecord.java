@@ -101,7 +101,7 @@ public class DeleteRecord {
        try{
          DBConnection  conn = new DBConnection();
          conn.connectDatabase();
-         PreparedStatement ps = conn.insertRecord("delete from FreelancerLanguage where freelancerID = ? and progLanguageID = ?");
+         PreparedStatement ps = conn.insertRecord("delete from freelancerlanguage where freelancerID = ? and progLanguageID = ?");
              ps.setInt( 1,freelancerLangauge.getFreelancerID()) ;     
              ps.setInt( 2,freelancerLangauge.getProgLanguageID()) ;  
              ps.execute();

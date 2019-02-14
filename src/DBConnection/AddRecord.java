@@ -46,7 +46,7 @@ public  class AddRecord {
          try{
              String query = "";
              
-                  query = "INSERT INTO Contact( streetAddress,apt,city,state,zip,country,phone,email)" + 
+                  query = "INSERT INTO contact( streetAddress,apt,city,state,zip,country,phone,email)" + 
                                             "VALUES( ? , ? , ? ,? ,? , ? ,?, ? );";
                                          
                  PreparedStatement ps = conn.insertRecord(query);
@@ -109,7 +109,7 @@ public  class AddRecord {
                 
                 String query = "";
                
-                query = "INSERT INTO Contractor(firstName,lastName,DOB,contractorType,contactID,userID)" + 
+                query = "INSERT INTO contractor(firstName,lastName,DOB,contractorType,contactID,userID)" + 
                                             "VALUES( ? , ? , ? ,? ,? , ? );";
               
                  System.out.println( "USER ID:" + user.getUserAccount().getUserID() );   
@@ -134,7 +134,7 @@ public  class AddRecord {
                 Freelancer freelancer = ( Freelancer )obj;
                 
                 String query = "";
-                query = "INSERT INTO Freelancer(firstName,lastName,DOB,yearsOfExperience,selfDescription,amountCharge,contactID,userID)" + 
+                query = "INSERT INTO freelancer(firstName,lastName,DOB,yearsOfExperience,selfDescription,amountCharge,contactID,userID)" + 
                                             "VALUES( ? , ? , ? ,? ,? , ? , ? , ? );";
                                             
                                                 
@@ -157,7 +157,7 @@ public  class AddRecord {
                 try{
                     Job job = ( Job )obj;
                     String query = "";
-                    query = "INSERT INTO Job(jobTitle,jobDescription,jobCategory, jobPostedBy ,jobPostDate)" + 
+                    query = "INSERT INTO job(jobTitle,jobDescription,jobCategory, jobPostedBy ,jobPostDate)" + 
                                                 "VALUES( ? , ? , ? ,?, ?);";
 
 
@@ -187,7 +187,7 @@ public  class AddRecord {
                 try{
                 Message message = ( Message )obj;
                 String query = "";
-                query = "INSERT INTO Message( message,msgCreateDate,sender,freelancerID,jobID )" + 
+                query = "INSERT INTO message( message,msgCreateDate,sender,freelancerID,jobID )" + 
                                             "VALUES( ? , ? , ?, ?,? );";
                                             
                                                 
@@ -208,7 +208,7 @@ public  class AddRecord {
                 try{
                 FreelancerLanguage freelancerLanguage = ( FreelancerLanguage )obj;
                 String query = "";
-                query = "INSERT INTO FreelancerLanguage( freelancerID,progLanguageID)" + 
+                query = "INSERT INTO freelancerlanguage( freelancerID,progLanguageID)" + 
                                             "VALUES( ? , ? );";
                                             
                                                 
@@ -225,7 +225,7 @@ public  class AddRecord {
                 try{
                 SavedFreelancer savedFreelancer = ( SavedFreelancer )obj;
                 String query = "";
-                query = "INSERT INTO savedFreelancer( contractorID, freelancerID )" + 
+                query = "INSERT INTO savedfreelancer( contractorID, freelancerID )" + 
                                             "VALUES( ? , ?  );";
                                             
                                                 
@@ -245,10 +245,10 @@ public  class AddRecord {
                 String query = "";
                 
                 if( assignment.getJobAssignedDate() != null ){
-                      query = "INSERT INTO Assignment( contractorID, freelancerID, jobID, contractStatus,jobAssignedDate )" + 
+                      query = "INSERT INTO assignment( contractorID, freelancerID, jobID, contractStatus,jobAssignedDate )" + 
                                             "VALUES( ? , ? , ?, ? ,? );";
                 }else{
-                       query = "INSERT INTO Assignment( contractorID, freelancerID, jobID, contractStatus )" + 
+                       query = "INSERT INTO assignment( contractorID, freelancerID, jobID, contractStatus )" + 
                                             "VALUES( ? , ? , ?, ? );";
                 }
                                             
