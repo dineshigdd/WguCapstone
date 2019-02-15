@@ -34,6 +34,8 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -706,15 +708,15 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void tabAllJobsHandler(Event event) {
-        int userID = getUserID();
-        int contractorID = getUserTypeID("contractorID","contractor",userID);  
-        ObservableList<Job> jobList = SearchRecord.searchJob("all", Integer.toString(contractorID));
-                 colAllJobTitle.setCellValueFactory(new PropertyValueFactory<>("jobTitle"));
-              //   colAllJobTitle.setCellFactory(TextFieldTableCell.forTableColumn());               
-                 colAllJobDescription.setCellValueFactory(new PropertyValueFactory<>("jobDescription"));
-                 colAllJobCategory.setCellValueFactory(new PropertyValueFactory<>("jobCategory"));
-                 colAllJobPostDate.setCellValueFactory(new PropertyValueFactory<>("postDate"));
-                 tableViewJobPosted.setItems(jobList);
+//        int userID = getUserID();
+//        int contractorID = getUserTypeID("contractorID","contractor",userID);  
+//        ObservableList<Job> jobList = SearchRecord.searchJob("all", Integer.toString(contractorID));
+//                 colAllJobTitle.setCellValueFactory(new PropertyValueFactory<>("jobTitle"));
+//              //   colAllJobTitle.setCellFactory(TextFieldTableCell.forTableColumn());               
+//                 colAllJobDescription.setCellValueFactory(new PropertyValueFactory<>("jobDescription"));
+//                 colAllJobCategory.setCellValueFactory(new PropertyValueFactory<>("jobCategory"));
+//                 colAllJobPostDate.setCellValueFactory(new PropertyValueFactory<>("postDate"));
+//                 tableViewJobPosted.setItems(jobList);
     }
 
     @FXML
@@ -1314,11 +1316,11 @@ public class MainScreenController implements Initializable {
              
              Label label = new Label("Choose the job to invite: ");
          //    GridPane.setHalignment(label, HPos.RIGHT);
-                     
+                      
              comboBoxJobPost = new ComboBox();
              comboBoxJobPost.setPromptText("Please select the Job post: ");
              
-              btnSubmit = null;
+             // btnSubmit = null;
              if( gridpaneJobPost2.getChildren().isEmpty() ){        
                     gridpaneJobPost2.add(label, 0, 0);
                     gridpaneJobPost2.add(comboBoxJobPost, 1, 0);
@@ -1357,11 +1359,22 @@ public class MainScreenController implements Initializable {
             for( int i = 0; i < jobList.size(); i++ ){
                 jobMap.put( i , jobList.get(i).getJobID());
             }
-            for(int i = 0; i < jobList.size(); i++ ){
-                comboBoxJobPost.getItems().add( jobList.get(i).getJobTitle());
-            }
-        
             
+             comboBoxJobPost.getItems().clear();
+             for(int i = 0; i < jobList.size(); i++ ){
+                             comboBoxJobPost.getItems().add( jobList.get(i).getJobTitle());
+                              System.out.println(jobList.get(i).getJobTitle());
+             }    
+            
+             System.out.println("combo box:"+ comboBoxJobPost.getItems().size());
+        
+//             comboBoxJobPost.valueProperty().addListener(new ChangeListener<String>() {
+//              @Override 
+//              public void changed(ObservableValue ov, String t, String t1) {                
+//                      
+//                }    
+//             });
+                    
             btnSubmit.setOnAction((e) -> {
                        try{
                             boolean isValidPost = true;
@@ -2142,19 +2155,19 @@ private void setInbox(int userType){
     private void tabPostJobHandler(Event event) {
         
         
-        if( isInviteFreelancer ){
-            try{
-             gridpaneJobPost.add(lblMessage, 0, 3);
-             gridpaneJobPost.add(textAreaJobPostMessage, 1, 3);
-             gridpaneJobPost.add(btnSubmit, 1,3);
-            }catch(Exception e){
-        
-            gridpaneJobPost.getChildren().remove(btnSubmit);
-            gridpaneJobPost.getChildren().remove(lblMessage);
-            gridpaneJobPost.getChildren().remove(textAreaJobPostMessage);
-            gridpaneJobPost.add(btnSubmit, 1, 3 );
-            }
-        }
+//        if( isInviteFreelancer ){
+//            try{
+//             gridpaneJobPost.add(lblMessage, 0, 3);
+//             gridpaneJobPost.add(textAreaJobPostMessage, 1, 3);
+//             gridpaneJobPost.add(btnSubmit, 1,3);
+//            }catch(Exception e){
+//        
+//            gridpaneJobPost.getChildren().remove(btnSubmit);
+//            gridpaneJobPost.getChildren().remove(lblMessage);
+//            gridpaneJobPost.getChildren().remove(textAreaJobPostMessage);
+//            gridpaneJobPost.add(btnSubmit, 1, 3 );
+//            }
+//        }
         
     }
 

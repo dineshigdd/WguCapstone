@@ -29,17 +29,20 @@ public class DBConnection {
                 final String DB_URL = "jdbc:mysql://52.206.157.109/U056ht";       
                 final String DBUSER = "U056ht";
                 final String DBPASS = "53688428145";
-
+                             
+                
+                
+                
                 ResultSet logInResult = null;
                 String location = null;
 
                 try{
-                    Class.forName( JDBC_DRIVER );
+                  //  Class.forName( JDBC_DRIVER );
                     connection = DriverManager.getConnection(DB_URL, DBUSER, DBPASS);    
                     statement = connection.createStatement();
                     
-                }catch(ClassNotFoundException e){
-                       e.printStackTrace();
+//                }catch(ClassNotFoundException e){
+//                       e.printStackTrace();
                 }catch(SQLException e){
                        e.printStackTrace();
                 }     
