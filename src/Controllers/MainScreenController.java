@@ -356,6 +356,8 @@ public class MainScreenController implements Initializable {
            comboBox.setPrefWidth(300);
            comboBox.setPromptText("Select Years Of Experience");
            
+           comboBoxJobPost = new ComboBox();
+           
            int size =  SearchRecord.searchLanguage("all", "*").size();
            ObservableList<String> listLanguage = FXCollections.observableArrayList();      
             
@@ -1314,10 +1316,10 @@ public class MainScreenController implements Initializable {
              Label label = new Label("Choose the job to invite: ");
          //    GridPane.setHalignment(label, HPos.RIGHT);
                      
-             comboBoxJobPost = new ComboBox();
+          
              comboBoxJobPost.setPromptText("Please select the Job post: ");
              
-              btnSubmit = null;
+             // btnSubmit = null;
              if( gridpaneJobPost2.getChildren().isEmpty() ){        
                     gridpaneJobPost2.add(label, 0, 0);
                     gridpaneJobPost2.add(comboBoxJobPost, 1, 0);
