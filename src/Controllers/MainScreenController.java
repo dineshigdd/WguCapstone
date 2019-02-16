@@ -301,8 +301,6 @@ public class MainScreenController implements Initializable {
     private boolean isSelectJobFirst;
     private ComboBox comboBoxCategory;
     @FXML
-    private Button btnAssignedJob;
-    @FXML
     private Tab tabInbox;
     private WebView webview;
     private TextArea msgTextArea;
@@ -357,6 +355,8 @@ public class MainScreenController implements Initializable {
            comboBox = new ComboBox(list);
            comboBox.setPrefWidth(300);
            comboBox.setPromptText("Select Years Of Experience");
+           
+           comboBoxJobPost = new ComboBox();
            
            int size =  SearchRecord.searchLanguage("all", "*").size();
            ObservableList<String> listLanguage = FXCollections.observableArrayList();      
@@ -1317,7 +1317,6 @@ public class MainScreenController implements Initializable {
              Label label = new Label("Choose the job to invite: ");
          //    GridPane.setHalignment(label, HPos.RIGHT);
                       
-             comboBoxJobPost = new ComboBox();
              comboBoxJobPost.setPromptText("Please select the Job post: ");
              
              // btnSubmit = null;
@@ -1363,18 +1362,10 @@ public class MainScreenController implements Initializable {
              comboBoxJobPost.getItems().clear();
              for(int i = 0; i < jobList.size(); i++ ){
                              comboBoxJobPost.getItems().add( jobList.get(i).getJobTitle());
-                              System.out.println(jobList.get(i).getJobTitle());
+                             
              }    
             
-             System.out.println("combo box:"+ comboBoxJobPost.getItems().size());
-        
-//             comboBoxJobPost.valueProperty().addListener(new ChangeListener<String>() {
-//              @Override 
-//              public void changed(ObservableValue ov, String t, String t1) {                
-//                      
-//                }    
-//             });
-                    
+                     
             btnSubmit.setOnAction((e) -> {
                        try{
                             boolean isValidPost = true;
@@ -2120,9 +2111,6 @@ private void setInbox(int userType){
        
     }
    
-    @FXML
-    private void btnAssignedJobHandler(ActionEvent event) {
-    }
 
     @FXML
     private void tabInboxHandler(Event event) {
