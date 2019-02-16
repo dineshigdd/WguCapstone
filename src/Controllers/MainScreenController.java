@@ -299,8 +299,6 @@ public class MainScreenController implements Initializable {
     private boolean isSelectJobFirst;
     private ComboBox comboBoxCategory;
     @FXML
-    private Button btnAssignedJob;
-    @FXML
     private Tab tabInbox;
     private WebView webview;
     private TextArea msgTextArea;
@@ -2108,9 +2106,6 @@ private void setInbox(int userType){
        
     }
    
-    @FXML
-    private void btnAssignedJobHandler(ActionEvent event) {
-    }
 
     @FXML
     private void tabInboxHandler(Event event) {
