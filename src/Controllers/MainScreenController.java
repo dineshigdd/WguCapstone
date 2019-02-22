@@ -1136,7 +1136,6 @@ public class MainScreenController implements Initializable {
             textAreaJobPostMessage.setDisable(false);
             btnSubmit.setText("Submit");
            
-          
             
             
 //            if( isValidPost ){
@@ -1404,6 +1403,9 @@ public class MainScreenController implements Initializable {
                                         alert("Error adding record","","",AlertType.ERROR);
                                     }else{
                                         alert("The freelancer has been invited for the job posted","","",AlertType.INFORMATION);
+                                        isSelectJobFirst = false;
+                                        isInviteFreelancer = false;
+//                                        tableViewFreelancer.getItems().clear();
 
                                     }
                                     job = new Job();
