@@ -325,6 +325,7 @@ public class MainScreenController implements Initializable {
     @FXML
     private GridPane gridpaneJobPost2;
     private Label labelForInvite;
+    private Button btngridpaneJobPost2Submit;
    
   
   
@@ -734,9 +735,13 @@ public class MainScreenController implements Initializable {
          stage.centerOnScreen();
          stage.show();
          
+         try{
          Job job = tableViewJobPosted.getSelectionModel().getSelectedItem();
          ManagePostScreenController controller = loader.getController();         
          controller.setJob(job , userAccount);
+         }catch(Exception e){
+             alert("Error in Editing the job","","",AlertType.ERROR);
+         }
 //        colAllJobTitle.setOnEditCommit( 
 //                         new EventHandler<CellEditEvent<Job,String>>() {  
 //                            @Override
@@ -1043,53 +1048,7 @@ public class MainScreenController implements Initializable {
     @FXML
     private void btnAddSkillsHandler(ActionEvent event) {
         
-        //get Prgramming laguagues
-        int userID;
-        int freelancerID;
-        int progLanguageID;
-        int size = 0;
-        
-        
-//        userID = getUserID();
-//        freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
-//        
-//       
-//       if( ListselectedPrgmLanguages.getItems().size() >= selectedLanguageList.size() ){
-//           size = ListselectedPrgmLanguages.getItems().size();
-//       }else{
-//           size = selectedLanguageList.size();
-//       }
-//       
-//        for( int i = 0 ; i <  selectedLanguageList.size(); i++ ){             
-//             FreelancerLanguage freelancerLanguage = new FreelancerLanguage();
-//            
-//            for( int x = 0; x < ListselectedPrgmLanguages.getItems().size(); x++ ){
-//                
-//                //get already selected language for freelancer and compare with the newly selected list
-//                if( !( selectedLanguageList.get(i).getProgLanguage().equals( ListselectedPrgmLanguages.getItems().get(x))) ){
-//                    freelancerLanguage.setFreelancerID(freelancerID);
-//                  
-//                //get the ID of the newly added language  
-//                for( int r = 0; r < prgmLanguageList.size(); r++ ){
-//                      
-//                     if( ListselectedPrgmLanguages.getItems().get(x).equals(prgmLanguageList.get(r).getProgLanguage())){
-//                            
-//                           freelancerLanguage.setProgLanguageID(prgmLanguageList.get(r).getProgLanguageID());
-//                     }
-//                }
-//               
-//                
-//            }
-//            
-//            
-//                
-//              int isRecordAdded =   AddRecord.setDbRecord(freelancerLanguage, AddRecord.FREELANCER_PRGM_LANGUAGE);  
-//        }
-//                   
-//        
-//        }     
-    
-        
+                   
         addOtherSkills( textAreaOtherTech.getText(), textAreaNonTech.getText());
         
     }
@@ -1126,27 +1085,14 @@ public class MainScreenController implements Initializable {
     @FXML
     private void tableViewFreelancerHandler(MouseEvent event) {
        
-        //String fullName =  tableViewFreelancer.getSelectionModel().getSelectedItem().getFullName();
-            int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
-        
-        
-              
-            assignment = new Assignment();        
-            assignment.setFreelancerID(freelancerID);
-        
-//       Stage invite = new Stage();
-//       Parent root;
-//       FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/InviteFreelancer.fxml"));
-//       
-//
-//        Scene scene = new Scene( loader.load());
-//        invite.setScene(scene); 
-//        invite.setTitle("Invite the Freelancer");
-//        invite.centerOnScreen();
-//        invite.show();
-//        
-//        InviteFreelancerController controller = loader.getController();
-//        controller.initialize( tableViewFreelancer.getSelectionModel().getSelectedItem());
+            if( !tableViewFreelancer.getItems().isEmpty()){
+                int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();             
+                assignment = new Assignment();        
+                assignment.setFreelancerID(freelancerID);
+            }else{
+                alert("You must search for freelancers before make any selection","","",AlertType.INFORMATION);
+            }
+
     }
    
     
@@ -1257,7 +1203,8 @@ public class MainScreenController implements Initializable {
     
     
     @FXML
-    private void btnInviteFreelancerHandler(ActionEvent event) {     
+    private void btnInviteFreelancerHandler(ActionEvent event) {  
+            
              tabPaneContractor.getSelectionModel().select(tabPostJob); 
              isInviteFreelancer = true;     
              
@@ -1268,6 +1215,7 @@ public class MainScreenController implements Initializable {
              gridpaneJobPost.add(btnSubmit, 1,4);
              
              radBtnInvite.setDisable(false);
+           
     }
     
     @FXML
@@ -1280,32 +1228,29 @@ public class MainScreenController implements Initializable {
          int userID = getUserID();
          int contractorID = getUserTypeID("contractorID","Contractor",userID);          
              
-             labelForInvite = new Label("Choose the job to invite: ");        //    GridPane.setHalignment(label, HPos.RIGHT);   
-             comboBoxJobPost = new ComboBox();
-             comboBoxJobPost.setPromptText("Please select the Job post: ");
-             
+            
              // btnSubmit = null;
-             if( gridpaneJobPost2.getChildren().isEmpty() ){      
-                 System.out.println("This is gridpaneJobPost2");
+             if( gridpaneJobPost2.getChildren().isEmpty() ){ 
+                 labelForInvite = new Label("Choose the job to invite: ");        //    GridPane.setHalignment(label, HPos.RIGHT);   
+                 comboBoxJobPost = new ComboBox();
+                 comboBoxJobPost.setPromptText("Please select the Job post: ");
+                 btngridpaneJobPost2Submit = new Button("Submit");
+                 
+            
                     gridpaneJobPost2.add(labelForInvite, 0, 0);
                     gridpaneJobPost2.add(comboBoxJobPost, 1, 0);
                     gridpaneJobPost2.add(lblMessage, 0, 1);
                                   
                    
-                   gridpaneJobPost2.add(textAreaJobPostMessage, 1, 1);
-                   btnSubmit = new Button("Submit");
-                   btnSubmit.setPrefWidth(97);
-                   btnSubmit.setPrefHeight(32);
-                   GridPane.setHalignment(btnSubmit, HPos.RIGHT);
-       
-                   gridpaneJobPost2.add(btnSubmit, 1, 2);     
+                   gridpaneJobPost2.add(textAreaJobPostMessage, 1, 1);                   
+                   btngridpaneJobPost2Submit.setPrefWidth(97);
+                   btngridpaneJobPost2Submit.setPrefHeight(32);
+                   GridPane.setHalignment(btngridpaneJobPost2Submit, HPos.RIGHT);       
+                   gridpaneJobPost2.add(btngridpaneJobPost2Submit, 1, 2);     
                    
                    
              }
 
-                      
-                     
-            
             
              ObservableList<Job> jobList = SearchRecord.searchJob("all", Integer.toString(contractorID ));
              jobMap = new HashMap();    
@@ -1318,7 +1263,7 @@ public class MainScreenController implements Initializable {
             }
         
             
-            btnSubmit.setOnAction((e) -> {
+            btngridpaneJobPost2Submit.setOnAction((e) -> {
                        try{
                             boolean isValidPost = true;
                             String message ="";
@@ -1351,7 +1296,7 @@ public class MainScreenController implements Initializable {
                                     assignment.setJobAssignedDate(null);                            
                                     int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
                                     assignment.setFreelancerID(freelancerID);
-        //                            assignment = new Assignment(contractorID, freelancerID, jobID);                                  
+                                     
                                     int addStatus = AddRecord.setDbRecord(assignment, AddRecord.ASSIGNMENT);
                                     
                                     if( addStatus == AddRecord.ERROR ){
@@ -1377,17 +1322,20 @@ public class MainScreenController implements Initializable {
                                         alert("The freelancer has been invited for the job posted","","",AlertType.INFORMATION);
                                       
                                     }
-                                    //resetting 
+                                    //resetting controls and variables
                                         tableViewFreelancer.getSelectionModel().clearSelection();
                                         assignment = null;
                                         comboBoxJobPost = null;
                                         isInviteFreelancer = false;
+                                        btngridpaneJobPost2Submit = null;
                                         tableViewFreelancer.getItems().clear();
                                         gridpaneJobPost2.getChildren().clear();
                                         textAreaJobPostMessage.clear();
-                                        gridpaneJobPost2.setVisible(false);
-                                        radBtnNewJobPost.setSelected(true);
+                                        gridpaneJobPost2.setVisible(false);                                        
                                         radBtnInvite.setDisable(true);
+                                        radBtnNewJobPost.setSelected(true);
+                                        gridpaneJobPost.setVisible(true);
+                                        setbtnSubmitOnGridPane();
                             }
                        }catch(NullPointerException x){
                                 x.printStackTrace();
@@ -1396,30 +1344,41 @@ public class MainScreenController implements Initializable {
 
                          
                        }
-                       
-//                    anchorPanePostJob.getChildren().remove(vbox);      
-//                    anchorPanePostJob.getChildren().add(gridpaneJobPost);  
-//                    radBtnNewJobPost.setSelected(true);
+
                         
                });            
         
     }
     
+    private void setbtnSubmitOnGridPane(){
+    if( isInviteFreelancer ){         
+            try{
+             gridpaneJobPost.add(lblMessage, 0, 3);
+             gridpaneJobPost.add(textAreaJobPostMessage, 1, 3);
+             gridpaneJobPost.add(btnSubmit, 1,3);
+            }catch(Exception e){
+        
+            gridpaneJobPost.getChildren().remove(btnSubmit);
+            gridpaneJobPost.getChildren().remove(lblMessage);
+            gridpaneJobPost.getChildren().remove(textAreaJobPostMessage);
+            gridpaneJobPost.add(btnSubmit, 1, 3 );
+            }
+        }else{
+            try{
+            gridpaneJobPost.getChildren().remove(textAreaJobPostMessage);
+            gridpaneJobPost.add(btnSubmit, 1, 3 );
+            }catch(Exception e){}
+        }
+    }
     
     @FXML
     private void radBtnNewJobPostHandler(MouseEvent event) {
         
         gridpaneJobPost.setVisible(true);
         gridpaneJobPost2.setVisible(false);
-       // if( anchorPanePostJob.getChildren().equals(vbox) &&   !anchorPanePostJob.getChildren().equals(gridpaneJobPost)  ){
-//        try{
-//                anchorPanePostJob.getChildren().remove(vbox);
-//                anchorPanePostJob.getChildren().add(gridpaneJobPost);
-//        }catch(Exception e){}
-       // }
-         
-          
-           
+        gridpaneJobPost2.getChildren().clear();
+        textAreaJobPostMessage.clear();
+        setbtnSubmitOnGridPane();    
             
             
     }
@@ -1434,6 +1393,7 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void btnSaveHandler(ActionEvent event) {
+        
         int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
         int userID = getUserID();
         int contractorID = getUserTypeID("contractorID","Contractor",userID);      
@@ -2113,6 +2073,18 @@ private void setInbox(int userType){
 //            }
 //        }
         
+    }
+
+    @FXML
+    private void tabFreelancerSearchResultHandler(Event event) {
+        if( tableViewFreelancer.getItems().isEmpty()){
+            
+            btnInviteFreelancer.setDisable(true);
+            btnSave.setDisable(true);
+         }else{
+            btnInviteFreelancer.setDisable(false);
+            btnSave.setDisable(false);
+        }
     }
 
     
