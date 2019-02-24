@@ -3,23 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/WGU/capstone/Test/capstone/src/Model/Job.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/Model/Contractor.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/DBConnection/DeleteRecord.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/Model/Message.java</file>
+            <file>file:/F:/WGU/capstone/Test/capstone/src/Controllers/ResponseJobPostController.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/Controllers/MainScreenController.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/DBConnection/DBConnection.java</file>
-            <file>file:/F:/WGU/capstone/Test/capstone/src/Model/SavedFreelancer.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/DBConnection/SearchRecord.java</file>
-            <file>file:/F:/WGU/capstone/Test/capstone/src/Model/PrgmLanguage.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/Controllers/RegistrationScreenController.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/Controllers/AccountCreationScreenController.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/Model/User.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/DBConnection/AddRecord.java</file>
-            <file>file:/F:/WGU/capstone/Test/capstone/src/Model/FreelancerLanguage.java</file>
             <file>file:/F:/WGU/capstone/Test/capstone/src/Model/Freelancer.java</file>
-            <file>file:/F:/WGU/capstone/Test/capstone/src/Model/Assignment.java</file>
-            <file>file:/F:/WGU/capstone/Test/capstone/src/Model/UserAccount.java</file>
+            <file>file:/F:/WGU/capstone/Test/capstone/src/Model/Inbox.java</file>
         </group>
     </open-files>
 </project-private>

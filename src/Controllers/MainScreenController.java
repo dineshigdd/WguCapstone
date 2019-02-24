@@ -2066,7 +2066,7 @@ private void setInbox(int userType){
           
           User user = new Freelancer();
           int  userID = getUserID();
-          int freelancerID = getUserTypeID("freelancerID","Freelancer",userID); 
+          int freelancerID = getUserTypeID("freelancerID","freelancer",userID); 
           ((Freelancer)user).setFreelancerID(freelancerID);
            Message freelancerResponse = new Message(       
                message,
