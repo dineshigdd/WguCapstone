@@ -2041,18 +2041,41 @@ private void setInbox(int userType){
         
     @FXML
     private void btnSendHandler(ActionEvent event) {
-        
-        message =   contractorMsgTextArea.getText();
        
-       Message contractorResponse = new Message(       
+        message =   contractorMsgTextArea.getText();
+        
+       
+       
+      if( userAccount.getUserType() == CONTRACTOR ){
+          
+            Message contractorResponse = new Message(       
                message,
-               AddRecord.CONTRACTOR,
+               CONTRACTOR,
                LocalDateTime.now(),
                user,
                job
                );
+          AddRecord.setDbRecord(contractorResponse, AddRecord.MESSAGE);
+      }else{
+          
+          User user = new Freelancer();
+          int  userID = getUserID();
+          int freelancerID = getUserTypeID("freelancerID","Freelancer",userID); 
+          ((Freelancer)user).setFreelancerID(freelancerID);
+           Message freelancerResponse = new Message(       
+               message,
+               FREELANCER,
+               LocalDateTime.now(),
+               user,
+               job
+               );
+           AddRecord.setDbRecord(freelancerResponse, AddRecord.MESSAGE);
+         
+      }
+      
+      
        
-       AddRecord.setDbRecord(contractorResponse, AddRecord.MESSAGE);
+      
     }
 
     @FXML
