@@ -67,7 +67,7 @@
                                              <children>
                                                 <VBox alignment="CENTER_LEFT" prefHeight="94.0" prefWidth="336.0" spacing="20.0">
                                                    <children>
-                                                      <RadioButton fx:id="radBtnNewJobPost" mnemonicParsing="false" onMouseClicked="#radBtnNewJobPostHandler" selected="true" text="Create a new Job post to invite">
+                                                      <RadioButton fx:id="radBtnNewJobPost" mnemonicParsing="false" onMouseClicked="#radBtnNewJobPostHandler" text="Create a new Job post to invite">
                                                          <toggleGroup>
                                                             <ToggleGroup fx:id="jobPostCategory" />
                                                          </toggleGroup>
