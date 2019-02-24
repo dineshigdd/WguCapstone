@@ -1086,9 +1086,9 @@ public class MainScreenController implements Initializable {
     private void tableViewFreelancerHandler(MouseEvent event) {
        
             if( !tableViewFreelancer.getItems().isEmpty()){
-                int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();             
-                assignment = new Assignment();        
-                assignment.setFreelancerID(freelancerID);
+//                int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();             
+//                assignment = new Assignment();        
+//                assignment.setFreelancerID(freelancerID);
             }else{
                 alert("You must search for freelancers before make any selection","","",AlertType.INFORMATION);
             }
@@ -1203,18 +1203,30 @@ public class MainScreenController implements Initializable {
     
     
     @FXML
-    private void btnInviteFreelancerHandler(ActionEvent event) {  
+    private void btnInviteFreelancerHandler(ActionEvent event){  
+        
+             try{
+                int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();             
+                assignment = new Assignment();        
+                assignment.setFreelancerID(freelancerID);
+//                assignment.getFreelancerID();                 
+           
+                tabPaneContractor.getSelectionModel().select(tabPostJob); 
+                isInviteFreelancer = true;     
+
+                gridpaneJobPost.getChildren().remove(btnSubmit);
+
+                gridpaneJobPost.add(lblMessage, 0, 3);
+                gridpaneJobPost.add(textAreaJobPostMessage, 1, 3);
+                gridpaneJobPost.add(btnSubmit, 1,4);
+
+                radBtnInvite.setDisable(false);
+             }catch(NullPointerException e){
+                alert("You must first select the freelancer to invite for a job","","",AlertType.INFORMATION);
+            }catch(Exception e){
             
-             tabPaneContractor.getSelectionModel().select(tabPostJob); 
-             isInviteFreelancer = true;     
-             
-             gridpaneJobPost.getChildren().remove(btnSubmit);
-             
-             gridpaneJobPost.add(lblMessage, 0, 3);
-             gridpaneJobPost.add(textAreaJobPostMessage, 1, 3);
-             gridpaneJobPost.add(btnSubmit, 1,4);
-             
-             radBtnInvite.setDisable(false);
+            
+            }
            
     }
     
@@ -1230,7 +1242,7 @@ public class MainScreenController implements Initializable {
              
             
              // btnSubmit = null;
-             if( gridpaneJobPost2.getChildren().isEmpty() ){ 
+            if( gridpaneJobPost2.getChildren().isEmpty() ){ 
                  labelForInvite = new Label("Choose the job to invite: ");        //    GridPane.setHalignment(label, HPos.RIGHT);   
                  comboBoxJobPost = new ComboBox();
                  comboBoxJobPost.setPromptText("Please select the Job post: ");
@@ -1351,17 +1363,19 @@ public class MainScreenController implements Initializable {
     }
     
     private void setbtnSubmitOnGridPane(){
+    
+            gridpaneJobPost.getChildren().remove(btnSubmit);
+            gridpaneJobPost.getChildren().remove(lblMessage);
+            gridpaneJobPost.getChildren().remove(textAreaJobPostMessage);
+            
     if( isInviteFreelancer ){         
             try{
              gridpaneJobPost.add(lblMessage, 0, 3);
              gridpaneJobPost.add(textAreaJobPostMessage, 1, 3);
-             gridpaneJobPost.add(btnSubmit, 1,3);
+             gridpaneJobPost.add(btnSubmit, 1,4);
             }catch(Exception e){
         
-            gridpaneJobPost.getChildren().remove(btnSubmit);
-            gridpaneJobPost.getChildren().remove(lblMessage);
-            gridpaneJobPost.getChildren().remove(textAreaJobPostMessage);
-            gridpaneJobPost.add(btnSubmit, 1, 3 );
+
             }
         }else{
             try{
@@ -1394,6 +1408,7 @@ public class MainScreenController implements Initializable {
     @FXML
     private void btnSaveHandler(ActionEvent event) {
         
+        try{
         int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();
         int userID = getUserID();
         int contractorID = getUserTypeID("contractorID","Contractor",userID);      
@@ -1406,7 +1421,9 @@ public class MainScreenController implements Initializable {
         if( inserRecord == AddRecord.ERROR ){
             alert("You have already saved this freelancer", "Saving Freelancer","",AlertType.INFORMATION);
         }  
-        
+        }catch(Exception e){
+            alert("You must first select the freelancer to save into the list","","",AlertType.INFORMATION);
+        }
     }
 
 
@@ -2080,21 +2097,22 @@ private void setInbox(int userType){
 
     @FXML
     private void tabPostJobHandler(Event event) {
-        
+       
         radBtnInvite.setDisable(true);
-//        if( isInviteFreelancer ){         
-//            try{
-//             gridpaneJobPost.add(lblMessage, 0, 3);
-//             gridpaneJobPost.add(textAreaJobPostMessage, 1, 3);
-//             gridpaneJobPost.add(btnSubmit, 1,3);
-//            }catch(Exception e){
-//        
-//            gridpaneJobPost.getChildren().remove(btnSubmit);
-//            gridpaneJobPost.getChildren().remove(lblMessage);
-//            gridpaneJobPost.getChildren().remove(textAreaJobPostMessage);
-//            gridpaneJobPost.add(btnSubmit, 1, 3 );
-//            }
-//        }
+        
+        if( isInviteFreelancer ){         
+            try{
+             gridpaneJobPost.add(lblMessage, 0, 3);
+             gridpaneJobPost.add(textAreaJobPostMessage, 1, 3);
+             gridpaneJobPost.add(btnSubmit, 1,3);
+            }catch(Exception e){
+        
+            gridpaneJobPost.getChildren().remove(btnSubmit);
+            gridpaneJobPost.getChildren().remove(lblMessage);
+            gridpaneJobPost.getChildren().remove(textAreaJobPostMessage);
+            gridpaneJobPost.add(btnSubmit, 1, 3 );
+            }
+        }
         
     }
 
