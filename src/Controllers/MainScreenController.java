@@ -760,7 +760,7 @@ public class MainScreenController implements Initializable {
        int userID;
        
        userID = getUserID();
-       int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);      
+       int freelancerID = getUserTypeID("freelancerID","freelancer",userID);      
        User user = SearchRecord.searchFreelancer("freelancerNeed", String.valueOf(freelancerID )).get(0);
        
        Stage response = new Stage();
@@ -987,7 +987,7 @@ public class MainScreenController implements Initializable {
         if( !ListallPrgmLanguages.getSelectionModel().isEmpty() ){
             
           int  userID = getUserID();
-          int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
+          int freelancerID = getUserTypeID("freelancerID","freelancer",userID);
           FreelancerLanguage freelancerLanguage = new FreelancerLanguage();
                   
            for( int i = 0; i < prgmLanguageList.size(); i++ ){
@@ -1021,7 +1021,7 @@ public class MainScreenController implements Initializable {
         if(  !ListselectedPrgmLanguages.getSelectionModel().isEmpty() ){
             
           int  userID = getUserID();
-          int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
+          int freelancerID = getUserTypeID("freelancerID","freelancer",userID);
           FreelancerLanguage freelancerLanguage = new FreelancerLanguage();
                   
            for( int i = 0; i < prgmLanguageList.size(); i++ ){
@@ -1062,10 +1062,10 @@ public class MainScreenController implements Initializable {
                 conn.connectDatabase();   
                 
                 int userID = getUserID();
-                freelancerID = getUserTypeID("freelancerID","Freelancer",userID);
+                freelancerID = getUserTypeID("freelancerID","freelancer",userID);
                 System.out.println("freelancer ID:"+ freelancerID);
                 String query;
-                query = "Update Freelancer set "
+                query = "Update freelancer set "
                         + "otherTechSkills = ?," 
                         + "nonTechSkills = ?"
                         + " where freelancerID = ?";
