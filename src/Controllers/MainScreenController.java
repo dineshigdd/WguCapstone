@@ -2066,14 +2066,7 @@ private void setInbox(int userType){
     private void btnSendHandler(ActionEvent event) {
        
         message =   contractorMsgTextArea.getText();
-        
-<<<<<<< HEAD
-       
-       
-=======
-       
-       
->>>>>>> dev
+
       if( userAccount.getUserType() == CONTRACTOR ){
           
             Message contractorResponse = new Message(       
@@ -2088,11 +2081,9 @@ private void setInbox(int userType){
           
           User user = new Freelancer();
           int  userID = getUserID();
-<<<<<<< HEAD
+
           int freelancerID = getUserTypeID("freelancerID","freelancer",userID); 
-=======
-          int freelancerID = getUserTypeID("freelancerID","Freelancer",userID); 
->>>>>>> dev
+
           ((Freelancer)user).setFreelancerID(freelancerID);
            Message freelancerResponse = new Message(       
                message,
@@ -2114,22 +2105,7 @@ private void setInbox(int userType){
     private void tabPostJobHandler(Event event) {
        
         radBtnInvite.setDisable(true);
-<<<<<<< HEAD
-//        if( isInviteFreelancer ){         
-//            try{
-//             gridpaneJobPost.add(lblMessage, 0, 3);
-//             gridpaneJobPost.add(textAreaJobPostMessage, 1, 3);
-//             gridpaneJobPost.add(btnSubmit, 1,3);
-//            }catch(Exception e){
-//        
-//            gridpaneJobPost.getChildren().remove(btnSubmit);
-//            gridpaneJobPost.getChildren().remove(lblMessage);
-//            gridpaneJobPost.getChildren().remove(textAreaJobPostMessage);
-//            gridpaneJobPost.add(btnSubmit, 1, 3 );
-//            }
-//        }
 
-=======
         
         if( isInviteFreelancer ){         
             try{
@@ -2145,7 +2121,7 @@ private void setInbox(int userType){
             }
         }
         
->>>>>>> dev
+
     }
 
     @FXML
