@@ -28,21 +28,6 @@ public abstract class User {
         this.userAccount = userAccount;
     }
     
-
-   
-    
-//    protected String phone;
-//    protected String email;
-
-//    public String getEmail() {
-//        return email;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
-    
-
     public Contact getContact() {
         return contact;
     }

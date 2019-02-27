@@ -92,31 +92,6 @@ public class UpdateRecord {
                  }
                  
                  
-//                 try{
-//                      query = "select * from contact, freelancer where contact.contactID = " + contactID;
-//                      conn.setStatement(query);
-//                      sqlResult = conn.getStatement(); 
-//
-//                      while( sqlResult.next()){
-//                             contact = new Contact(
-//                              sqlResult.getString("streetAddress"),
-//                              sqlResult.getString("apt"),
-//                              sqlResult.getString("city"),
-//                              sqlResult.getString("zip"), 
-//                              sqlResult.getString("state"), 
-//                              sqlResult.getString("country"),                             
-//                              sqlResult.getString("phone"), 
-//                              sqlResult.getString("email")
-//                           );
-//                      }
-//                      
-//                      freelancer.setContact(contact);
-//                      obj = freelancer;
-//                 }catch( SQLException sql){
-//
-//                 }
-
-//            System.out.println("Freelancer city:" + freelancer.getContact().getCity());
        }else if( userType == CONTRACTOR ){
                 user = new Contractor();                       
 
@@ -176,14 +151,7 @@ public class UpdateRecord {
                  }
         
                  user.setContact(contact);
-//                 if( userType == FREELANCER ){
-//                     user.setContact(contact);
-//                     //obj = freelancer;
-//                 }else{
-//                     contractor.setContact(contact);
-//                     obj = contractor;
-//                 }
-//                 
+            
                  
        return user;
     }
@@ -242,7 +210,7 @@ public class UpdateRecord {
                 User user = ( Contractor )obj;
                 Contractor contractor = ( Contractor )obj;
                 
-//                    System.out.println( "Fk key ID:" + contractor.getContact().getContactId() );
+
                 String query;
                
                 query = "Update contractor set "

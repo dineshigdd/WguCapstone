@@ -78,8 +78,7 @@ public  class AddRecord {
                 }catch(Exception e){
                     e.printStackTrace();
                 }
-                  // System.out.println( "Address ID:" + contact.getContactId() );
-               // return addressID;
+                 
                
     }
     
@@ -91,21 +90,14 @@ public  class AddRecord {
         conn.connectDatabase();    
         
        
-           // int contactID = setAddress( address );
-            //System.out.println( "Fk key ID:" + contactID );
+          
         switch( ObjectType ){
             
             case CONTRACTOR: 
                try{
                 User user = ( Contractor )obj;
                 Contractor contractor = ( Contractor )obj;
-//                System.out.println( user.getFirstName()); System.out.println( user.getFirstName());
-//                  System.out.println( user.getLastName());
-//                  System.out.println( toTimeStamp(user.getDOB()));
-//                    System.out.println( contractor.getTypeOfContractor());
-//               System.out.println( user.getContact().getContactId());   
-//                 System.out.println(user.getUserAccount().getUserID()); 
-                
+             
                 
                 String query = "";
                

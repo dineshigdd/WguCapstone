@@ -307,7 +307,7 @@ public class RegistrationScreenController implements Initializable {
             zip = txtZip.getText().trim();
             if( zip.isEmpty()){
                 list.add(txtZip);
-                //txtZip.setStyle("-fx-border-color:red");   
+                  
             }else{
                 listClear.add(txtZip);
             }
@@ -347,18 +347,13 @@ public class RegistrationScreenController implements Initializable {
                 if( !Validation.isValidEmail(email)){
                     alert("The Email address you entered is not valid","Invalid Email address","", AlertType.ERROR);
                 }
-               // txtEmail.setStyle("-fx-border-color:red");   
+               
             }else{
                 listClear.add(txtEmail);
             }
             
             
-//            if( txtFirstName.getText().isEmpty() ||   txtLastName.getText().isEmpty() || txtStaddress.getText().isEmpty()||
-//                txtCity.getText().isEmpty() || txtZip.getText().isEmpty() || txtState.getText().isEmpty() || txtCountry.getText().isEmpty() ||
-//                txtPhoneNumber.getText().isEmpty() || txtEmail.getText().isEmpty() ){
-//                
-//                isValid = false;
-//              }
+
            LocalDate DOB = null;     
             try{
             
@@ -371,7 +366,7 @@ public class RegistrationScreenController implements Initializable {
                    datePickerDOB.setStyle("-fx-border-color:transparent");
                 }
           
-//         DOB = dobFormat.parse(dateInput.getDayOfMonth() + "/" + dateInput.getDayOfWeek() + "/" + dateInput.getYear());
+
       
              }catch(Exception e){
                   e.printStackTrace();
@@ -401,8 +396,7 @@ public class RegistrationScreenController implements Initializable {
            lblUserRequired.setVisible(false);
            vBoxUser.setStyle("-fx-border-color:transparent");
            
-       //  System.out.println("Testing setUser()" + Boolean.toString(setUserTest(address)));//for testing
-          //ObservableList jobList = FXCollections.observableArrayList();
+       
           
           //create contractor object
           
@@ -418,12 +412,10 @@ public class RegistrationScreenController implements Initializable {
                );  
           }         
                               
-                //user = contractor;
-                userType = CONTRACTOR;
-                 
+               
+                userType = CONTRACTOR;                 
             
-        // setDbRecord( contact , contractor , "contractor"); 
-//          System.out.println("Testing Contractor:" + Boolean.toString(ContractorTest(contractor)));
+        
         } 
       
       
@@ -474,9 +466,9 @@ public class RegistrationScreenController implements Initializable {
                 }
                
             
-           // obj = freelancer;
+          
             userType = FREELANCER;
-           //setDbRecord( contact , freelancer , "freelancer");    
+            
         }
      
             
@@ -515,25 +507,18 @@ public class RegistrationScreenController implements Initializable {
                 this.user.setContact(contact);           
                 this.user.setDOB(DOB);
                    
-           //try{           
+                      
                 if( user.getUserAccount().getUserType() == CONTRACTOR ){
                 contractor = ( Contractor)user;
                 this.contractor.setTypeOfContractor(spinner.getValue());
                 userType = this.contractor.getUserAccount().getUserType();
                 }else{
-            //    UpdateRecord.setUpdateRecord( user, userType );
-            
-           //}catch(Exception e){
-//                contact.setContactId(this.freelancer.getContact().getContactId());
-//                this.freelancer.setFirstName(firstName);
-//                this.freelancer.setLastName(lastName);
-//                this.freelancer.setContact(contact);           
-//                this.freelancer.setDOB(DOB);
+          
                 this.freelancer.setYearsOfExperince(spinner.getValue());
                 this.freelancer.setSelfDescription(txtAreaDescription.getText());
                 this.freelancer.setAmountCharge(Integer.parseInt(txtAmountCharge.getText()));
                 userType = this.freelancer.getUserAccount().getUserType();
-               // UpdateRecord.setUpdateRecord( freelancer, userType );
+               
            }
             UpdateRecord.setUpdateRecord( user, userType );
             UpdateRecord.setUpdateContactRecord(contact); //update Database record for the contact
@@ -542,113 +527,6 @@ public class RegistrationScreenController implements Initializable {
        return isValid;
     }
 
-//    private int setAddress(Contact contact){   //Inserting address
-//        
-//        
-//         try{
-//             String query = "";
-//                if( !isUpdate ){
-//                  query = "INSERT INTO Contact( streetAddress,apt,city,state,zip,country,phone,email)" + 
-//                                            "VALUES( ? , ? , ? ,? ,? , ? ,?, ? );";
-//                }else{
-//                  // query = "UPDATE SET"  
-//                }
-//                                                
-//                 PreparedStatement ps = conn.insertRecord(query);
-//                                ps.setString( 1, contact.getStreetAddress());
-//                                ps.setString( 2, contact.getApt());
-//                                ps.setString( 3, contact.getCity());
-//                                ps.setString( 4, contact.getState());
-//                                ps.setString( 5, contact.getZip());
-//                                ps.setString( 6, contact.getCountry());
-//                                ps.setString( 7, contact.getPhone());
-//                                ps.setString( 8, contact.getEmail());
-//                                ps.execute();
-//                                
-//                                //conn.closeDBConnection();
-//                }catch(SQLException e){
-//                    e.printStackTrace();
-//                }
-//    
-//                //conn.connectDatabase();
-//                conn.setStatement("select LAST_INSERT_ID();");
-//                ResultSet sqlResult  = conn.getStatement();
-//                
-//                int addressID = 0;
-//                try{
-//                while( sqlResult.next() ){
-//                    addressID = sqlResult.getInt("LAST_INSERT_ID()");
-//                }
-//                }catch(Exception e){
-//                    e.printStackTrace();
-//                }
-//                   System.out.println( "Address ID:" + addressID );
-//                return addressID;
-//    }
-    
-//    private void setDbRecord( Contact address, Object obj, String objType ){
-//        
-//        
-//        conn.connectDatabase();     
-//       
-//            int contactID = setAddress( address );
-//            System.out.println( "Fk key ID:" + contactID );
-//        switch( objType ){
-//            
-//            case "contractor": 
-//                try{
-//                Contractor contractor = ( Contractor )obj;
-//                
-//                String query = "";
-//                if( ! isUpdate ){
-//                    query = "INSERT INTO Contractor(firstName,lastName,DOB,contractorType,contactID)" + 
-//                                            "VALUES( ? , ? , ? ,? ,? );";
-//                }else{
-//                    //update query
-//                }
-//                                                
-//                 PreparedStatement ps = conn.insertRecord(query);
-//                                ps.setString( 1, contractor.getFirstName());
-//                                ps.setString( 2, contractor.getLastName());
-//                                ps.setTimestamp(3, toTimeStamp(contractor.getDOB()));
-//                                ps.setString( 4, contractor.getTypeOfContractor());
-//                                ps.setInt( 5, contactID);
-//                                ps.execute();
-//                 conn.closeDBConnection();                    
-//                }catch(SQLException e){
-//                    e.printStackTrace();
-//                }
-//                break;
-//            case "freelancer":
-//                try{
-//                Freelancer freelancer = ( Freelancer )obj;
-//                
-//                String query = "";
-//                if( ! isUpdate ){
-//                        query = "INSERT INTO Freelancer(firstName,lastName,DOB,yearsOfExperience,selfDescription,contactID)" + 
-//                                            "VALUES( ? , ? , ? ,? ,? , ? );";
-//                }else{
-//                    //update query
-//                }
-//                                                
-//                 PreparedStatement ps = conn.insertRecord(query);
-//                                ps.setString( 1, freelancer.getFirstName());
-//                                ps.setString( 2, freelancer.getLastName());
-//                                ps.setTimestamp(3,toTimeStamp( freelancer.getDOB()));
-//                                ps.setString(4, freelancer.getYearsOfExperince());
-//                                ps.setString(5, freelancer.getSelfDescription());
-//                                ps.setInt( 6, contactID);
-//                                ps.execute();
-//                 conn.closeDBConnection();       
-//                }catch( SQLException e){
-//                    e.printStackTrace();
-//                }
-//               
-//        }
-//        
-//        
-//        
-//    }
     
     @FXML
     private void radBtnContractorHandler(MouseEvent event) {
@@ -688,35 +566,7 @@ public class RegistrationScreenController implements Initializable {
          spinner.setValueFactory(valueFactory);
     }   
        
-  //---------for testing purpose------------------------------------------    
-//   private boolean setUserTest(Contact address){
-//            
-//      
-//         return (address.getStreetAddress().equals("4919 Coldwater") &&
-//         address.getApt().equals("1") &&              
-//         address.getCity().equals( "Sherman Oaks") &&     
-//         address.getZip().equals("91423")&&         
-//         address.getState().equals("CA") &&         
-//         address.getCountry().equals("USA"));
-//                
-//   }
-//   
-//   private boolean ContractorTest(Contractor contractor){
-//            
-//      
-//         return (contractor.getFirstName().equals("Dinesh") &&
-//                 contractor.getLastName().equals("gamage") &&
-//                 contractor.getTypeOfContractor().equalsIgnoreCase("Indivitual") &&
-//                 contractor.getContact().getPhone().equalsIgnoreCase("818") &&
-//                 contractor.getContact().getEmail().equalsIgnoreCase("d@d.com")&&
-//                 contractor.getContact().getStreetAddress().equalsIgnoreCase("4919 coldwater")) &&
-//                 contractor.getContact().getApt().equals("1") &&       
-//                 contractor.getContact().getCity().equals( "Sherman Oaks") &&     
-//                 contractor.getContact().getZip().equals("91423") &&     
-//                 contractor.getContact().getState().equals("CA") && 
-//                 contractor.getContact().getCountry().equals("USA");
-//                 
-//    }    
+  
 
     public void setUpdate(boolean isUpdate, String username) {
       
@@ -727,93 +577,21 @@ public class RegistrationScreenController implements Initializable {
         }
         
         
-        // record= new UpdateRecord();        
+     
          User user = UpdateRecord.getUpdateRecord(username);    
          setUpdateFields(user);
         
     }
 
    
-//    private void getUpdateRecord(String username){
-//        
-//       int userID = 0; 
-//       int userType = -1;
-//       conn.connectDatabase();     
-//       String query = "select userID,userType,username from User where username="+ "'" + username + "'";       
-//       conn.setStatement( query );
-//       ResultSet sqlResult = conn.getStatement();
-//       
-//       try{
-//            while( ! sqlResult.next()){
-//                userID = sqlResult.getInt("userID");
-//                userType = sqlResult.getInt("userType");
-//            }
-//        }catch(SQLException e){
-//
-//         }
-//       
-//       
-//       if( userType == FREELANCER ){
-//                Contact contact = null;
-//           
-//                try{
-//                      query = "select * from contact, freelancer where contact.contactID = freelancer.contactID";
-//                      conn.setStatement(query);
-//                      sqlResult = conn.getStatement(); 
-//
-//                      while( !sqlResult.next()){
-//                             contact = new Contact(
-//                              sqlResult.getString("streetAddress"),
-//                              sqlResult.getString("apt"),
-//                              sqlResult.getString("city"),
-//                              sqlResult.getString("zip"), 
-//                              sqlResult.getString("state"), 
-//                              sqlResult.getString("country"),                             
-//                              sqlResult.getString("phone"), 
-//                              sqlResult.getString("email")
-//                           );
-//                      }
-//                 }catch( SQLException sql){
-//
-//                 }
-//
-//
-//                 Freelancer freelancer = null;   
-//                 try{
-//                     query = "select * from user, freelancer where user.userID = freelancer.userID";
-//                     conn.setStatement(query);
-//                     sqlResult = conn.getStatement();               
-//
-//                      while( !sqlResult.next()){
-//                              freelancer = new Freelancer(
-//                              sqlResult.getString("firstName"),
-//                              sqlResult.getString("lastName"),
-//                              sqlResult.getTimestamp("DOB").toLocalDateTime().toLocalDate(),
-//                              contact,
-//                              sqlResult.getString("yearsOfExperience"),
-//                              sqlResult.getString("selfDescription")
-//
-//                            );          
-//
-//                      }
-//                 }catch(SQLException e){
-//
-//                 }
-//       
-//       }else{
-//           
-//       }       
-//       
-//       
-//    }
-//    
+
    public void setUpdateFields( User user ){
              radBtnContractor.setVisible(false);
              radBtnFreelancer.setVisible(false);
              hzBoxContracotorType.setVisible(true);
              
              
-      // try{            
+                  
              
              if( user.getUserAccount().getUserType() == FREELANCER ) {
              
@@ -854,8 +632,7 @@ public class RegistrationScreenController implements Initializable {
              this.user = user;
          
       }else{
-       //catch(ClassCastException e){
-            // contractor = (Contractor)obj;
+      
              
              txtFirstName.setText(user.getFirstName());
              txtLastName.setText(user.getLastName());

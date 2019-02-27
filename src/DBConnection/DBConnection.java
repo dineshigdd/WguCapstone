@@ -37,12 +37,11 @@ public class DBConnection {
                 String location = null;
 
                 try{
-                  //  Class.forName( JDBC_DRIVER );
+             
                     connection = DriverManager.getConnection(DB_URL, DBUSER, DBPASS);    
                     statement = connection.createStatement();
                     
-//                }catch(ClassNotFoundException e){
-//                       e.printStackTrace();
+
                 }catch(SQLException e){
                        e.printStackTrace();
                 }     

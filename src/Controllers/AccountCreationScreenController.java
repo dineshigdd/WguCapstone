@@ -123,33 +123,7 @@ public class AccountCreationScreenController implements Initializable {
                     
                     
                       showMainScreen( username, password );
-//                    if( userAccount.getUserType() == FREELANCER ){
-//                       // user  = new Freelancer();
-//                      //  freelancer = (Freelancer)obj;
-//                        user.setUserAccount(userAccount);                            
-//                        AddRecord.setDbRecord(user, user.getUserAccount().getUserType());
-//                        
-//                    }else{
-//                       // user = new Contractor();
-//                       // contractor = ( Contractor)obj;
-//                        System.out.println( "bEFORE ADDINF:)" + user.getFirstName());
-//                        user.setUserAccount(userAccount);
-//                        AddRecord.setDbRecord(user, user.getUserAccount().getUserType());
-//                    }
-//                    
-                    
-                    //UPDATE FREELANCER
-//                    conn.setStatement("select LAST_INSERT_ID();");
-//                    ResultSet sqlResult  = conn.getStatement();
-//                    int userID = sqlResult.getInt("LAST_INSERT_ID()");
-//                    query = "update freelancer set(userID) value = "+ userID;
-//                    ps = conn.insertRecord(query);
-//                    ps.setInt( 1, userID);
-//                    ps.execute();
-//                        Stage stage;     
-                
-                    
-                    
+           
                     conn.closeDBConnection();
                     
                     

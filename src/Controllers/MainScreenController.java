@@ -34,8 +34,6 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -73,7 +71,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -338,12 +335,7 @@ public class MainScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-//           hbox = new HBox();           
-//           hbox.setSpacing(15);
-//           hbox.setLayoutX(250);
-//           hbox.setLayoutY(170);    
-//           searchPane.getChildren().add(hbox);
-           
+                     
                    
            userAccount = new UserAccount();
           
@@ -398,11 +390,7 @@ public class MainScreenController implements Initializable {
            gridpaneJobPost.getChildren().remove(textAreaJobPostMessage);
            gridpaneJobPost.add(btnSubmit, 1, 3 );
            
-//           FXMLLoader loader = new FXMLLoader(getClass().getResource("MyGui.fxml"));
-//           Parent root = (Parent)loader.load();
-//           MainScreenController controller = (MainScreenController)loader.getController();
-//            controller.setStageAndSetupListeners(stage); // 
-           
+
      }    
 
    
@@ -525,22 +513,6 @@ public class MainScreenController implements Initializable {
         return isConfirmed;   
     }
 
-//      private boolean alert(String message, String title,String header, Alert.AlertType alertType, ButtonType noBtn ){
-//        Alert alert = new Alert(alertType);
-//        alert.setTitle(title);
-//        alert.setHeaderText(header);
-//        alert.setContentText(message);
-//        alert.getButtonTypes().add(noBtn);
-//        
-//        
-//        boolean isConfirmed = false;
-//        Optional<ButtonType> result = alert.showAndWait();
-//        if( result.get() == ButtonType.OK ){
-//            isConfirmed = true;
-//        }
-//            
-//        return isConfirmed;   
-//    }
       
     @FXML
     private void radbtnDateHandler(ActionEvent event) throws IOException {
@@ -591,18 +563,7 @@ public class MainScreenController implements Initializable {
          stage = (Stage) settings.getScene().getWindow();       
        
         
-//         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/updatePostScreen.fxml"));
-//         root = loader.load();
-//         
-//         Scene scene = new Scene(root);
-//         stage.setScene(scene);
-//         stage.centerOnScreen();
-//         stage.show();
-//         
-//         RegistrationScreenController controller = loader.getController();         
-//         controller.setUpdate(isUpdate, username);
-//        ObservableList<Job> jobList = FXCollections.observableArrayList();
-//        jobList.add(tableViewJobPosted.getItems().get(tableViewJobPosted.getItems().get));
+
     }
      
     
@@ -651,14 +612,9 @@ public class MainScreenController implements Initializable {
      
    } 
 
-   private void searchFreelancer(){
-              
+   private void searchFreelancer(){              
         
-//        if( criteria.equals("all")){
-////            freelancerList  = SearchRecord.searchFreelancer( criteria , "");
-//             
-//        }
-        //else{
+
             btnSearch.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
@@ -685,7 +641,7 @@ public class MainScreenController implements Initializable {
                
             });
        
-       // }
+       
         
                    
                      
@@ -709,15 +665,7 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void tabAllJobsHandler(Event event) {
-//        int userID = getUserID();
-//        int contractorID = getUserTypeID("contractorID","contractor",userID);  
-//        ObservableList<Job> jobList = SearchRecord.searchJob("all", Integer.toString(contractorID));
-//                 colAllJobTitle.setCellValueFactory(new PropertyValueFactory<>("jobTitle"));
-//              //   colAllJobTitle.setCellFactory(TextFieldTableCell.forTableColumn());               
-//                 colAllJobDescription.setCellValueFactory(new PropertyValueFactory<>("jobDescription"));
-//                 colAllJobCategory.setCellValueFactory(new PropertyValueFactory<>("jobCategory"));
-//                 colAllJobPostDate.setCellValueFactory(new PropertyValueFactory<>("postDate"));
-//                 tableViewJobPosted.setItems(jobList);
+
     }
 
     @FXML
@@ -743,15 +691,7 @@ public class MainScreenController implements Initializable {
          }catch(Exception e){
              alert("Error in Editing the job","","",AlertType.ERROR);
          }
-//        colAllJobTitle.setOnEditCommit( 
-//                         new EventHandler<CellEditEvent<Job,String>>() {  
-//                            @Override
-//                            public void handle(CellEditEvent<Job, String> event) {
-//                               ((Job) event.getTableView().getItems().get(
-//                                       event.getTablePosition().getRow())
-//                                       ).setJobTitle(event.getNewValue());
-//                                    }                                
-//                        });
+
     }
 
     @FXML
@@ -803,27 +743,6 @@ public class MainScreenController implements Initializable {
     }
     
     
-//     private int getUserType( int userID ){
-//         String query = "select userType from User where userName ="+ userID;       
-//       
-//         
-//         //get userID
-//         int userType = 0;
-//         try{
-//               DBConnection conn = new DBConnection();
-//               conn.connectDatabase();
-//               conn.setStatement(query);
-//               ResultSet sqlResult = conn.getStatement();
-//            while( sqlResult.next()){
-//                userType = sqlResult.getInt("userType");
-//            }
-//            
-//              conn.closeDBConnection();
-//         }catch(SQLException e){}
-//         
-//        
-//        return userType;
-//    }
      
   private int getUserTypeID(String userCategoryID, String userCategory , int userID ){
        String query;
@@ -857,13 +776,13 @@ public class MainScreenController implements Initializable {
         
         if( searchHzBoxContractor.getChildren().isEmpty()){
              searchHzBoxContractor.getChildren().add(comboBoxLanguage);
-             //searchHzBoxContractor.getChildren().add(txtSearch);
+       
              searchHzBoxContractor.getChildren().add(btnSearch);
          }else if( searchHzBoxContractor.getChildren().get(0).equals(txtSearch) || 
                  searchHzBoxContractor.getChildren().get(0).equals(comboBox)){             
              searchHzBoxContractor.getChildren().remove(0);
              searchHzBoxContractor.getChildren().add(0,comboBoxLanguage);
-           //  searchHzBoxContractor.getChildren().add(0,txtSearch);            
+          ;            
          }        
         
         
@@ -917,10 +836,7 @@ public class MainScreenController implements Initializable {
             
          prgmLanguageList = SearchRecord.searchLanguage("all", "*");    
          languageMap = new HashMap<>();
-//         for(int i = 0; i < prgmLanguageList.size(); i++ ){
-//                  languageMap.put(ListallPrgmLanguages.getItems().indexOf(ListallPrgmLanguages.getItems().get(i)),
-//                          prgmLanguageList.get(i).getProgLanguage());
-//         }
+
                   
        if( selectedLanguageList.isEmpty() ){            
             
@@ -931,8 +847,7 @@ public class MainScreenController implements Initializable {
             
         }else {
            
-          // prgmLanguageList = SearchRecord.searchLanguage("all", "*"); 
-           for(int i = 0; i < selectedLanguageList.size(); i++ ){
+            for(int i = 0; i < selectedLanguageList.size(); i++ ){
                ListselectedPrgmLanguages.getItems().add(selectedLanguageList.get(i).getProgLanguage());              
                
               
@@ -954,10 +869,7 @@ public class MainScreenController implements Initializable {
                             isFound = true;
                     }
                 }
-//               if( prgmLanguageList.get(i).getProgLanguageID() == selectedLanguageList.get(i).getProgLanguageID()){
-//                   
-//                   prgmLanguageList.remove(i);
-//                }
+
                 if( ! isFound )
                      ListallPrgmLanguages.getItems().add( prgmLanguageList.get(i).getProgLanguage());   
 
@@ -1088,9 +1000,7 @@ public class MainScreenController implements Initializable {
     private void tableViewFreelancerHandler(MouseEvent event) {
        
             if( !tableViewFreelancer.getItems().isEmpty()){
-//                int freelancerID = tableViewFreelancer.getSelectionModel().getSelectedItem().getFreelancerID();             
-//                assignment = new Assignment();        
-//                assignment.setFreelancerID(freelancerID);
+
             }else{
                 alert("You must search for freelancers before make any selection","","",AlertType.INFORMATION);
             }
@@ -1537,7 +1447,7 @@ public class MainScreenController implements Initializable {
                         listInvitedFreelancer.getItems().add(freelancerList.get(i).getFullName());
                    }
         }
-//        
+        
          
         ObservableList<Job> jobList = SearchRecord.searchJob("all", Integer.toString(contractorID ));
         jobMap = new HashMap();    
@@ -1559,10 +1469,7 @@ public class MainScreenController implements Initializable {
         if( ! listSavedFreelancer.getItems().isEmpty()){
               isSavedFreelancer = true;   
               hzBoxJob.setVisible(true);
-//              anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
-//              hzBoxJob.setLayoutY(382);
-//              hzBoxJob.setLayoutX(0);
-//              anchorPaneJobAssigned.getChildren().add(hzBoxJob); 
+
             if( isCheckBoxAdded ){
                isCheckBoxRemoved = anchorPaneJobAssigned.getChildren().remove(chkBox);
                isCheckBoxAdded = false;              
@@ -1572,8 +1479,6 @@ public class MainScreenController implements Initializable {
             
             System.out.println(" isCheckBoxAdded save:"+ isCheckBoxAdded + " and " + "isCheckBoxRemoved:" + isCheckBoxRemoved);
             freelancerID = savedFreelancerMap.get(listSavedFreelancer.getSelectionModel().getSelectedIndex()); 
-    //        ObservableList<Job> jobList  = SearchRecord.searchJob("jobApplied", Integer.toString(freelancerID));
-    //        lblJobInfo.setText("Title:" + jobList.get(0).getJobTitle()+ "   " + "Category:" + jobList.get(0).getJobCategory());
             lblFreelancer.setText(" to " + listSavedFreelancer.getSelectionModel().getSelectedItem());
         }
 
@@ -1581,66 +1486,31 @@ public class MainScreenController implements Initializable {
     
     @FXML
     private void listAppliedFreelancerHandler(MouseEvent event) {
-        //gridPaneJob.getChildren().remove(hzBoxJob);
+        
         chkBox.setSelected(false);
         hzBoxJob.setVisible(false);
         
-//         anchorPaneJobAssigned.getChildren().remhzBoxJobove();
+
         if( ! listAppliedFreelancer.getItems().isEmpty()){
                 isSavedFreelancer = false;
              
                
-    //          
+              
             if( isCheckBoxRemoved ){
                 isCheckBoxAdded = anchorPaneJobAssigned.getChildren().add(chkBox);
                 isCheckBoxRemoved = false;
                
-//                hzBoxJob.setLayoutX(0);
-//                hzBoxJob.setLayoutY(407);
-              //  anchorPaneJobAssigned.getChildren().add(hzBoxJob)
+
             }
             
              if ( chkBox.isSelected()){
                  hzBoxJob.setVisible(true);
-                 //anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+                 
                }else{
-               //  hzBoxJob.setVisible(true);                     
-                 //anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+               
                }
             
-//             chkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-//                public void changed(ObservableValue ov,Boolean old_val, Boolean new_val) {
-//                         if( chkBox.isSelected() ){
-//                      anchorPaneJobAssigned.getChildren().add(hzBoxJob);
-//                 }
-//                 else{
-//                     anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
-//                 }
-//                }
-//            });
-                   
-             
-//            chkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-//                @Override
-//                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-//                    
-//                    System.out.println("chkBox.isSelected():"  +chkBox.isSelected());
-////                                     if( chkBox.isSelected() ){
-////                      anchorPaneJobAssigned.getChildren().add(hzBoxJob);
-////                 }
-////                 else{
-////                     anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
-////                 }
-//                    
-//                    
-//                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//                }
-//                
-//            
-//            });
-               
-            
-            System.out.println(" isCheckBoxAdded save:"+ isCheckBoxAdded + " and " + "isCheckBoxRemoved:" + isCheckBoxRemoved);
+             System.out.println(" isCheckBoxAdded save:"+ isCheckBoxAdded + " and " + "isCheckBoxRemoved:" + isCheckBoxRemoved);
             freelancerID = appliedFreelancerMap.get( listAppliedFreelancer.getSelectionModel().getSelectedIndex());
             ObservableList<Job> jobList  = SearchRecord.searchJob("jobAppliedOrInvited", Integer.toString(freelancerID));
             jobID = jobList.get(0).getJobID();
@@ -1657,23 +1527,21 @@ public class MainScreenController implements Initializable {
         if( ! listInvitedFreelancer.getItems().isEmpty()){
             isSavedFreelancer = false;
             
-            //anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+           
            if( isCheckBoxRemoved ){
                
                 isCheckBoxAdded = anchorPaneJobAssigned.getChildren().add(chkBox);
                 isCheckBoxRemoved = false;
                 
-//                hzBoxJob.setLayoutX(0);
-//                hzBoxJob.setLayoutY(407);
             }
             
            
            if ( chkBox.isSelected()){
                   hzBoxJob.setVisible(true);
-                 //anchorPaneJobAssigned.getChildren().add(hzBoxJob);
+                
                }else{
                 hzBoxJob.setVisible(false);
-                 //anchorPaneJobAssigned.getChildren().remove(hzBoxJob);
+                 
                }
             System.out.println(" isCheckBoxAdded save:"+ isCheckBoxAdded + " and " + "isCheckBoxRemoved:" + isCheckBoxRemoved);
             freelancerID = invitedFreelancerMap.get( listInvitedFreelancer.getSelectionModel().getSelectedIndex());
@@ -1947,23 +1815,7 @@ public class MainScreenController implements Initializable {
 
  
    
-//   public  static void shiftControls(){
-//   
-//      // btnOk.setText("moving");
-//       
-//       
-////        Stage stage = (Stage)mainPane.getScene().getWindow();
-////        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
-////     // Do whatever you want
-////            btnOk.setStyle("-fx-background-color:yellow");
-////            
-////        });
-//       
-//       
-//   
-//       // hzBoxFreelancerInviteApply.setStyle("-fx-padding:0 0 0 50");
-//   }
-    
+  
 private void setInbox(int userType){     
 
        
@@ -2139,28 +1991,3 @@ private void setInbox(int userType){
 
     
 }
-
-
-
-//private void tableViewJobHandler(MouseEvent event) throws IOException {
-//        
-//       int userID;
-//       
-//       userID = getUserID();
-//       int freelancerID = getUserTypeID("freelancerID","Freelancer",userID);      
-//       
-//       Stage response = new Stage();
-//       Parent root;
-//       FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/ResponseJobPost.fxml"));
-//       
-//
-//        Scene scene = new Scene( loader.load());
-//        response.setScene(scene); 
-//        response.setTitle("Response to job posted");
-//        response.centerOnScreen();
-//        response.show();
-//        
-//        Job job = tableViewJob.getSelectionModel().getSelectedItem();
-//        ResponseJobPostController controller = loader.getController();
-//        controller.initialize( job, freelancerID );
-//    }

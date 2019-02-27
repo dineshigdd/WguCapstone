@@ -70,38 +70,6 @@ public class Message {
        name = fullName;
     }
     
-//    public int getJobID() {
-//        return JobID;
-//    }
-//
-//    public void setJobID(int JobID) {
-//        this.JobID = JobID;
-//    }
-//    
-//    public int getFreelancerID() {
-//        return freelancerID;
-//    }
-//
-//    public void setFreelancerID(int freelancerID) {
-//        this.freelancerID = freelancerID;
-//    }
-//
-//    public int getSender() {
-//        return sender;
-//    }
-//
-//    public void setSender(int sender) {
-//        this.sender = sender;
-//    }
-//
-//    public String getFreelancerName() {
-//        return freelancerName;
-//    }
-//
-//    public void setFreelancerName(String freelancerName) {
-//        this.freelancerName = freelancerName;
-//    }
-
     public int getSender() {
         return sender;
     }

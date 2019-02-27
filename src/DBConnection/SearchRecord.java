@@ -28,12 +28,7 @@ public class SearchRecord {
         DBConnection conn = new DBConnection();
         conn.connectDatabase();
         
-//        SimpleDateFormat  pattern = new SimpleDateFormat("yyyy-mm-dd");
-//        try {
-//            pattern.parse(date);
-//        } catch (ParseException ex) {
-//           ex.printStackTrace();
-//        }
+
         String query = null;
         
         switch( criteria ){
@@ -172,12 +167,7 @@ public class SearchRecord {
 
      public static ObservableList<PrgmLanguage>  searchLanguage(String criteria , String criteriaValue ){
            ObservableList<PrgmLanguage> prgmLanguageList =  FXCollections.observableArrayList();
-    //        prgmLanguageList = FXCollections.observableArrayList(
-    //                    "Java","C","Python","C++","Visual Basic .NET","C#","JavaScript","PHP",
-    //                    "SQL","Objective-C","Delphi/Object Pascal","Assembly language","MATLAB",
-    //                    "Swift","Go","R","RubyprgmLanguageList","Perl","Other"
-    //         );
-    //        
+           
              PrgmLanguage progrmLanguage;
              DBConnection conn = new DBConnection();
              conn.connectDatabase();
@@ -319,33 +309,4 @@ public class SearchRecord {
             
      }
      
- 
-
-//    public static ObservableList<Message> searchLanguage(String criteria , String criteriaValue ){
-//            
-//            
-//            ObservableList<Message> list =  FXCollections.observableArrayList();           
-//            DBConnection conn = new DBConnection();
-//            conn.connectDatabase();
-//             String query = "SELECT messageID,jobTitle, concat(freelancer.firstName,' ',freelancer.lastName) as 'name' , message " +
-//                            "FROM job, message, freelancer WHERE job.jobID = message.jobID and freelancer.freelancerID = message.freelancerID and "
-//                             + "jobPostedBy =" +criteriaValue;
-//
-//
-//             conn.setStatement(query);
-//             ResultSet sqlResult = conn.getStatement();
-//
-//            try {
-//                while( sqlResult.next()){
-//                    Message message = new Message();
-//                    inbox.setJobTitle(sqlResult.getString("jobTitle"));
-//                    inbox.setName(sqlResult.getString("name"));
-//                    inbox.setMessage(sqlResult.getString("message"));
-//                    list.add(inbox);
-//                   
-//                }
-//            } catch (SQLException ex) {
-//                ex.printStackTrace();
-//            }
-//    }
 }

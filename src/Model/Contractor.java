@@ -49,18 +49,4 @@ public class Contractor extends User{
     public void setTypeOfContractor(String typeOfContractor) {
         this.typeOfContractor = typeOfContractor;
     }
-
-//    public ObservableList<Job> getJobList() {
-//        return jobList;
-//    }
-//
-//    public void setJobList(Job job) {
-//        this.jobList.add(job);
-//    }
-
-
-    
-    
-    
-    
 }

@@ -22,9 +22,7 @@ public class Inbox {
         this.user = msg.getUser();
         this.job = msg.getJob();
         this.messageObj = msg;
-//        jobTitle = msg.getJob().getJobTitle();
-//        name = msg.getUser().getFullName();
-//        message = msg.getMessage();
+
     }
 
     
