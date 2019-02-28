@@ -20,6 +20,7 @@ import Model.Contact;
 import Model.Contractor;
 import Model.Freelancer;
 import Model.User;
+import Model.UserAccount;
 import Validation.Validation;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -104,6 +105,7 @@ public class RegistrationScreenController implements Initializable {
     private ObservableList<String> ContractorTypeList;
     //private Object obj;
     private User user;
+    private UserAccount userAccount;
     private Contact contact;
     private boolean isNewUser;
     private boolean isUpdate;
@@ -137,6 +139,7 @@ public class RegistrationScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
                
         // TODO
+       userAccount = new UserAccount();
        
        stateList =  FXCollections.observableArrayList(
         "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana",
@@ -212,7 +215,10 @@ public class RegistrationScreenController implements Initializable {
                 stage = (Stage) btnSignup.getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/MainScreen.fxml"));
                 root = loader.load();
-
+                
+                MainScreenController controller = loader.getController();        
+                controller.setLoginInfo(userAccount);
+                
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
                 stage.centerOnScreen();
@@ -383,7 +389,7 @@ public class RegistrationScreenController implements Initializable {
                 zip,       
                 state,
                 country,
-                phone,
+                areacode + phone,
                 email
             );
             
@@ -471,13 +477,14 @@ public class RegistrationScreenController implements Initializable {
             
         }
      
-            
-       if( (!radBtnContractor.isSelected() && !radBtnFreelancer.isSelected())){
-                isValid = false;
-                vBoxUser.setStyle("-fx-border-color:red");
-                lblUserRequired.setVisible(true);
+       if(!isUpdate){    
+            if( (!radBtnContractor.isSelected() && !radBtnFreelancer.isSelected())){
+                     isValid = false;
+                     vBoxUser.setStyle("-fx-border-color:red");
+                     lblUserRequired.setVisible(true);
 
-        }
+             }
+       }
        
         if( !list.isEmpty()){
                isValid = false;
@@ -568,17 +575,22 @@ public class RegistrationScreenController implements Initializable {
        
   
 
-    public void setUpdate(boolean isUpdate, String username) {
+    public void setUpdate(boolean isUpdate, UserAccount userAccount) {
+        
       
+       this.userAccount.setUserID(userAccount.getUserID());
+       this.userAccount.setUserType(userAccount.getUserType());
+       this.userAccount.setUsername(userAccount.getUsername());
+       this.userAccount.setPassword(userAccount.getPassword());
        this.isUpdate = isUpdate;
        
         if( isUpdate ){  
            lblTitle.setText("Update Your Record");
         }
         
-        
-     
-         User user = UpdateRecord.getUpdateRecord(username);    
+ 
+        // record= new UpdateRecord();        
+         User user = UpdateRecord.getUpdateRecord(userAccount.getUsername());    
          setUpdateFields(user);
         
     }
@@ -601,9 +613,13 @@ public class RegistrationScreenController implements Initializable {
              txtApt.setText(user.getContact().getApt());
              txtCity.setText(user.getContact().getCity());
              txtZip.setText(user.getContact().getZip());
-             txtState.setText(user.getContact().getState());
+             cmbBoxState.setValue(user.getContact().getState());
              txtCountry.setText(user.getContact().getCountry());
-             txtPhoneNumber.setText(user.getContact().getPhone());
+           
+             String phoneNumber = user.getContact().getPhone().substring(3);
+             String areaCode = user.getContact().getPhone().substring(0, 3);
+             txtAreaCode.setText(areaCode);
+             txtPhoneNumber.setText(phoneNumber);
              txtEmail.setText(user.getContact().getEmail());
              datePickerDOB.setValue(user.getDOB());             
              
@@ -640,9 +656,14 @@ public class RegistrationScreenController implements Initializable {
              txtApt.setText(user.getContact().getApt());
              txtCity.setText(user.getContact().getCity());
              txtZip.setText(user.getContact().getZip());
-             txtState.setText(user.getContact().getState());
+             cmbBoxState.setValue(user.getContact().getState());
              txtCountry.setText(user.getContact().getCountry());
-             txtPhoneNumber.setText(user.getContact().getPhone());
+             
+             String phoneNumber = user.getContact().getPhone().substring(3);
+             String areaCode = user.getContact().getPhone().substring(0, 3);
+             txtAreaCode.setText(areaCode);
+             txtPhoneNumber.setText(phoneNumber);
+             
              txtEmail.setText(user.getContact().getEmail());
              datePickerDOB.setValue(user.getDOB());
              
