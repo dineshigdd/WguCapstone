@@ -423,8 +423,10 @@ public class MainScreenController implements Initializable {
          stage.centerOnScreen();
          stage.show();
          
-         RegistrationScreenController controller = loader.getController();         
-         controller.setUpdate(isUpdate, userAccount.getUsername());
+         RegistrationScreenController controller = loader.getController();
+         
+   
+         controller.setUpdate(isUpdate, userAccount );
          
         
     }       

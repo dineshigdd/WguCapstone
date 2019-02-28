@@ -70,7 +70,7 @@ public class UpdateRecord {
 
                    
                  try{
-                     query = "select * from user, freelancer where user.userID = " + userID;
+                     query = "select * from freelancer where freelancer.userID = " + userID;
                      conn.setStatement(query);
                      sqlResult = conn.getStatement();                
                       while( sqlResult.next()){
@@ -122,7 +122,7 @@ public class UpdateRecord {
 
                    
                  try{
-                     query = "select * from user, contractor where user.userID = " + userID;
+                     query = "select * from contractor where contractor.userID = " + userID;
                      conn.setStatement(query);
                      sqlResult = conn.getStatement();                
                       while( sqlResult.next()){
@@ -254,7 +254,8 @@ public class UpdateRecord {
                         + " where userID = ?" ; 
                                             
               
-                 System.out.println( "First Name:" +  contractor.getFirstName());   
+                 System.out.println( "First for upsaye Name:" +  contractor.getFirstName());   
+                  System.out.println( "User ID:" + user.getContact().getContactId());
               
                  PreparedStatement ps = conn.insertRecord(query);
                                 ps.setString( 1, user.getFirstName());
